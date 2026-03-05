@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Nocapvc/static/css/main.af821f2e.css",
+    "main.js": "/Nocapvc/static/js/main.39d5b019.js",
+    "index.html": "/Nocapvc/index.html",
+    "main.af821f2e.css.map": "/Nocapvc/static/css/main.af821f2e.css.map",
+    "main.39d5b019.js.map": "/Nocapvc/static/js/main.39d5b019.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.af821f2e.css",
+    "static/js/main.39d5b019.js"
+  ]
+}
