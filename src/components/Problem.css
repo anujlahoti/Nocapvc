@@ -1,0 +1,42 @@
+.prob-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 3px; margin-top: 52px;
+}
+@media (max-width: 768px) { .prob-grid { grid-template-columns: 1fr; } }
+
+.prob-card {
+  background: var(--g1); padding: 40px 34px;
+  position: relative; overflow: hidden; transition: background .3s;
+}
+.prob-card:hover { background: var(--g2); }
+.prob-card::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 3px; height: 0; background: var(--yellow);
+  transition: height .4s ease;
+}
+.prob-card:hover::before { height: 100%; }
+.prob-n {
+  font-family: 'DM Mono', monospace; font-size: 42px;
+  font-weight: 300; color: rgba(255,224,52,.1);
+  line-height: 1; margin-bottom: 14px; display: block;
+}
+.prob-t { font-size: 19px; font-weight: 700; margin-bottom: 10px; color: var(--white); }
+.prob-b { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--muted2); line-height: 1.8; }
+.prob-b strong { color: var(--white); }
+
+.quote {
+  margin-top: 52px; padding: 40px;
+  border: 1px solid var(--border); border-radius: 3px;
+  background: rgba(255,224,52,.02); position: relative;
+}
+.quote::before {
+  content: '\201C'; position: absolute; top: -16px; left: 34px;
+  font-family: 'Instrument Serif', serif; font-size: 68px;
+  color: var(--yellow); line-height: 1;
+}
+.quote-t {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(17px, 2.2vw, 24px); font-style: italic;
+  line-height: 1.55; margin-bottom: 14px; color: var(--white);
+}
+.quote-a { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }

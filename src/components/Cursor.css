@@ -1,0 +1,16 @@
+.cur {
+  position: fixed; width: 10px; height: 10px;
+  background: var(--yellow); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  transition: width .25s, height .25s;
+}
+.cur-r {
+  position: fixed; width: 36px; height: 36px;
+  border: 1.5px solid rgba(255,224,52,.45); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width .3s, height .3s;
+}
+@media (hover: none) { .cur, .cur-r { display: none; } }
