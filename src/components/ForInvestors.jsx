@@ -7,7 +7,7 @@ const cards = [
   { icon: '🤝', t: 'Brand building with founders', b: "Founders remember who gave them useful feedback. Investors in NoCap VC's framework build reputation in the community — the most valuable distribution channel in Indian startup investing." },
 ];
 
-export default function ForInvestors() {
+export default function ForInvestors({ onPartnerClick }) {
   return (
     <section className="inv-sec" id="investors">
       <div className="sec-inner">
@@ -28,7 +28,12 @@ export default function ForInvestors() {
           <div className="inv-cta-box rev d2">
             <h3>Partner with<br /><span style={{ color: 'var(--yellow)' }}>NoCap VC</span></h3>
             <p>We're onboarding a small number of investor and incubator partners. Currently active with 2 incubators and 1 angel — next cohort opening soon.</p>
-            <a href="mailto:partner@nocapvc.com" className="btn-outline">Apply to Partner →</a>
+
+            {/* ← Changed from <a href="mailto:..."> to a button that opens the modal */}
+            <button className="btn-outline" onClick={onPartnerClick}>
+              Apply to Partner →
+            </button>
+
             <div className="inv-meta">
               <div className="inv-meta-lbl">Currently onboarded</div>
               <div className="inv-row"><span>Partner Incubators</span><span>2 active</span></div>

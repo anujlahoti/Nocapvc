@@ -1,0 +1,264 @@
+/* ── PARTNER MODAL ───────────────────────────────────── */
+.pm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: pmFadeIn 0.25s ease;
+}
+@keyframes pmFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.pm-box {
+  background: #141414;
+  border: 1px solid rgba(255, 224, 52, 0.2);
+  border-radius: 10px;
+  width: 100%;
+  max-width: 660px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: pmSlideUp 0.3s ease;
+}
+@keyframes pmSlideUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* Scrollbar */
+.pm-box::-webkit-scrollbar { width: 4px; }
+.pm-box::-webkit-scrollbar-track { background: #141414; }
+.pm-box::-webkit-scrollbar-thumb { background: rgba(255,224,52,0.3); border-radius: 2px; }
+
+/* Header */
+.pm-hd {
+  padding: 24px 28px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  background: #141414;
+  z-index: 10;
+}
+.pm-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--yellow);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.pm-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -0.02em;
+}
+.pm-close {
+  background: #2a2a2a;
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #999;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  line-height: 1;
+}
+.pm-close:hover {
+  background: var(--yellow);
+  color: #000;
+  border-color: var(--yellow);
+}
+
+/* Body */
+.pm-body { padding: 24px 28px 32px; }
+
+.pm-intro {
+  background: rgba(255, 224, 52, 0.04);
+  border: 1px solid rgba(255, 224, 52, 0.15);
+  border-radius: 6px;
+  padding: 14px 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: #999;
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+.pm-intro strong { color: var(--white); }
+
+/* Sections */
+.pm-sec { margin-bottom: 28px; }
+.pm-sec-hd {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.pm-sec-n {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--yellow);
+  opacity: 0.6;
+  letter-spacing: 0.1em;
+}
+.pm-sec-t {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+/* Fields */
+.pm-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px;
+  margin-bottom: 13px;
+}
+@media (max-width: 560px) { .pm-row { grid-template-columns: 1fr; } }
+
+.pm-field { margin-bottom: 13px; }
+.pm-field:last-child { margin-bottom: 0; }
+
+.pm-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--white);
+}
+.pm-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: #5a5a5a;
+  margin-bottom: 7px;
+  line-height: 1.5;
+}
+.pm-opt {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  background: rgba(255,224,52,0.1);
+  color: var(--yellow);
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 5px;
+  letter-spacing: 0.05em;
+  vertical-align: middle;
+}
+
+/* Inputs inherit from ApplicationForm.css globals — just ensure they're visible */
+.pm-body input[type=text],
+.pm-body input[type=email],
+.pm-body input[type=url],
+.pm-body textarea,
+.pm-body select {
+  width: 100%;
+  background: #1c1c1c;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 5px;
+  padding: 11px 13px;
+  color: #f2efe7;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.pm-body input:focus,
+.pm-body textarea:focus,
+.pm-body select:focus {
+  border-color: var(--yellow);
+  background: #222;
+}
+.pm-body input::placeholder,
+.pm-body textarea::placeholder {
+  color: #3a3a3a;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+}
+.pm-body textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+.pm-body select {
+  background-color: #1c1c1c;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  cursor: pointer;
+}
+.pm-body select option { background: #1c1c1c; color: #f2efe7; }
+
+/* Checkboxes grid */
+.pm-checks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+@media (max-width: 480px) { .pm-checks { grid-template-columns: 1fr; } }
+
+/* Submit area */
+.pm-submit-area {
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-top: 22px;
+  text-align: center;
+}
+
+/* Success state */
+.pm-success {
+  text-align: center;
+  padding: 40px 20px;
+}
+.pm-success-ico { font-size: 42px; margin-bottom: 14px; }
+.pm-success-t {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+  color: var(--white);
+}
+.pm-success-t em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--yellow);
+}
+.pm-success-b {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: #999;
+  line-height: 1.9;
+  margin-bottom: 24px;
+}
+.pm-success-btn {
+  background: var(--yellow);
+  color: #000;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 4px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.pm-success-btn:hover { background: #fff; }
