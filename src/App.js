@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from 'react';
 import Cursor from './components/Cursor';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -9,10 +9,12 @@ import ForInvestors from './components/ForInvestors';
 import ProofSection from './components/ProofSection';
 import ApplicationSection from './components/ApplicationSection';
 import Footer from './components/Footer';
+import PartnerModal from './components/PartnerModal';
 import useScrollReveal from './hooks/useScrollReveal';
 
 export default function App() {
   useScrollReveal();
+  const [partnerOpen, setPartnerOpen] = useState(false);
 
   return (
     <>
@@ -22,10 +24,14 @@ export default function App() {
       <Problem />
       <HowItWorks />
       <FeedbackFramework />
-      <ForInvestors />
+      <ForInvestors onPartnerClick={() => setPartnerOpen(true)} />
       <ProofSection />
       <ApplicationSection />
       <Footer />
+      <PartnerModal
+        isOpen={partnerOpen}
+        onClose={() => setPartnerOpen(false)}
+      />
     </>
   );
 }
