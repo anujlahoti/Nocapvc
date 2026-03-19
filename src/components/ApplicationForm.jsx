@@ -1,13 +1,9 @@
 import { useState, useRef } from 'react';
 import './ApplicationForm.css';
 
-// ─────────────────────────────────────────────────────────────
-// 🔑 PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
-// See GOOGLE_SHEETS_SETUP.md for full instructions
-// ─────────────────────────────────────────────────────────────
 const GOOGLE_SCRIPT_URL = process.env.REACT_APP_GOOGLE_SCRIPT_URL || 'YOUR_APPS_SCRIPT_URL_HERE';
 
-const TOTAL_FIELDS = 15; // total trackable fields
+const TOTAL_FIELDS = 14;
 
 const initialForm = {
   name: '', email: '', linkedin_url: '',
@@ -86,9 +82,8 @@ export default function ApplicationForm() {
     e.preventDefault();
     setError('');
 
-    // Basic validation
     const required = ['name', 'email', 'startup_name', 'sector', 'one_liner',
-      'why_this', 'stage', 'founder_type', 'hours', 'biggest_challenge',
+      'why_this', 'stage', 'founder_type', 'biggest_challenge',
       'applied_before', 'why_not_job', 'success_vision'];
     for (const field of required) {
       if (!form[field]) {
@@ -124,7 +119,6 @@ export default function ApplicationForm() {
         cofounder_details: hasCofounder
           ? `${form.cofounder_name} | ${form.cofounder_linkedin}`
           : 'Solo',
-        hours: form.hours,
         biggest_challenge: form.biggest_challenge,
         applied_before: form.applied_before,
         why_not_job: form.why_not_job,
@@ -135,7 +129,6 @@ export default function ApplicationForm() {
         submitted_at: new Date().toISOString(),
       };
 
-      // If there's a pitch deck, convert to base64
       if (form.pitchdeck) {
         payload.pitchdeck_name = form.pitchdeck.name;
         payload.pitchdeck_base64 = await toBase64(form.pitchdeck);
@@ -176,7 +169,6 @@ export default function ApplicationForm() {
 
   return (
     <div className="form-box">
-      {/* Progress */}
       <div className="prog-wrap">
         <div className="prog-meta">
           <span className="prog-lbl">Progress</span>
@@ -189,7 +181,7 @@ export default function ApplicationForm() {
 
       <form onSubmit={handleSubmit} noValidate>
 
-        {/* ── SECTION 1: BASICS ── */}
+        {/* SECTION 1: BASICS */}
         <div className="fsec">
           <div className="fsec-hd">
             <span className="fsec-n">01 —</span>
@@ -208,8 +200,8 @@ export default function ApplicationForm() {
           </div>
 
           <div className="ff">
-            <label className="fl">LinkedIn URL <span className="req">*</span></label>
-            <div className="fh">Your personal LinkedIn profile</div>
+            <label className="fl">Founder LinkedIn profile <span className="req">*</span></label>
+            <div className="fh">Your LinkedIn profile as a founder</div>
             <input type="url" name="linkedin_url" placeholder="https://linkedin.com/in/yourprofile" value={form.linkedin_url} onChange={handleChange} required />
           </div>
 
@@ -237,7 +229,7 @@ export default function ApplicationForm() {
           </div>
         </div>
 
-        {/* ── SECTION 2: REALITY CHECK ── */}
+        {/* SECTION 2: REALITY CHECK */}
         <div className="fsec">
           <div className="fsec-hd">
             <span className="fsec-n">02 —</span>
@@ -268,28 +260,15 @@ export default function ApplicationForm() {
             </div>
           </div>
 
-          <div className="frow">
-            <div className="ff">
-              <label className="fl">Founder setup <span className="req">*</span></label>
-              <div className="rg h">
-                {[['Solo Founder','Solo'],['2 Co-founders','2 founders'],['3+ Founders','3+ founders']].map(([v,l]) => (
-                  <div className="ri" key={v}>
-                    <input type="radio" name="founder_type" id={`ft_${v}`} value={v} checked={form.founder_type === v} onChange={() => handleRadio('founder_type', v)} />
-                    <label htmlFor={`ft_${v}`}>{l}</label>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="ff">
-              <label className="fl">Hours per week <span className="req">*</span></label>
-              <div className="rg h">
-                {[['Under 10 hrs/week','<10'],['10-30 hrs/week','10–30'],['30-50 hrs/week','30–50'],['Full Time 50+ hrs','50+']].map(([v,l]) => (
-                  <div className="ri" key={v}>
-                    <input type="radio" name="hours" id={`h_${v}`} value={v} checked={form.hours === v} onChange={() => handleRadio('hours', v)} />
-                    <label htmlFor={`h_${v}`}>{l}</label>
-                  </div>
-                ))}
-              </div>
+          <div className="ff">
+            <label className="fl">Founder setup <span className="req">*</span></label>
+            <div className="rg h">
+              {[['Solo Founder','Solo'],['2 Co-founders','2 founders'],['3+ Founders','3+ founders']].map(([v,l]) => (
+                <div className="ri" key={v}>
+                  <input type="radio" name="founder_type" id={`ft_${v}`} value={v} checked={form.founder_type === v} onChange={() => handleRadio('founder_type', v)} />
+                  <label htmlFor={`ft_${v}`}>{l}</label>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -349,7 +328,7 @@ export default function ApplicationForm() {
           </div>
         </div>
 
-        {/* ── SECTION 3: AMBITION ── */}
+        {/* SECTION 3: AMBITION */}
         <div className="fsec">
           <div className="fsec-hd">
             <span className="fsec-n">03 —</span>
@@ -388,17 +367,17 @@ export default function ApplicationForm() {
           </div>
         </div>
 
-        {/* ── SECTION 4: YOUR VOICE ── */}
+        {/* SECTION 4: YOUR VOICE */}
         <div className="fsec">
           <div className="fsec-hd">
             <span className="fsec-n">04 —</span>
-            <span className="fsec-t">Your Voice <span className="otag">optional</span></span>
+            <span className="fsec-t">Your Voice</span>
           </div>
 
           <div className="ff">
-            <label className="fl">60-second video intro <span className="otag">optional</span></label>
+            <label className="fl">60-second video intro <span className="req">*</span></label>
             <div className="fh">Record on your phone. Raw is real. Founders with videos get 3× more responses.</div>
-            <input type="url" name="video_url" placeholder="https://youtu.be/... or Google Drive link" value={form.video_url} onChange={handleChange} />
+            <input type="url" name="video_url" placeholder="https://youtu.be/... or Google Drive link" value={form.video_url} onChange={handleChange} required />
           </div>
 
           <div className="ff">
@@ -406,9 +385,8 @@ export default function ApplicationForm() {
             <input type="url" name="website" placeholder="https://" value={form.website} onChange={handleChange} />
           </div>
 
-          {/* Pitch Deck Upload */}
           <div className="ff">
-            <label className="fl">Pitch Deck <span className="otag">optional · PDF only</span></label>
+            <label className="fl">Pitch Deck <span className="req">*</span> <span className="otag">PDF only</span></label>
             <div className="fh">Upload your pitch deck as a PDF (max 10MB)</div>
             <div
               className={`file-drop ${fileName ? 'has-file' : ''}`}
@@ -442,7 +420,7 @@ export default function ApplicationForm() {
                 </div>
               ) : (
                 <div className="file-empty">
-                  <span className="file-upload-icon">⬆</span>
+                  <span className="file-upload-icon">↑</span>
                   <div className="file-upload-text">Drop PDF here or <span className="file-link">browse files</span></div>
                   <div className="file-upload-hint">PDF · Max 10MB</div>
                 </div>
@@ -451,7 +429,7 @@ export default function ApplicationForm() {
           </div>
         </div>
 
-        {/* ── SUBMIT ── */}
+        {/* SUBMIT */}
         <div className="sub-area">
           <p className="sub-note">
             Your application goes to our partner incubators and investors.<br />
