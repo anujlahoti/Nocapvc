@@ -14,7 +14,7 @@ const initialForm = {
   startup_name: '', sector: '', one_liner: '',
   why_this: '', stage: '', founder_type: '',
   cofounder_name: '', cofounder_linkedin: '',
-  hours: '', biggest_challenge: '', applied_before: '',
+  biggest_challenge: '', applied_before: '',
   why_not_job: '', success_vision: '',
   need_funding: false, need_mentorship: false,
   need_network: false, need_validation: false, need_technical: false,
