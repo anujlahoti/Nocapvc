@@ -1,24 +1,6 @@
-import { useEffect, useRef } from 'react';
 import './InstagramFeed.css';
 
 export default function InstagramFeed() {
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    // Inject the behold widget HTML
-    containerRef.current.innerHTML = '<behold-widget feed-id="jPZawaMbbo5X3Vb30DUS"></behold-widget>';
-
-    // Load the behold script only once
-    if (!document.querySelector('script[src="https://w.behold.so/widget.js"]')) {
-      const s = document.createElement('script');
-      s.type = 'module';
-      s.src = 'https://w.behold.so/widget.js';
-      document.head.appendChild(s);
-    }
-  }, []);
-
   return (
     <section className="ig-sec" id="instagram">
       <div className="sec-inner">
@@ -40,7 +22,15 @@ export default function InstagramFeed() {
           </a>
         </div>
 
-        <div className="ig-widget-wrap" ref={containerRef} />
+        <div className="ig-widget-wrap">
+          <iframe
+            src="https://app.behold.so/feeds/jPZawaMbbo5X3Vb30DUS/"
+            title="NoCap VC Instagram Feed"
+            frameBorder="0"
+            scrolling="no"
+            className="ig-iframe"
+          />
+        </div>
 
         <div className="ig-cta">
           <a

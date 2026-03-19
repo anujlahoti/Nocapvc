@@ -28,6 +28,13 @@
   margin: 0 auto;
 }
 
+.ig-iframe {
+  width: 100%;
+  height: 700px;
+  border: none;
+  display: block;
+}
+
 .ig-cta {
   text-align: center;
   margin-top: 40px;
@@ -35,4 +42,5 @@
 
 @media (max-width: 768px) {
   .ig-sec { padding: 60px 20px; }
+  .ig-iframe { height: 500px; }
 }
