@@ -3,7 +3,7 @@ import './ApplicationForm.css';
 
 const GOOGLE_SCRIPT_URL = process.env.REACT_APP_GOOGLE_SCRIPT_URL || 'YOUR_APPS_SCRIPT_URL_HERE';
 
-const TOTAL_FIELDS = 14;
+const TOTAL_FIELDS = 20;
 
 const initialForm = {
   name: '', email: '', linkedin_url: '',
@@ -14,6 +14,8 @@ const initialForm = {
   why_not_job: '', success_vision: '',
   need_funding: false, need_mentorship: false,
   need_network: false, need_validation: false, need_technical: false,
+  problem_gap: '', target_customer: '', product_description: '',
+  domain_expertise: '', competitors: '', revenue_model: '',
   video_url: '', website: '',
   pitchdeck: null,
 };
@@ -84,7 +86,10 @@ export default function ApplicationForm() {
 
     const required = ['name', 'email', 'startup_name', 'sector', 'one_liner',
       'why_this', 'stage', 'founder_type', 'biggest_challenge',
-      'applied_before', 'why_not_job', 'success_vision'];
+      'applied_before', 'why_not_job', 'success_vision',
+      'problem_gap', 'target_customer', 'product_description',
+      'domain_expertise', 'competitors', 'revenue_model',
+      'video_url'];
     for (const field of required) {
       if (!form[field]) {
         setError(`Please fill in all required fields (missing: ${field.replace(/_/g, ' ')}).`);
@@ -93,6 +98,10 @@ export default function ApplicationForm() {
     }
     if (!form.linkedin_url) {
       setError('Please enter your LinkedIn URL.');
+      return;
+    }
+    if (!form.pitchdeck) {
+      setError('Please upload your pitch deck (PDF required).');
       return;
     }
 
@@ -124,6 +133,12 @@ export default function ApplicationForm() {
         why_not_job: form.why_not_job,
         success_vision: form.success_vision,
         needs: needs.join(', ') || 'None selected',
+        problem_gap: form.problem_gap,
+        target_customer: form.target_customer,
+        product_description: form.product_description,
+        domain_expertise: form.domain_expertise,
+        competitors: form.competitors,
+        revenue_model: form.revenue_model,
         video_url: form.video_url,
         website: form.website,
         submitted_at: new Date().toISOString(),
@@ -272,7 +287,6 @@ export default function ApplicationForm() {
             </div>
           </div>
 
-          {/* Co-founder details */}
           <div className="ff cofounder-toggle">
             <label className="fl">Do you have a Co-founder?</label>
             <div className="rg h">
@@ -367,10 +381,60 @@ export default function ApplicationForm() {
           </div>
         </div>
 
-        {/* SECTION 4: YOUR VOICE */}
+        {/* SECTION 4: THE BUSINESS CASE */}
         <div className="fsec">
           <div className="fsec-hd">
             <span className="fsec-n">04 —</span>
+            <span className="fsec-t">The Business Case</span>
+          </div>
+
+          <div className="ff">
+            <label className="fl">What problem or gap are you solving? <span className="req">*</span></label>
+            <div className="fh">Who has this problem today? Why does it exist? Be specific.</div>
+            <textarea name="problem_gap" placeholder="The problem is... It exists because... People currently solve it by..." maxLength={300} value={form.problem_gap} onChange={handleChange} style={{ minHeight: '80px' }} required />
+            <div className={`cc ${form.problem_gap.length > 264 ? 'warn' : ''}`}>{form.problem_gap.length} / 300</div>
+          </div>
+
+          <div className="ff">
+            <label className="fl">Who is your target customer + what is your TAM? <span className="req">*</span></label>
+            <div className="fh">Describe your customer precisely. Include an estimate of how large this market is.</div>
+            <textarea name="target_customer" placeholder="Our customer is... There are approximately X of them in India / globally... The TAM is estimated at..." maxLength={300} value={form.target_customer} onChange={handleChange} style={{ minHeight: '80px' }} required />
+            <div className={`cc ${form.target_customer.length > 264 ? 'warn' : ''}`}>{form.target_customer.length} / 300</div>
+          </div>
+
+          <div className="ff">
+            <label className="fl">What exactly is your product? <span className="req">*</span></label>
+            <div className="fh">What does it do or will it do? How does it solve the problem above?</div>
+            <textarea name="product_description" placeholder="Our product is... It works by... The customer experience is..." maxLength={300} value={form.product_description} onChange={handleChange} style={{ minHeight: '80px' }} required />
+            <div className={`cc ${form.product_description.length > 264 ? 'warn' : ''}`}>{form.product_description.length} / 300</div>
+          </div>
+
+          <div className="ff">
+            <label className="fl">Why are you the right person to build this? <span className="req">*</span></label>
+            <div className="fh">Domain expertise, unfair insight, personal experience. Why you and not someone else?</div>
+            <textarea name="domain_expertise" placeholder="I have X years in this space... I've personally experienced this problem... My unfair advantage is..." maxLength={300} value={form.domain_expertise} onChange={handleChange} style={{ minHeight: '80px' }} required />
+            <div className={`cc ${form.domain_expertise.length > 264 ? 'warn' : ''}`}>{form.domain_expertise.length} / 300</div>
+          </div>
+
+          <div className="ff">
+            <label className="fl">Who are your competitors? <span className="req">*</span></label>
+            <div className="fh">Name them. What do you understand about this market that they don't?</div>
+            <textarea name="competitors" placeholder="Direct competitors are... Indirect alternatives are... We're different because..." maxLength={300} value={form.competitors} onChange={handleChange} style={{ minHeight: '80px' }} required />
+            <div className={`cc ${form.competitors.length > 264 ? 'warn' : ''}`}>{form.competitors.length} / 300</div>
+          </div>
+
+          <div className="ff">
+            <label className="fl">How will you make money? <span className="req">*</span></label>
+            <div className="fh">Revenue model + realistic estimate of how much you could make.</div>
+            <textarea name="revenue_model" placeholder="We charge... Our unit economics are... In Year 1 we expect... At scale this could be..." maxLength={300} value={form.revenue_model} onChange={handleChange} style={{ minHeight: '80px' }} required />
+            <div className={`cc ${form.revenue_model.length > 264 ? 'warn' : ''}`}>{form.revenue_model.length} / 300</div>
+          </div>
+        </div>
+
+        {/* SECTION 5: YOUR VOICE */}
+        <div className="fsec">
+          <div className="fsec-hd">
+            <span className="fsec-n">05 —</span>
             <span className="fsec-t">Your Voice</span>
           </div>
 
