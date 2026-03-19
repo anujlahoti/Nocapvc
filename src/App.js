@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import ReactGA from 'react-ga4';
 import Cursor from './components/Cursor';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -13,7 +14,11 @@ import PartnerModal from './components/PartnerModal';
 import useScrollReveal from './hooks/useScrollReveal';
 
 export default function App() {
+  useEffect(() => {
+    ReactGA.initialize(process.env.REACT_APP_GA_ID);
+  }, []);
   useScrollReveal();
+
   const [partnerOpen, setPartnerOpen] = useState(false);
 
   return (
