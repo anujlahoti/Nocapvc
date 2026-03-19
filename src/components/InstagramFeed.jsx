@@ -1,12 +1,22 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import './InstagramFeed.css';
 
 export default function InstagramFeed() {
+  const containerRef = useRef(null);
+
   useEffect(() => {
-    const s = document.createElement('script');
-    s.type = 'module';
-    s.src = 'https://w.behold.so/widget.js';
-    document.head.appendChild(s);
+    if (!containerRef.current) return;
+
+    // Inject the behold widget HTML
+    containerRef.current.innerHTML = '<behold-widget feed-id="jPZawaMbbo5X3Vb30DUS"></behold-widget>';
+
+    // Load the behold script only once
+    if (!document.querySelector('script[src="https://w.behold.so/widget.js"]')) {
+      const s = document.createElement('script');
+      s.type = 'module';
+      s.src = 'https://w.behold.so/widget.js';
+      document.head.appendChild(s);
+    }
   }, []);
 
   return (
@@ -30,9 +40,7 @@ export default function InstagramFeed() {
           </a>
         </div>
 
-        <div className="ig-widget-wrap">
-          <behold-widget feed-id="jPZawaMbbo5X3Vb30DUS"></behold-widget>
-        </div>
+        <div className="ig-widget-wrap" ref={containerRef} />
 
         <div className="ig-cta">
           <a
