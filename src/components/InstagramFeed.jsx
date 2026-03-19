@@ -9,7 +9,10 @@ export default function InstagramFeed() {
   useEffect(() => {
     fetch(FEED_URL)
       .then(r => r.json())
-      .then(data => setPosts((data.posts || []).slice(0, 9)))
+      .then(data => {
+  const posts = Array.isArray(data) ? data : (data.posts || []);
+  setPosts(posts.slice(0, 6));
+})
       .catch(() => {});
   }, []);
 
