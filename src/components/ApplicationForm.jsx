@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import './ApplicationForm.css';
 
 const GOOGLE_SCRIPT_URL = process.env.REACT_APP_GOOGLE_SCRIPT_URL || 'YOUR_APPS_SCRIPT_URL_HERE';
@@ -17,7 +17,7 @@ const initialForm = {
   problem_gap: '', target_customer: '', product_description: '',
   domain_expertise: '', competitors: '', revenue_model: '',
   video_url: '', website: '',
-  pitchdeck: null,
+  pitchdeck_url: '',
 };
 
 export default function ApplicationForm() {
@@ -26,9 +26,7 @@ export default function ApplicationForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [fileName, setFileName] = useState('');
   const [hasCofounder, setHasCofounder] = useState(false);
-  const fileRef = useRef(null);
 
   const progress = Math.round((answered.size / TOTAL_FIELDS) * 100);
 
@@ -54,100 +52,6 @@ export default function ApplicationForm() {
     setForm(f => ({ ...f, [name]: value }));
     track(name, value);
   };
-
-  const handleFile = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.type !== 'application/pdf') {
-        setError('Please upload a PDF file only.');
-        return;
-      }
-      if (file.size > 10 * 1024 * 1024) {
-        setError('PDF must be under 10MB.');
-        return;
-      }
-      setForm(f => ({ ...f, pitchdeck: file }));
-      setFileName(file.name);
-      setError('');
-    }
-  };
-
-  const toBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(',')[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-
-    const required = ['name', 'email', 'startup_name', 'sector', 'one_liner',
-      'why_this', 'stage', 'founder_type', 'biggest_challenge',
-      'applied_before', 'why_not_job', 'success_vision',
-      'problem_gap', 'target_customer', 'product_description',
-      'domain_expertise', 'competitors', 'revenue_model',
-      'video_url'];
-    for (const field of required) {
-      if (!form[field]) {
-        setError(`Please fill in all required fields (missing: ${field.replace(/_/g, ' ')}).`);
-        return;
-      }
-    }
-    if (!form.linkedin_url) {
-      setError('Please enter your LinkedIn URL.');
-      return;
-    }
-    if (!form.pitchdeck) {
-      setError('Please upload your pitch deck (PDF required).');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const needs = [];
-      if (form.need_funding) needs.push('Funding');
-      if (form.need_mentorship) needs.push('Mentorship');
-      if (form.need_network) needs.push('Network');
-      if (form.need_validation) needs.push('Validation');
-      if (form.need_technical) needs.push('Technical Help');
-
-      const payload = {
-        name: form.name,
-        email: form.email,
-        linkedin_url: form.linkedin_url,
-        startup_name: form.startup_name,
-        sector: form.sector,
-        one_liner: form.one_liner,
-        why_this: form.why_this,
-        stage: form.stage,
-        founder_type: form.founder_type,
-        cofounder_details: hasCofounder
-          ? `${form.cofounder_name} | ${form.cofounder_linkedin}`
-          : 'Solo',
-        biggest_challenge: form.biggest_challenge,
-        applied_before: form.applied_before,
-        why_not_job: form.why_not_job,
-        success_vision: form.success_vision,
-        needs: needs.join(', ') || 'None selected',
-        problem_gap: form.problem_gap,
-        target_customer: form.target_customer,
-        product_description: form.product_description,
-        domain_expertise: form.domain_expertise,
-        competitors: form.competitors,
-        revenue_model: form.revenue_model,
-        video_url: form.video_url,
-        website: form.website,
-        submitted_at: new Date().toISOString(),
-      };
-
-      if (form.pitchdeck) {
-        payload.pitchdeck_name = form.pitchdeck.name;
-        payload.pitchdeck_base64 = await toBase64(form.pitchdeck);
-      }
 
       await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
@@ -450,46 +354,9 @@ export default function ApplicationForm() {
           </div>
 
           <div className="ff">
-            <label className="fl">Pitch Deck <span className="req">*</span> <span className="otag">PDF only</span></label>
-            <div className="fh">Upload your pitch deck as a PDF (max 10MB)</div>
-            <div
-              className={`file-drop ${fileName ? 'has-file' : ''}`}
-              onClick={() => fileRef.current?.click()}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault();
-                const file = e.dataTransfer.files[0];
-                if (file) handleFile({ target: { files: [file] } });
-              }}
-            >
-              <input
-                type="file"
-                ref={fileRef}
-                accept=".pdf,application/pdf"
-                onChange={handleFile}
-                style={{ display: 'none' }}
-              />
-              {fileName ? (
-                <div className="file-chosen">
-                  <span className="file-icon">📄</span>
-                  <div>
-                    <div className="file-name">{fileName}</div>
-                    <div className="file-hint">Click to change file</div>
-                  </div>
-                  <button
-                    type="button"
-                    className="file-remove"
-                    onClick={(e) => { e.stopPropagation(); setForm(f => ({...f, pitchdeck: null})); setFileName(''); }}
-                  >✕</button>
-                </div>
-              ) : (
-                <div className="file-empty">
-                  <span className="file-upload-icon">↑</span>
-                  <div className="file-upload-text">Drop PDF here or <span className="file-link">browse files</span></div>
-                  <div className="file-upload-hint">PDF · Max 10MB</div>
-                </div>
-              )}
-            </div>
+            <label className="fl">Pitch Deck — Google Drive link <span className="req">*</span></label>
+            <div className="fh">Upload your deck to Google Drive → share with "Anyone with the link" → paste the link here</div>
+            <input type="url" name="pitchdeck_url" placeholder="https://drive.google.com/file/d/..." value={form.pitchdeck_url} onChange={handleChange} required />
           </div>
         </div>
 
