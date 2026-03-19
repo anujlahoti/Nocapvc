@@ -2,12 +2,10 @@
   padding: 100px 48px;
   border-top: 1px solid rgba(255,255,255,0.06);
 }
-
 .ig-hd {
   text-align: center;
   margin-bottom: 48px;
 }
-
 .ig-handle {
   display: inline-flex;
   align-items: center;
@@ -20,27 +18,57 @@
   margin-top: 16px;
   transition: opacity 0.2s;
 }
-
 .ig-handle:hover { opacity: 0.7; }
-
-.ig-widget-wrap {
+.ig-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
   max-width: 1000px;
   margin: 0 auto;
 }
-
-.ig-iframe {
+.ig-post {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 6px;
+  display: block;
+  background: #1a1a1a;
+}
+.ig-post img {
   width: 100%;
-  height: 700px;
-  border: none;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
   display: block;
 }
-
+.ig-post:hover img { transform: scale(1.04); }
+.ig-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0);
+  display: flex;
+  align-items: flex-end;
+  padding: 10px;
+  transition: background 0.2s;
+}
+.ig-post:hover .ig-overlay { background: rgba(0,0,0,0.45); }
+.ig-type {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.2s;
+  letter-spacing: 0.06em;
+}
+.ig-post:hover .ig-type { opacity: 1; }
 .ig-cta {
   text-align: center;
   margin-top: 40px;
 }
-
 @media (max-width: 768px) {
   .ig-sec { padding: 60px 20px; }
-  .ig-iframe { height: 500px; }
+  .ig-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+}
+@media (max-width: 480px) {
+  .ig-grid { grid-template-columns: repeat(2, 1fr); }
 }
