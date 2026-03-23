@@ -95,17 +95,25 @@ export default function AIInterview() {
       parts: [{ text: msg.content }]
     }));
 
+    const systemTurn = [
+      { role: 'user', parts: [{ text: 'You are NoCap AI. Instructions:\n\n' + SYSTEM_PROMPT }] },
+      { role: 'model', parts: [{ text: 'Understood. I am NoCap AI, ready to conduct the founder interview.' }] }
+    ];
+    const allContents = [...systemTurn, ...contents];
+
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents,
+        contents: allContents,
         generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
       })
     });
 
     const data = await res.json();
+    if (!data.candidates || !data.candidates[0]) {
+      throw new Error(data.error?.message || 'Gemini error');
+    }
     return data.candidates[0].content.parts[0].text;
   };
 
