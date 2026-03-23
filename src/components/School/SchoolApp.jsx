@@ -3,9 +3,11 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import SignalFeed from './SignalFeed';
 import PostSignal from './PostSignal';
+import Conversations from './Conversations';
 import './School.css';
 
-export default function SchoolApp({ user, profile }) {
+export default function SchoolApp(props) {
+  var profile = props.profile;
   var [tab, setTab] = useState('feed');
 
   function handlePosted() {
@@ -25,22 +27,14 @@ export default function SchoolApp({ user, profile }) {
       </div>
 
       <div className="school-main">
-        {tab === 'feed' && <SignalFeed profile={profile} />}
-        {tab === 'post' && <PostSignal profile={profile} onPosted={handlePosted} />}
-        {tab === 'chats' && (
-          <div className="school-placeholder">
-            <div className="school-placeholder-icon">💬</div>
-            <div className="school-placeholder-title">Conversations — coming Sprint 3</div>
-            <p className="school-placeholder-sub">
-              Your private chats with founders and experts who responded to your signals.
-            </p>
-          </div>
-        )}
+        {tab === 'feed' ? <SignalFeed profile={profile} /> : null}
+        {tab === 'post' ? <PostSignal profile={profile} onPosted={handlePosted} /> : null}
+        {tab === 'chats' ? <Conversations profile={profile} /> : null}
       </div>
 
       <div className="school-bottom-nav">
         <button
-          className={'school-nav-btn' + (tab === 'feed' ? ' active' : '')}
+          className={tab === 'feed' ? 'school-nav-btn active' : 'school-nav-btn'}
           onClick={function() { setTab('feed'); }}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -50,7 +44,7 @@ export default function SchoolApp({ user, profile }) {
           <span>Signals</span>
         </button>
         <button
-          className={'school-nav-btn post' + (tab === 'post' ? ' active' : '')}
+          className={tab === 'post' ? 'school-nav-btn post active' : 'school-nav-btn post'}
           onClick={function() { setTab('post'); }}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -59,7 +53,7 @@ export default function SchoolApp({ user, profile }) {
           <span>Post</span>
         </button>
         <button
-          className={'school-nav-btn' + (tab === 'chats' ? ' active' : '')}
+          className={tab === 'chats' ? 'school-nav-btn active' : 'school-nav-btn'}
           onClick={function() { setTab('chats'); }}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
