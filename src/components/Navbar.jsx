@@ -29,8 +29,20 @@ export default function Navbar() {
         <li><button onClick={() => scrollTo('feedback')}>Feedback</button></li>
         <li><button onClick={() => scrollTo('investors')}>For Investors</button></li>
         <li><button onClick={() => scrollTo('apply')}>Apply</button></li>
+        <li>
+          <a
+            href="/school"
+            className="nav-school-link"
+            onClick={() => setMenuOpen(false)}
+          >
+            Founder School ✦
+          </a>
+        </li>
       </ul>
 
+      <a href="/school" className="nav-school-btn">
+        Founder School ✦
+      </a>
       <button className="nav-cta" onClick={() => scrollTo('apply')}>Apply Now →</button>
 
       <button

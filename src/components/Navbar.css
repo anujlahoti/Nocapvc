@@ -8,7 +8,6 @@ nav {
   transition: padding .3s;
 }
 nav.scr { padding: 12px 48px; }
-
 .logo {
   font-family: 'DM Mono', monospace; font-size: 14px;
   letter-spacing: .2em; color: var(--yellow);
@@ -20,7 +19,6 @@ nav.scr { padding: 12px 48px; }
   width: 7px; height: 7px; background: var(--yellow);
   border-radius: 50%; animation: pulse 2s ease-in-out infinite; flex-shrink: 0;
 }
-
 .nav-links {
   display: flex; align-items: center; gap: 32px; list-style: none;
 }
@@ -32,6 +30,29 @@ nav.scr { padding: 12px 48px; }
 }
 .nav-links li button:hover { color: var(--yellow); }
 
+/* Founder School link inside mobile nav */
+.nav-school-link {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: .12em; color: var(--yellow);
+  text-transform: uppercase; text-decoration: none;
+  transition: opacity .2s;
+}
+.nav-school-link:hover { opacity: 0.7; }
+
+/* Founder School button in desktop nav */
+.nav-school-btn {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: .14em; color: var(--yellow);
+  text-transform: uppercase; text-decoration: none;
+  border: 1px solid rgba(255,224,52,0.35);
+  padding: 8px 16px; border-radius: 4px;
+  transition: all .2s; white-space: nowrap;
+}
+.nav-school-btn:hover {
+  background: rgba(255,224,52,0.08);
+  border-color: var(--yellow);
+}
+
 .nav-cta {
   background: var(--yellow); color: #000 !important;
   padding: 10px 20px; border-radius: 4px;
@@ -41,7 +62,6 @@ nav.scr { padding: 12px 48px; }
   white-space: nowrap; border: none; cursor: pointer;
 }
 .nav-cta:hover { background: #fff; }
-
 .ham {
   display: none; flex-direction: column; gap: 5px;
   background: none; border: none; cursor: pointer; padding: 4px;
@@ -53,7 +73,6 @@ nav.scr { padding: 12px 48px; }
 .ham span.open:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
 .ham span.open:nth-child(2) { opacity: 0; }
 .ham span.open:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
 @media (max-width: 768px) {
   .nav-links {
     display: none; flex-direction: column;
@@ -66,4 +85,5 @@ nav.scr { padding: 12px 48px; }
   nav { padding: 14px 20px; }
   nav.scr { padding: 10px 20px; }
   .ham { display: flex; }
+  .nav-school-btn { display: none; } /* hidden on mobile, shows in nav-links instead */
 }
