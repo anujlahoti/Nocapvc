@@ -14,12 +14,12 @@ import Footer from './components/Footer';
 import InstagramFeed from './components/InstagramFeed';
 import PartnerModal from './components/PartnerModal';
 import School from './components/School/School';
+import AIInterview from './components/AIInterview';
 import useScrollReveal from './hooks/useScrollReveal';
 
 function MainSite() {
   useScrollReveal();
   const [partnerOpen, setPartnerOpen] = useState(false);
-
   return (
     <>
       <Cursor />
@@ -51,6 +51,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainSite />} />
         <Route path="/school/*" element={<School />} />
+        <Route path="/interview" element={<AIInterview />} />
       </Routes>
     </BrowserRouter>
   );
