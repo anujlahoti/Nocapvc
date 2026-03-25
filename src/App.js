@@ -14,7 +14,7 @@ import Footer from './components/Footer';
 import InstagramFeed from './components/InstagramFeed';
 import PartnerModal from './components/PartnerModal';
 import School from './components/School/School';
-import AIInterview from './components/AIInterview';
+
 import useScrollReveal from './hooks/useScrollReveal';
 
 function MainSite() {

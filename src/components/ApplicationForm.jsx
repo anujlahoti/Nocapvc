@@ -109,7 +109,7 @@ export default function ApplicationForm() {
         revenue_model: form.revenue_model,
         video_url: form.video_url,
         phone: form.phone,
-        phone: form.phone,
+      
         pitchdeck_url: form.pitchdeck_url,
         website: form.website,
         submitted_at: new Date().toISOString(),
