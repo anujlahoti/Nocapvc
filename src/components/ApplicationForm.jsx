@@ -16,7 +16,7 @@ const initialForm = {
   need_network: false, need_validation: false, need_technical: false,
   problem_gap: '', target_customer: '', product_description: '',
   domain_expertise: '', competitors: '', revenue_model: '',
-  video_url: '', pitchdeck_url: '', website: '',
+ phone: '', video_url: '', pitchdeck_url: '', website: '',
 };
 
 export default function ApplicationForm() {
@@ -108,6 +108,8 @@ export default function ApplicationForm() {
         competitors: form.competitors,
         revenue_model: form.revenue_model,
         video_url: form.video_url,
+        phone: form.phone,
+        phone: form.phone,
         pitchdeck_url: form.pitchdeck_url,
         website: form.website,
         submitted_at: new Date().toISOString(),
@@ -174,6 +176,12 @@ export default function ApplicationForm() {
             <div className="ff">
               <label className="fl">Email <span className="req">*</span></label>
               <input type="email" name="email" placeholder="your@email.com" value={form.email} onChange={handleChange} required />
+            </div>
+          </div>
+          <div className="frow">
+            <div className="ff">
+              <label className="fl">Phone number <span className="req">*</span></label>
+              <input type="tel" name="phone" placeholder="+91 98765 43210" value={form.phone} onChange={handleChange} required />
             </div>
           </div>
           <div className="ff">

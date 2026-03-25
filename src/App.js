@@ -51,7 +51,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainSite />} />
         <Route path="/school/*" element={<School />} />
-        <Route path="/interview" element={<AIInterview />} />
+        {/* <Route path="/interview" element={<AIInterview />} /> */}
       </Routes>
     </BrowserRouter>
   );
