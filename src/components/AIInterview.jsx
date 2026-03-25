@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import './AIInterview.css';
 
 const APPS_SCRIPT_URL = process.env.REACT_APP_GOOGLE_SCRIPT_URL;
-const GEMINI_KEY = process.env.REACT_APP_GEMINI_KEY;
+
 
 const SYSTEM_PROMPT = `You are NoCap AI, a sharp investment analyst conducting founder interviews for NoCap VC — India's founder-first funding platform. You have the sharpness of a YC partner and the warmth of a mentor.
 
