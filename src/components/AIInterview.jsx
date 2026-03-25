@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import './AIInterview.css';
 
 const APPS_SCRIPT_URL = process.env.REACT_APP_GOOGLE_SCRIPT_URL;
-
+console.log(process.env.REACT_APP_GEMINI_KEY)
 
 const SYSTEM_PROMPT = `You are NoCap AI, a sharp investment analyst conducting founder interviews for NoCap VC — India's founder-first funding platform. You have the sharpness of a YC partner and the warmth of a mentor.
 
@@ -89,7 +89,7 @@ export default function AIInterview() {
 
   const callGemini = async (conversationHistory) => {
     const key = process.env.REACT_APP_GEMINI_KEY;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${key}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
 
     const contents = conversationHistory.map(msg => ({
       role: msg.role === 'ai' ? 'model' : 'user',
