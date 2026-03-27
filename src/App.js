@@ -15,7 +15,7 @@ import InstagramFeed from './components/InstagramFeed';
 import PartnerModal from './components/PartnerModal';
 import School from './components/School/School';
 import AIInterview from './components/AIInterview';
-import NoCap_PE from './components/NoCap_PE';
+import NoCaPE from './components/NoCap_PE';
 import useScrollReveal from './hooks/useScrollReveal';
 
 function MainSite() {
@@ -54,7 +54,7 @@ export default function App() {
         <Route path="/" element={<MainSite />} />
         <Route path="/school/*" element={<School />} />
         <Route path="/interview" element={<AIInterview />} />
-        <Route path="/pe" element={<NoCap_PE />} />
+        <Route path="/pe" element={<NoCaPE />} />
       </Routes>
     </BrowserRouter>
   );
