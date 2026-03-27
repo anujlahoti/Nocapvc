@@ -20,7 +20,7 @@ import useScrollReveal from './hooks/useScrollReveal';
 
 function MainSite() {
   useScrollReveal();
-  const [partnerOpen, setPartnerOpen] = useState(false);
+  var [partnerOpen, setPartnerOpen] = useState(false);
 
   return (
     <>

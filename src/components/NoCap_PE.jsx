@@ -1,640 +1,617 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './NoCap_PE.css';
 
 const SCRIPT_URL = process.env.REACT_APP_GOOGLE_SCRIPT_URL;
 
 const SECTORS = [
-  'Food & Beverage', 'Retail / E-commerce', 'SaaS / Tech',
-  'Manufacturing', 'Healthcare / Wellness', 'Education',
-  'Logistics / Supply Chain', 'Real Estate / Construction',
-  'Media / Content', 'Hospitality / Travel', 'Agriculture',
-  'Financial Services', 'Other'
+  'Food & Beverage','Retail / E-commerce','SaaS / Tech',
+  'Manufacturing','Healthcare / Wellness','Education',
+  'Logistics / Supply Chain','Real Estate / Construction',
+  'Media / Content','Hospitality / Travel','Agriculture',
+  'Financial Services','Fashion / Apparel','Beauty / Personal Care','Other'
 ];
 
 const DEAL_TYPES = [
-  { id: 'full', label: 'Full Acquisition', desc: 'Buyer acquires 100% ownership' },
-  { id: 'majority', label: 'Majority Stake', desc: 'Buyer takes 51–80%, founder stays' },
-  { id: 'growth', label: 'Growth Capital', desc: 'Investor takes 10–30% minority stake' },
+  { id: 'full', label: 'Full Acquisition', sub: '100% ownership transfer' },
+  { id: 'majority', label: 'Majority Stake', sub: '51–80%, founder stays' },
+  { id: 'growth', label: 'Growth Capital', sub: '10–30% minority stake' },
 ];
 
-const REVENUE_BANDS = [
-  'Under ₹10L/year', '₹10L – ₹50L/year', '₹50L – ₹1Cr/year',
-  '₹1Cr – ₹5Cr/year', '₹5Cr – ₹25Cr/year', 'Above ₹25Cr/year'
-];
+const REVENUE_BANDS = ['Under ₹10L/year','₹10L–₹50L/year','₹50L–₹1Cr/year','₹1Cr–₹5Cr/year','₹5Cr–₹25Cr/year','Above ₹25Cr/year'];
+const ASKING_PRICE = ['Under ₹25L','₹25L–₹1Cr','₹1Cr–₹5Cr','₹5Cr–₹25Cr','₹25Cr–₹100Cr','Above ₹100Cr','Open to offers'];
+const EBITDA_OPTIONS = ['Negative / Pre-revenue','0–5%','5–15%','15–25%','25–40%','Above 40%'];
+const YEARS_RUNNING = ['Under 1 year','1–3 years','3–7 years','7–15 years','Above 15 years'];
+const EMPLOYEE_COUNT = ['Solo / Founder only','2–5 employees','6–20 employees','21–50 employees','51–200 employees','200+ employees'];
+const GROWTH_RATE = ['Declining','Flat (0–5%)','Moderate (5–20%)','Strong (20–50%)','Hyper-growth (50%+)'];
+const CUSTOMER_TYPE = ['B2C — direct consumers','B2B — businesses','B2B2C — both','Government / Institutional','D2C — direct to consumer'];
+const GEOGRAPHY = ['Single city','State-wide','Pan India','India + International'];
 
-const ASKING_PRICE = [
-  'Under ₹25L', '₹25L – ₹1Cr', '₹1Cr – ₹5Cr',
-  '₹5Cr – ₹25Cr', 'Above ₹25Cr', 'Open to offers'
-];
+function useScrollReveal() {
+  useEffect(function() {
+    var els = document.querySelectorAll('.pe-reveal');
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { e.target.classList.add('pe-revealed'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    els.forEach(function(el) { obs.observe(el); });
+    return function() { obs.disconnect(); };
+  }, []);
+}
 
-const BUYER_TICKET = [
-  'Under ₹25L', '₹25L – ₹1Cr', '₹1Cr – ₹5Cr',
-  '₹5Cr – ₹25Cr', 'Above ₹25Cr'
-];
-
-const YEARS_RUNNING = [
-  'Under 1 year', '1–3 years', '3–7 years', '7–15 years', 'Above 15 years'
-];
-
-function AnimatedStat({ value, label }) {
-  const [displayed, setDisplayed] = useState(0);
-  const ref = useRef(null);
-  const hasAnimated = useRef(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated.current) {
-          hasAnimated.current = true;
-          let start = 0;
-          const target = parseInt(value);
-          const step = Math.ceil(target / 40);
-          const timer = setInterval(() => {
-            start += step;
-            if (start >= target) { setDisplayed(target); clearInterval(timer); }
-            else setDisplayed(start);
-          }, 30);
-        }
-      },
-      { threshold: 0.3 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+function StatCounter(props) {
+  var value = props.value;
+  var suffix = props.suffix || '';
+  var label = props.label;
+  var ref = useRef(null);
+  var [n, setN] = useState(0);
+  var done = useRef(false);
+  useEffect(function() {
+    var obs = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting && !done.current) {
+        done.current = true;
+        var target = parseFloat(value);
+        var steps = 40;
+        var step = target / steps;
+        var i = 0;
+        var t = setInterval(function() {
+          i++;
+          setN(Math.min(parseFloat((step * i).toFixed(1)), target));
+          if (i >= steps) clearInterval(t);
+        }, 30);
+      }
+    }, { threshold: 0.3 });
+    if (ref.current) obs.observe(ref.current);
+    return function() { obs.disconnect(); };
   }, [value]);
-
   return (
-    <div className="pe-stat" ref={ref}>
-      <div className="pe-stat-num">{typeof value === 'string' && isNaN(parseInt(value)) ? value : displayed}{typeof value === 'string' && value.includes('+') ? '+' : ''}</div>
-      <div className="pe-stat-label">{label}</div>
+    <div className="pe-stat-block" ref={ref}>
+      <div className="pe-stat-val">{Number.isInteger(parseFloat(value)) ? Math.round(n) : n}{suffix}</div>
+      <div className="pe-stat-lbl">{label}</div>
     </div>
   );
 }
 
-function SellerForm({ onSuccess }) {
-  const [form, setForm] = useState({
-    business_name: '', founder_name: '', email: '', phone: '',
-    sector: '', years_running: '', annual_revenue: '', ebitda_margin: '',
-    asking_price: '', deal_type: '', reason_for_sale: '',
-    what_buyer_needs: '', existing_team: '', website: '', linkedin: ''
+function SellerForm(props) {
+  var onSuccess = props.onSuccess;
+  var [form, setForm] = useState({
+    business_name:'', trading_name:'', founder_name:'', co_founders:'',
+    email:'', phone:'', linkedin:'', city:'', state:'',
+    sector:'', business_model:'', geography:'', years_running:'',
+    employee_count:'', annual_revenue:'', revenue_growth:'', ebitda_margin:'',
+    gross_margin:'', monthly_burn:'', cash_in_bank:'', debt:'',
+    customer_type:'', active_customers:'', top_customers:'', churn_rate:'',
+    key_products:'', tech_ip:'', brand_value:'', physical_assets:'',
+    deal_type:'', asking_price:'', valuation_basis:'',
+    reason_for_sale:'', founder_post_deal:'', what_buyer_needs:'',
+    existing_team:'', key_person_risk:'', website:'', pitchdeck_url:'',
+    additional_info:''
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  var [loading, setLoading] = useState(false);
+  var [error, setError] = useState('');
 
-  const set = (k, v) => setForm(f => Object.assign({}, f, { [k]: v }));
+  var set = function(k, v) { setForm(function(f) { return Object.assign({}, f, {[k]: v}); }); };
 
-  const handleSubmit = async () => {
-    const required = ['business_name', 'founder_name', 'email', 'sector',
-      'years_running', 'annual_revenue', 'asking_price', 'deal_type', 'reason_for_sale'];
-    for (const f of required) {
-      if (!form[f]) { setError('Please fill all required fields.'); return; }
+  var handleSubmit = async function() {
+    var required = ['business_name','founder_name','email','phone','sector','years_running',
+      'annual_revenue','ebitda_margin','deal_type','asking_price','reason_for_sale'];
+    for (var i = 0; i < required.length; i++) {
+      if (!form[required[i]]) { setError('Please fill all required fields.'); return; }
     }
     setLoading(true);
     setError('');
     try {
       await fetch(SCRIPT_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.assign({}, form, { _type: 'pe_seller' }),),
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(Object.assign({}, form, {_type: 'pe_seller'})),
         mode: 'no-cors'
       });
       onSuccess('seller');
-    } catch (e) {
+    } catch(e) {
       setError('Something went wrong. Please try again.');
       setLoading(false);
     }
   };
 
   return (
-    <div className="pe-form-inner">
-      <div className="pe-form-section">
-        <div className="pe-form-section-title">01 — The Business</div>
-        <div className="pe-field">
-          <label>Business name <span className="pe-req">*</span></label>
-          <input type="text" placeholder="What is your business called?" value={form.business_name} onChange={e => set('business_name', e.target.value)} />
-        </div>
-        <div className="pe-field-row">
-          <div className="pe-field">
-            <label>Sector <span className="pe-req">*</span></label>
-            <select value={form.sector} onChange={e => set('sector', e.target.value)}>
-              <option value="">Select sector</option>
-              {SECTORS.map(s => <option key={s}>{s}</option>)}
-            </select>
+    <div className="pe-form-wrap">
+
+      <div className="pe-form-block">
+        <div className="pe-form-block-title"><span>01</span> Business Identity</div>
+        <div className="pe-row">
+          <div className="pe-f">
+            <label>Registered business name <span className="rq">*</span></label>
+            <input type="text" placeholder="Legal entity name" value={form.business_name} onChange={function(e){set('business_name',e.target.value);}} />
           </div>
-          <div className="pe-field">
-            <label>Years in operation <span className="pe-req">*</span></label>
-            <select value={form.years_running} onChange={e => set('years_running', e.target.value)}>
+          <div className="pe-f">
+            <label>Trading / brand name <span className="opt">optional</span></label>
+            <input type="text" placeholder="Name customers know you by" value={form.trading_name} onChange={function(e){set('trading_name',e.target.value);}} />
+          </div>
+        </div>
+        <div className="pe-row">
+          <div className="pe-f">
+            <label>City <span className="opt">optional</span></label>
+            <input type="text" placeholder="e.g. Mumbai" value={form.city} onChange={function(e){set('city',e.target.value);}} />
+          </div>
+          <div className="pe-f">
+            <label>State <span className="opt">optional</span></label>
+            <input type="text" placeholder="e.g. Maharashtra" value={form.state} onChange={function(e){set('state',e.target.value);}} />
+          </div>
+        </div>
+        <div className="pe-f">
+          <label>Sector <span className="rq">*</span></label>
+          <select value={form.sector} onChange={function(e){set('sector',e.target.value);}}>
+            <option value="">Select sector</option>
+            {SECTORS.map(function(s){ return <option key={s}>{s}</option>; })}
+          </select>
+        </div>
+        <div className="pe-row">
+          <div className="pe-f">
+            <label>Business model</label>
+            <input type="text" placeholder="e.g. SaaS, marketplace, services, manufacturing" value={form.business_model} onChange={function(e){set('business_model',e.target.value);}} />
+          </div>
+          <div className="pe-f">
+            <label>Geographic presence</label>
+            <select value={form.geography} onChange={function(e){set('geography',e.target.value);}}>
               <option value="">Select</option>
-              {YEARS_RUNNING.map(y => <option key={y}>{y}</option>)}
+              {GEOGRAPHY.map(function(g){ return <option key={g}>{g}</option>; })}
             </select>
           </div>
         </div>
-        <div className="pe-field-row">
-          <div className="pe-field">
-            <label>Annual revenue <span className="pe-req">*</span></label>
-            <select value={form.annual_revenue} onChange={e => set('annual_revenue', e.target.value)}>
+        <div className="pe-row">
+          <div className="pe-f">
+            <label>Years in operation <span className="rq">*</span></label>
+            <select value={form.years_running} onChange={function(e){set('years_running',e.target.value);}}>
+              <option value="">Select</option>
+              {YEARS_RUNNING.map(function(y){ return <option key={y}>{y}</option>; })}
+            </select>
+          </div>
+          <div className="pe-f">
+            <label>Total employees</label>
+            <select value={form.employee_count} onChange={function(e){set('employee_count',e.target.value);}}>
+              <option value="">Select</option>
+              {EMPLOYEE_COUNT.map(function(e){ return <option key={e}>{e}</option>; })}
+            </select>
+          </div>
+        </div>
+        <div className="pe-f">
+          <label>Website <span className="opt">optional</span></label>
+          <input type="url" placeholder="https://yourbusiness.com" value={form.website} onChange={function(e){set('website',e.target.value);}} />
+        </div>
+      </div>
+
+      <div className="pe-form-block">
+        <div className="pe-form-block-title"><span>02</span> Financial Snapshot</div>
+        <p className="pe-form-note-inline">All figures are kept confidential. This is used only for buyer matching.</p>
+        <div className="pe-row">
+          <div className="pe-f">
+            <label>Annual revenue (FY24) <span className="rq">*</span></label>
+            <select value={form.annual_revenue} onChange={function(e){set('annual_revenue',e.target.value);}}>
               <option value="">Select range</option>
-              {REVENUE_BANDS.map(r => <option key={r}>{r}</option>)}
+              {REVENUE_BANDS.map(function(r){ return <option key={r}>{r}</option>; })}
             </select>
           </div>
-          <div className="pe-field">
-            <label>EBITDA margin <span className="pe-opt">optional</span></label>
-            <input type="text" placeholder="e.g. 18%" value={form.ebitda_margin} onChange={e => set('ebitda_margin', e.target.value)} />
+          <div className="pe-f">
+            <label>Revenue growth rate</label>
+            <select value={form.revenue_growth} onChange={function(e){set('revenue_growth',e.target.value);}}>
+              <option value="">Select</option>
+              {GROWTH_RATE.map(function(g){ return <option key={g}>{g}</option>; })}
+            </select>
           </div>
         </div>
-        <div className="pe-field">
-          <label>Website <span className="pe-opt">optional</span></label>
-          <input type="url" placeholder="https://" value={form.website} onChange={e => set('website', e.target.value)} />
+        <div className="pe-row">
+          <div className="pe-f">
+            <label>EBITDA margin <span className="rq">*</span></label>
+            <select value={form.ebitda_margin} onChange={function(e){set('ebitda_margin',e.target.value);}}>
+              <option value="">Select</option>
+              {EBITDA_OPTIONS.map(function(e){ return <option key={e}>{e}</option>; })}
+            </select>
+          </div>
+          <div className="pe-f">
+            <label>Gross margin <span className="opt">optional</span></label>
+            <input type="text" placeholder="e.g. 62%" value={form.gross_margin} onChange={function(e){set('gross_margin',e.target.value);}} />
+          </div>
+        </div>
+        <div className="pe-row">
+          <div className="pe-f">
+            <label>Monthly burn / fixed costs <span className="opt">optional</span></label>
+            <input type="text" placeholder="e.g. ₹8L/month" value={form.monthly_burn} onChange={function(e){set('monthly_burn',e.target.value);}} />
+          </div>
+          <div className="pe-f">
+            <label>Cash in bank <span className="opt">optional</span></label>
+            <input type="text" placeholder="e.g. ₹45L" value={form.cash_in_bank} onChange={function(e){set('cash_in_bank',e.target.value);}} />
+          </div>
+        </div>
+        <div className="pe-f">
+          <label>Outstanding debt / liabilities <span className="opt">optional</span></label>
+          <input type="text" placeholder="e.g. ₹12L bank loan, 0 external debt..." value={form.debt} onChange={function(e){set('debt',e.target.value);}} />
         </div>
       </div>
 
-      <div className="pe-form-section">
-        <div className="pe-form-section-title">02 — The Deal</div>
-        <div className="pe-field">
-          <label>Deal type <span className="pe-req">*</span></label>
-          <div className="pe-deal-type-grid">
-            {DEAL_TYPES.map(dt => (
-              <div key={dt.id} className={'pe-deal-pill' + (form.deal_type === dt.id ? ' active' : '')} onClick={() => set('deal_type', dt.id)}>
-                <div className="pe-deal-pill-label">{dt.label}</div>
-                <div className="pe-deal-pill-desc">{dt.desc}</div>
-              </div>
-            ))}
+      <div className="pe-form-block">
+        <div className="pe-form-block-title"><span>03</span> Customers & Revenue Quality</div>
+        <div className="pe-f">
+          <label>Customer type</label>
+          <div className="pe-chips">
+            {CUSTOMER_TYPE.map(function(c){
+              return <div key={c} className={'pe-chip' + (form.customer_type === c ? ' on' : '')} onClick={function(){set('customer_type',c);}}>{c}</div>;
+            })}
           </div>
         </div>
-        <div className="pe-field">
-          <label>Asking price <span className="pe-req">*</span></label>
-          <div className="pe-pill-group">
-            {ASKING_PRICE.map(p => (
-              <div key={p} className={'pe-pill' + (form.asking_price === p ? ' active' : '')} onClick={() => set('asking_price', p)}>{p}</div>
-            ))}
+        <div className="pe-row">
+          <div className="pe-f">
+            <label>Number of active customers <span className="opt">optional</span></label>
+            <input type="text" placeholder="e.g. 340 active clients" value={form.active_customers} onChange={function(e){set('active_customers',e.target.value);}} />
+          </div>
+          <div className="pe-f">
+            <label>Monthly churn rate <span className="opt">optional</span></label>
+            <input type="text" placeholder="e.g. 2% monthly, or N/A for B2B" value={form.churn_rate} onChange={function(e){set('churn_rate',e.target.value);}} />
           </div>
         </div>
-        <div className="pe-field">
-          <label>Why are you selling? <span className="pe-req">*</span></label>
-          <textarea placeholder="Be honest. Buyers respect transparency — retirement, pivot, health, new venture..." value={form.reason_for_sale} onChange={e => set('reason_for_sale', e.target.value)} maxLength={500} />
-          <div className="pe-char-count">{form.reason_for_sale.length}/500</div>
-        </div>
-        <div className="pe-field">
-          <label>What do you need from a buyer? <span className="pe-opt">optional</span></label>
-          <textarea placeholder="Domain expertise, operational involvement, growth capital, brand alignment..." value={form.what_buyer_needs} onChange={e => set('what_buyer_needs', e.target.value)} maxLength={300} />
-        </div>
-        <div className="pe-field">
-          <label>Team size <span className="pe-opt">optional</span></label>
-          <input type="text" placeholder="e.g. 8 full-time employees" value={form.existing_team} onChange={e => set('existing_team', e.target.value)} />
+        <div className="pe-f">
+          <label>Top 3 customers / revenue concentration <span className="opt">optional</span></label>
+          <textarea rows="2" placeholder="e.g. Top 3 clients = 40% of revenue. No single client above 20%." value={form.top_customers} onChange={function(e){set('top_customers',e.target.value);}} />
         </div>
       </div>
 
-      <div className="pe-form-section">
-        <div className="pe-form-section-title">03 — About You</div>
-        <div className="pe-field-row">
-          <div className="pe-field">
-            <label>Your name <span className="pe-req">*</span></label>
-            <input type="text" placeholder="Full name" value={form.founder_name} onChange={e => set('founder_name', e.target.value)} />
-          </div>
-          <div className="pe-field">
-            <label>Email <span className="pe-req">*</span></label>
-            <input type="email" placeholder="you@email.com" value={form.email} onChange={e => set('email', e.target.value)} />
-          </div>
+      <div className="pe-form-block">
+        <div className="pe-form-block-title"><span>04</span> Business Assets & Moat</div>
+        <div className="pe-f">
+          <label>Key products / services <span className="opt">optional</span></label>
+          <textarea rows="2" placeholder="What does the business actually sell? What are your top 3 revenue drivers?" value={form.key_products} onChange={function(e){set('key_products',e.target.value);}} />
         </div>
-        <div className="pe-field-row">
-          <div className="pe-field">
-            <label>Phone <span className="pe-opt">optional</span></label>
-            <input type="tel" placeholder="+91 98765 43210" value={form.phone} onChange={e => set('phone', e.target.value)} />
-          </div>
-          <div className="pe-field">
-            <label>LinkedIn <span className="pe-opt">optional</span></label>
-            <input type="url" placeholder="linkedin.com/in/..." value={form.linkedin} onChange={e => set('linkedin', e.target.value)} />
-          </div>
+        <div className="pe-f">
+          <label>Technology / IP / proprietary assets <span className="opt">optional</span></label>
+          <textarea rows="2" placeholder="Software, patents, brand, proprietary process, exclusive contracts, licenses..." value={form.tech_ip} onChange={function(e){set('tech_ip',e.target.value);}} />
+        </div>
+        <div className="pe-f">
+          <label>Physical / hard assets <span className="opt">optional</span></label>
+          <input type="text" placeholder="e.g. 2 delivery vehicles, leased warehouse 5000 sqft, production equipment" value={form.physical_assets} onChange={function(e){set('physical_assets',e.target.value);}} />
+        </div>
+        <div className="pe-f">
+          <label>Key person risk <span className="opt">optional</span></label>
+          <input type="text" placeholder="Is the business dependent on you or one person? Who?" value={form.key_person_risk} onChange={function(e){set('key_person_risk',e.target.value);}} />
+        </div>
+        <div className="pe-f">
+          <label>Team details <span className="opt">optional</span></label>
+          <textarea rows="2" placeholder="Who are the key people? Will they stay post-acquisition? Any employment contracts?" value={form.existing_team} onChange={function(e){set('existing_team',e.target.value);}} />
         </div>
       </div>
 
-      {error && <div className="pe-error">{error}</div>}
-      <button className="pe-submit-btn" onClick={handleSubmit} disabled={loading}>
-        {loading ? 'Submitting...' : 'List My Business →'}
+      <div className="pe-form-block">
+        <div className="pe-form-block-title"><span>05</span> The Deal</div>
+        <div className="pe-f">
+          <label>Deal type <span className="rq">*</span></label>
+          <div className="pe-deal-grid">
+            {DEAL_TYPES.map(function(dt){
+              return (
+                <div key={dt.id} className={'pe-deal-card' + (form.deal_type === dt.id ? ' on' : '')} onClick={function(){set('deal_type',dt.id);}}>
+                  <div className="pe-deal-lbl">{dt.label}</div>
+                  <div className="pe-deal-sub">{dt.sub}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="pe-f">
+          <label>Asking price / valuation expectation <span className="rq">*</span></label>
+          <div className="pe-chips wrap">
+            {ASKING_PRICE.map(function(p){
+              return <div key={p} className={'pe-chip' + (form.asking_price === p ? ' on' : '')} onClick={function(){set('asking_price',p);}}>{p}</div>;
+            })}
+          </div>
+        </div>
+        <div className="pe-f">
+          <label>Valuation basis <span className="opt">optional</span></label>
+          <input type="text" placeholder="e.g. 3x revenue, 6x EBITDA, asset value, comparable transactions..." value={form.valuation_basis} onChange={function(e){set('valuation_basis',e.target.value);}} />
+        </div>
+        <div className="pe-f">
+          <label>Why are you selling? <span className="rq">*</span></label>
+          <textarea rows="3" placeholder="Be specific and honest. Buyers respect transparency. Retirement, pivot, health, new venture, founder disagreement..." value={form.reason_for_sale} onChange={function(e){set('reason_for_sale',e.target.value);}} maxLength={600} />
+          <div className="pe-cc">{form.reason_for_sale.length}/600</div>
+        </div>
+        <div className="pe-f">
+          <label>Your role post-transaction <span className="opt">optional</span></label>
+          <input type="text" placeholder="e.g. Will stay 12 months for handover. Open to advisory role. Full exit preferred." value={form.founder_post_deal} onChange={function(e){set('founder_post_deal',e.target.value);}} />
+        </div>
+        <div className="pe-f">
+          <label>What do you need from the right buyer? <span className="opt">optional</span></label>
+          <textarea rows="2" placeholder="Domain expertise, distribution network, brand upgrade, operational bandwidth, just capital..." value={form.what_buyer_needs} onChange={function(e){set('what_buyer_needs',e.target.value);}} />
+        </div>
+        <div className="pe-f">
+          <label>Pitch deck / financials (Google Drive link) <span className="opt">optional</span></label>
+          <input type="url" placeholder="https://drive.google.com/..." value={form.pitchdeck_url} onChange={function(e){set('pitchdeck_url',e.target.value);}} />
+        </div>
+      </div>
+
+      <div className="pe-form-block">
+        <div className="pe-form-block-title"><span>06</span> About the Founder</div>
+        <div className="pe-row">
+          <div className="pe-f">
+            <label>Your full name <span className="rq">*</span></label>
+            <input type="text" placeholder="Full name" value={form.founder_name} onChange={function(e){set('founder_name',e.target.value);}} />
+          </div>
+          <div className="pe-f">
+            <label>Co-founders <span className="opt">optional</span></label>
+            <input type="text" placeholder="Names and roles of other founders" value={form.co_founders} onChange={function(e){set('co_founders',e.target.value);}} />
+          </div>
+        </div>
+        <div className="pe-row">
+          <div className="pe-f">
+            <label>Email <span className="rq">*</span></label>
+            <input type="email" placeholder="your@email.com" value={form.email} onChange={function(e){set('email',e.target.value);}} />
+          </div>
+          <div className="pe-f">
+            <label>Phone <span className="rq">*</span></label>
+            <input type="tel" placeholder="+91 98765 43210" value={form.phone} onChange={function(e){set('phone',e.target.value);}} />
+          </div>
+        </div>
+        <div className="pe-f">
+          <label>LinkedIn <span className="opt">optional</span></label>
+          <input type="url" placeholder="linkedin.com/in/yourprofile" value={form.linkedin} onChange={function(e){set('linkedin',e.target.value);}} />
+        </div>
+        <div className="pe-f">
+          <label>Anything else you want us to know? <span className="opt">optional</span></label>
+          <textarea rows="3" placeholder="Industry awards, certifications, pending contracts, strategic partnerships, future pipeline..." value={form.additional_info} onChange={function(e){set('additional_info',e.target.value);}} />
+        </div>
+      </div>
+
+      {error && <div className="pe-error-box">{error}</div>}
+
+      <button className="pe-cta-btn" onClick={handleSubmit} disabled={loading}>
+        {loading ? 'Submitting your listing...' : 'Submit Business Listing →'}
       </button>
-      <p className="pe-form-note">Your listing is confidential. Business name and identity are never shared without your consent.</p>
-    </div>
-  );
-}
-
-function BuyerForm({ onSuccess }) {
-  const [form, setForm] = useState({
-    buyer_name: '', email: '', phone: '',
-    buyer_type: '', sectors: [], deal_types: [],
-    ticket_size: '', value_add: '', timeline: '',
-    linkedin: '', experience: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const set = (k, v) => setForm(f => Object.assign({}, f, { [k]: v }));
-
-  const toggleArr = (key, val) => {
-    setForm(f => {
-      const arr = f[key];
-      const next = arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val];
-      return Object.assign({}, f, { [key]: next });
-    });
-  };
-
-  const handleSubmit = async () => {
-    const required = ['buyer_name', 'email', 'buyer_type', 'ticket_size', 'value_add'];
-    for (const f of required) {
-      if (!form[f]) { setError('Please fill all required fields.'); return; }
-    }
-    if (form.sectors.length === 0) { setError('Please select at least one sector.'); return; }
-    setLoading(true);
-    setError('');
-    try {
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.assign({}, form, {
-          _type: 'pe_buyer',
-          sectors: form.sectors.join(', '),
-          deal_types: form.deal_types.join(', ')
-        })),
-        mode: 'no-cors'
-      });
-      onSuccess('buyer');
-    } catch (e) {
-      setError('Something went wrong. Please try again.');
-      setLoading(false);
-    }
-  };
-
-  const BUYER_TYPES = ['Individual Operator', 'HNI / Family Office', 'Micro-PE Fund', 'Strategic Acquirer', 'Search Fund'];
-
-  return (
-    <div className="pe-form-inner">
-      <div className="pe-form-section">
-        <div className="pe-form-section-title">01 — Who You Are</div>
-        <div className="pe-field">
-          <label>Buyer type <span className="pe-req">*</span></label>
-          <div className="pe-pill-group wrap">
-            {BUYER_TYPES.map(t => (
-              <div key={t} className={'pe-pill' + (form.buyer_type === t ? ' active' : '')} onClick={() => set('buyer_type', t)}>{t}</div>
-            ))}
-          </div>
-        </div>
-        <div className="pe-field">
-          <label>Your relevant experience <span className="pe-req">*</span></label>
-          <textarea placeholder="What have you operated, built, or invested in before? Specifics matter." value={form.experience} onChange={e => set('experience', e.target.value)} maxLength={400} />
-          <div className="pe-char-count">{form.experience.length}/400</div>
-        </div>
-      </div>
-
-      <div className="pe-form-section">
-        <div className="pe-form-section-title">02 — What You Want</div>
-        <div className="pe-field">
-          <label>Sectors of interest <span className="pe-req">*</span></label>
-          <div className="pe-pill-group wrap">
-            {SECTORS.map(s => (
-              <div key={s} className={'pe-pill sm' + (form.sectors.includes(s) ? ' active' : '')} onClick={() => toggleArr('sectors', s)}>{s}</div>
-            ))}
-          </div>
-        </div>
-        <div className="pe-field">
-          <label>Deal types open to</label>
-          <div className="pe-deal-type-grid">
-            {DEAL_TYPES.map(dt => (
-              <div key={dt.id} className={'pe-deal-pill' + (form.deal_types.includes(dt.id) ? ' active' : '')} onClick={() => toggleArr('deal_types', dt.id)}>
-                <div className="pe-deal-pill-label">{dt.label}</div>
-                <div className="pe-deal-pill-desc">{dt.desc}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="pe-field-row">
-          <div className="pe-field">
-            <label>Ticket size <span className="pe-req">*</span></label>
-            <div className="pe-pill-group wrap">
-              {BUYER_TICKET.map(t => (
-                <div key={t} className={'pe-pill' + (form.ticket_size === t ? ' active' : '')} onClick={() => set('ticket_size', t)}>{t}</div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="pe-field">
-          <label>Timeline to close</label>
-          <div className="pe-pill-group">
-            {['1-3 months', '3-6 months', '6-12 months', 'Flexible'].map(t => (
-              <div key={t} className={'pe-pill' + (form.timeline === t ? ' active' : '')} onClick={() => set('timeline', t)}>{t}</div>
-            ))}
-          </div>
-        </div>
-        <div className="pe-field">
-          <label>What value do you bring beyond capital? <span className="pe-req">*</span></label>
-          <textarea placeholder="Network, domain expertise, operational playbooks, distribution — be specific." value={form.value_add} onChange={e => set('value_add', e.target.value)} maxLength={400} />
-          <div className="pe-char-count">{form.value_add.length}/400</div>
-        </div>
-      </div>
-
-      <div className="pe-form-section">
-        <div className="pe-form-section-title">03 — Contact</div>
-        <div className="pe-field-row">
-          <div className="pe-field">
-            <label>Full name <span className="pe-req">*</span></label>
-            <input type="text" placeholder="Your name" value={form.buyer_name} onChange={e => set('buyer_name', e.target.value)} />
-          </div>
-          <div className="pe-field">
-            <label>Email <span className="pe-req">*</span></label>
-            <input type="email" placeholder="you@email.com" value={form.email} onChange={e => set('email', e.target.value)} />
-          </div>
-        </div>
-        <div className="pe-field-row">
-          <div className="pe-field">
-            <label>Phone <span className="pe-opt">optional</span></label>
-            <input type="tel" placeholder="+91 98765 43210" value={form.phone} onChange={e => set('phone', e.target.value)} />
-          </div>
-          <div className="pe-field">
-            <label>LinkedIn <span className="pe-opt">optional</span></label>
-            <input type="url" placeholder="linkedin.com/in/..." value={form.linkedin} onChange={e => set('linkedin', e.target.value)} />
-          </div>
-        </div>
-      </div>
-
-      {error && <div className="pe-error">{error}</div>}
-      <button className="pe-submit-btn" onClick={handleSubmit} disabled={loading}>
-        {loading ? 'Submitting...' : 'Register as Buyer →'}
-      </button>
-      <p className="pe-form-note">Your profile is shared only with businesses that match your criteria.</p>
+      <p className="pe-privacy-note">
+        Strictly confidential. Your business identity is never shared without explicit written consent.
+        NoCap PE reviews every listing manually before matching begins.
+      </p>
     </div>
   );
 }
 
 export default function NoCap_PE() {
-  const [mode, setMode] = useState(null);
-  const [success, setSuccess] = useState(null);
-  const formRef = useRef(null);
+  useScrollReveal();
+  var [view, setView] = useState('home');
+  var [success, setSuccess] = useState(false);
+  var formRef = useRef(null);
+  var topRef = useRef(null);
 
-  const handleIntent = (intent) => {
-    setMode(intent);
-    setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  var goToForm = function() {
+    setView('form');
+    setTimeout(function() {
+      topRef.current && topRef.current.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
   };
 
-  const handleSuccess = (type) => {
-    setSuccess(type);
-    setMode(null);
+  var handleSuccess = function() {
+    setSuccess(true);
+    setView('home');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div className="pe-root">
+    <div className="pe-root" ref={topRef}>
+
+      {/* TOP NAV */}
+      <nav className="pe-nav">
+        <a href="/" className="pe-nav-logo">
+          <span className="pe-nav-logo-dot" />
+          nocapvc
+        </a>
+        <div className="pe-nav-badge">NOCAP PE · MICRO PRIVATE EQUITY</div>
+        <button className="pe-nav-cta" onClick={goToForm}>List Your Business →</button>
+      </nav>
 
       {/* HERO */}
       <section className="pe-hero">
-        <div className="pe-hero-bg">
-          <div className="pe-grid-lines" />
-          <div className="pe-orb pe-orb-1" />
-          <div className="pe-orb pe-orb-2" />
+        <div className="pe-hero-canvas">
+          <div className="pe-scanlines" />
+          <div className="pe-hero-grid" />
+          <div className="pe-glow g1" />
+          <div className="pe-glow g2" />
+          <div className="pe-glow g3" />
         </div>
-        <div className="pe-hero-inner">
-          <div className="pe-eyebrow">
-            <span className="pe-dot" />
-            NOCAP PE — PRIVATE EQUITY FOR INDIA
+
+        <div className="pe-hero-body">
+          <div className="pe-hero-tag pe-reveal">
+            <span className="pe-live-dot" />
+            INDIA'S FIRST MICRO-PE MARKETPLACE
           </div>
-          <h1 className="pe-h1">
-            India's businesses<br />
-            are changing hands.<br />
-            <em>Be on the right side.</em>
+
+          <h1 className="pe-hero-h1 pe-reveal">
+            Every great business<br />
+            deserves a <span className="pe-accent">great exit.</span>
           </h1>
-          <p className="pe-hero-sub">
-            The first structured marketplace for buying and selling Indian SMBs and startups.
-            From ₹25L to ₹25Cr. Confidential. Verified. Deal-room ready.
+
+          <p className="pe-hero-p pe-reveal">
+            Sixty-three million Indian SMBs. Thousands of operators ready to acquire.
+            No structured market connecting them — until now.
+            NoCap PE is micro private equity, democratised.
           </p>
-          <div className="pe-intent-cards">
-            <div className="pe-intent-card seller" onClick={() => handleIntent('seller')}>
-              <div className="pe-intent-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-              <div className="pe-intent-label">I want to sell</div>
-              <div className="pe-intent-desc">List your business confidentially. Get matched with verified buyers and investors.</div>
-              <div className="pe-intent-arrow">List my business →</div>
-            </div>
-            <div className="pe-intent-card buyer" onClick={() => handleIntent('buyer')}>
-              <div className="pe-intent-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                  <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="1.5"/>
-                  <path d="M21 21l-4.35-4.35M11 8v6M8 11h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <div className="pe-intent-label">I want to buy</div>
-              <div className="pe-intent-desc">Register your acquisition criteria. Get matched with off-market deal flow.</div>
-              <div className="pe-intent-arrow">Register as buyer →</div>
-            </div>
+
+          <div className="pe-hero-actions pe-reveal">
+            <button className="pe-btn-green" onClick={goToForm}>
+              List My Business
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <a href="mailto:pe@nocapvc.in" className="pe-btn-ghost">I want to acquire →</a>
+          </div>
+
+          <div className="pe-hero-scroll pe-reveal">
+            <div className="pe-scroll-line" />
+            <span>scroll to explore</span>
+          </div>
+        </div>
+
+        <div className="pe-hero-ticker">
+          <div className="pe-ticker-inner">
+            {['FULL ACQUISITION','MAJORITY STAKE','GROWTH CAPITAL','MICRO PE','CONFIDENTIAL','VERIFIED BUYERS','STRUCTURED DEALS','DEAL ROOM READY','INDIA SMB','NO BROKER FEES'].concat(['FULL ACQUISITION','MAJORITY STAKE','GROWTH CAPITAL','MICRO PE','CONFIDENTIAL','VERIFIED BUYERS','STRUCTURED DEALS','DEAL ROOM READY','INDIA SMB','NO BROKER FEES']).map(function(t,i){
+              return <span key={i} className="pe-tick-item">{t}</span>;
+            })}
           </div>
         </div>
       </section>
 
-      {/* SUCCESS */}
+      {/* SUCCESS BANNER */}
       {success && (
-        <section className="pe-success-section">
-          <div className="pe-success-box">
-            <div className="pe-success-check">✓</div>
-            <h2 className="pe-success-title">
-              {success === 'seller' ? 'Your listing is in.' : 'Buyer profile registered.'}
-            </h2>
-            <p className="pe-success-sub">
-              {success === 'seller'
-                ? 'We review every listing manually. Expect a response within 48 hours. Your identity stays confidential until you choose to reveal it.'
-                : 'We will match you with relevant listings as they come in. Expect your first matches within 5 business days.'}
-            </p>
-            <a href="https://instagram.com/nocapvc" target="_blank" rel="noreferrer" className="pe-btn-outline">Follow @nocapvc for deal insights →</a>
+        <div className="pe-success-banner">
+          <div className="pe-sb-check">✓</div>
+          <div>
+            <div className="pe-sb-title">Your listing is in. We review within 48 hours.</div>
+            <div className="pe-sb-sub">Your identity stays confidential until you approve a buyer. Expect our first outreach within 2 business days.</div>
           </div>
-        </section>
+        </div>
       )}
 
       {/* STATS */}
-      <section className="pe-stats-section">
-        <div className="pe-stats-inner">
-          <div className="pe-stats-label">THE OPPORTUNITY</div>
-          <div className="pe-stats-grid">
-            <AnimatedStat value="63" label="million SMBs in India" />
-            <AnimatedStat value="₹4.2Cr" label="average business valuation we serve" />
-            <AnimatedStat value="48" label="hour listing to first match" />
-            <AnimatedStat value="0%" label="upfront fee — success only" />
-          </div>
-        </div>
+      <section className="pe-stats-row pe-reveal">
+        <StatCounter value="63" suffix="M" label="Indian SMBs eligible" />
+        <div className="pe-stat-divider" />
+        <StatCounter value="48" suffix="hr" label="listing to first match" />
+        <div className="pe-stat-divider" />
+        <StatCounter value="0" suffix="%" label="upfront fee" />
+        <div className="pe-stat-divider" />
+        <StatCounter value="3" suffix="" label="deal types facilitated" />
       </section>
 
       {/* THE GAP */}
-      <section className="pe-gap-section">
+      <section className="pe-gap">
         <div className="pe-gap-inner">
-          <div className="pe-eyebrow-dark">THE PROBLEM WE SOLVE</div>
-          <h2 className="pe-h2">The market that never existed.</h2>
+          <div className="pe-section-tag pe-reveal">THE PROBLEM</div>
+          <h2 className="pe-section-h2 pe-reveal">
+            India's SMB exit market<br />is broken.
+          </h2>
           <div className="pe-gap-grid">
-            <div className="pe-gap-card">
+            <div className="pe-gap-item pe-reveal">
               <div className="pe-gap-num">01</div>
-              <div className="pe-gap-title">Brokers ignore small businesses</div>
-              <p>Traditional M&A advisors only serve companies doing ₹10Cr+ revenue. The ₹25L–₹5Cr segment is completely ignored — left to WhatsApp forwards and cold calls.</p>
+              <div className="pe-gap-content">
+                <h4>Brokers only serve ₹10Cr+</h4>
+                <p>Traditional M&A advisors ignore businesses below ₹10Cr revenue. The ₹25L–₹5Cr segment — which represents the majority of India's SMBs — has no formal exit infrastructure.</p>
+              </div>
             </div>
-            <div className="pe-gap-card">
+            <div className="pe-gap-item pe-reveal">
               <div className="pe-gap-num">02</div>
-              <div className="pe-gap-title">Buyers have no deal flow</div>
-              <p>Thousands of operators, HNIs, and micro-PE funds want to buy running businesses. They have no structured pipeline. They miss deals because the market is opaque.</p>
+              <div className="pe-gap-content">
+                <h4>Buyers have zero deal flow</h4>
+                <p>Thousands of operators, HNIs, and micro-PE funds want to acquire running businesses. They have no structured pipeline. Deals happen on WhatsApp — slow, opaque, and often fall apart.</p>
+              </div>
             </div>
-            <div className="pe-gap-card">
+            <div className="pe-gap-item pe-reveal">
               <div className="pe-gap-num">03</div>
-              <div className="pe-gap-title">Deals die in due diligence</div>
-              <p>Even when buyer and seller connect, deals fall apart. No framework. No NDA. No valuation reference. No accountability. NoCap PE gives every deal a structure.</p>
+              <div className="pe-gap-content">
+                <h4>No structure means no deals</h4>
+                <p>Even when buyer meets seller, deals die in due diligence. No NDA framework. No valuation benchmark. No accountability. NoCap PE installs the structure every deal needs.</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="pe-how-section">
+      <section className="pe-how">
         <div className="pe-how-inner">
-          <div className="pe-how-cols">
-            <div className="pe-how-col">
-              <div className="pe-eyebrow-dark">FOR SELLERS</div>
-              <h3 className="pe-h3">Exit with clarity.</h3>
-              <div className="pe-steps">
-                <div className="pe-step">
-                  <div className="pe-step-num">01</div>
-                  <div className="pe-step-content">
-                    <div className="pe-step-title">List confidentially</div>
-                    <p>Fill a structured listing form. Your business goes live anonymously — financials and story visible, identity hidden.</p>
+          <div className="pe-section-tag pe-reveal">THE PROCESS</div>
+          <h2 className="pe-section-h2 pe-reveal">Four steps to a closed deal.</h2>
+          <div className="pe-how-steps">
+            {[
+              { n:'01', t:'Submit a confidential listing', b:'Fill our structured form — the same information a Sequoia deal team would want to see. Takes 12 minutes. Your name stays hidden until you say otherwise.' },
+              { n:'02', t:'Get matched with verified buyers', b:'NoCap PE manually reviews your listing and matches you to buyers whose sector, ticket size, and deal type align. No spray and pray.' },
+              { n:'03', t:'Enter the private deal room', b:'Once you approve a match, we open a secure deal room — NDA, due diligence checklist, valuation reference, and a direct channel. Structured from day one.' },
+              { n:'04', t:'Close on your terms', b:'We facilitate, you decide. No pressure, no auction, no unsolicited sharing. Your business, your timeline, your exit.' },
+            ].map(function(s, i) {
+              return (
+                <div key={i} className="pe-how-step pe-reveal">
+                  <div className="pe-how-num">{s.n}</div>
+                  <div className="pe-how-content">
+                    <h4>{s.t}</h4>
+                    <p>{s.b}</p>
                   </div>
+                  {i < 3 && <div className="pe-how-arrow">↓</div>}
                 </div>
-                <div className="pe-step">
-                  <div className="pe-step-num">02</div>
-                  <div className="pe-step-content">
-                    <div className="pe-step-title">Get matched</div>
-                    <p>NoCap PE matches your listing to verified buyers whose sector, ticket size, and deal type align. Only serious buyers reach you.</p>
-                  </div>
-                </div>
-                <div className="pe-step">
-                  <div className="pe-step-num">03</div>
-                  <div className="pe-step-content">
-                    <div className="pe-step-title">Enter the deal room</div>
-                    <p>Once you approve a buyer, we open a private deal room — NDA, due diligence checklist, valuation reference, and a direct channel.</p>
-                  </div>
-                </div>
-                <div className="pe-step">
-                  <div className="pe-step-num">04</div>
-                  <div className="pe-step-content">
-                    <div className="pe-step-title">Close on your terms</div>
-                    <p>We facilitate. You decide. No pressure. No auction. Your business, your timeline, your terms.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="pe-how-col">
-              <div className="pe-eyebrow-dark">FOR BUYERS</div>
-              <h3 className="pe-h3">Acquire with conviction.</h3>
-              <div className="pe-steps">
-                <div className="pe-step">
-                  <div className="pe-step-num">01</div>
-                  <div className="pe-step-content">
-                    <div className="pe-step-title">Register your criteria</div>
-                    <p>Tell us what you want — sector, ticket size, deal type, what value you bring. We create your buyer profile.</p>
-                  </div>
-                </div>
-                <div className="pe-step">
-                  <div className="pe-step-num">02</div>
-                  <div className="pe-step-content">
-                    <div className="pe-step-title">Get curated deal flow</div>
-                    <p>When a matching business lists, you get a structured deal brief — financials, story, seller intent, asking price. No noise. Just relevant deals.</p>
-                  </div>
-                </div>
-                <div className="pe-step">
-                  <div className="pe-step-num">03</div>
-                  <div className="pe-step-content">
-                    <div className="pe-step-title">Submit intent and close</div>
-                    <p>Submit a structured LOI through NoCap PE. If the seller approves, the deal room opens. We guide both sides to close.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* DEAL TYPES */}
-      <section className="pe-deals-section">
+      <section className="pe-deals">
         <div className="pe-deals-inner">
-          <div className="pe-eyebrow-dark">DEAL TYPES WE FACILITATE</div>
-          <h2 className="pe-h2">Three ways to transact.</h2>
-          <div className="pe-deals-grid">
-            <div className="pe-deal-card">
-              <div className="pe-deal-card-tag">Full Acquisition</div>
-              <div className="pe-deal-card-icon">⬛</div>
-              <h4>100% ownership transfer</h4>
-              <p>The seller exits completely. The buyer takes full operational control. Clean, final, and complete.</p>
-              <div className="pe-deal-card-meta">Best for: Retiring founders, career pivots, distressed exits</div>
+          <div className="pe-section-tag pe-reveal">DEAL STRUCTURES</div>
+          <h2 className="pe-section-h2 pe-reveal">Three ways to transact.</h2>
+          <div className="pe-deal-cards pe-reveal">
+            <div className="pe-deal-type-card">
+              <div className="pe-dtc-tag">Full Acquisition</div>
+              <div className="pe-dtc-pct">100%</div>
+              <p>Complete ownership transfer. Seller exits fully. Buyer takes operational control. Clean and final.</p>
+              <div className="pe-dtc-for">Best for retirement, pivots, and distressed exits</div>
             </div>
-            <div className="pe-deal-card featured">
-              <div className="pe-deal-card-tag featured-tag">Most Common</div>
-              <div className="pe-deal-card-icon">🔶</div>
-              <h4>Majority Stake</h4>
-              <p>Buyer takes 51–80%. Founder stays operationally involved. Growth capital plus expertise — both sides win.</p>
-              <div className="pe-deal-card-meta">Best for: Founders who want a partner, not a replacement</div>
+            <div className="pe-deal-type-card featured">
+              <div className="pe-dtc-tag">Majority Stake</div>
+              <div className="pe-dtc-pct">51–80%</div>
+              <p>Buyer takes control. Founder stays involved. Capital, expertise, and continuity — all in one structure.</p>
+              <div className="pe-dtc-for">Most common structure on NoCap PE</div>
             </div>
-            <div className="pe-deal-card">
-              <div className="pe-deal-card-tag">Growth Capital</div>
-              <div className="pe-deal-card-icon">📈</div>
-              <h4>10–30% minority stake</h4>
-              <p>Investor takes a minority position. Founder retains control. Capital and network enter, ownership stays.</p>
-              <div className="pe-deal-card-meta">Best for: Profitable businesses that need a growth push</div>
+            <div className="pe-deal-type-card">
+              <div className="pe-dtc-tag">Growth Capital</div>
+              <div className="pe-dtc-pct">10–30%</div>
+              <p>Investor takes minority position. Founder keeps control. Growth capital plus strategic value added.</p>
+              <div className="pe-dtc-for">Best for profitable businesses that need scale</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* FORM SECTION */}
-      <section className="pe-form-section" ref={formRef} id="pe-form">
-        <div className="pe-form-outer">
-          {!mode && !success && (
-            <div className="pe-form-choose">
-              <div className="pe-eyebrow-dark">GET STARTED</div>
-              <h2 className="pe-h2">What describes you?</h2>
-              <div className="pe-choose-cards">
-                <div className="pe-choose-card" onClick={() => setMode('seller')}>
-                  <div className="pe-choose-title">I own a business and want to sell or raise capital</div>
-                  <div className="pe-choose-arrow">List my business →</div>
-                </div>
-                <div className="pe-choose-card" onClick={() => setMode('buyer')}>
-                  <div className="pe-choose-title">I want to buy or invest in a running business</div>
-                  <div className="pe-choose-arrow">Register as buyer →</div>
-                </div>
-              </div>
-            </div>
-          )}
+      <section className="pe-form-section" ref={formRef} id="list">
+        {view === 'home' && (
+          <div className="pe-form-cta-wrap pe-reveal">
+            <div className="pe-section-tag">LIST YOUR BUSINESS</div>
+            <h2 className="pe-section-h2">Ready to find the right buyer?</h2>
+            <p className="pe-form-cta-sub">The most detailed, most confidential business listing form in India. Built with the same rigour Sequoia's deal team would expect. Takes 12 minutes.</p>
+            <button className="pe-btn-green large" onClick={goToForm}>
+              Start Listing My Business
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        )}
 
-          {mode && (
-            <div className="pe-form-container">
-              <div className="pe-form-header">
-                <button className="pe-back-btn" onClick={() => setMode(null)}>← Back</button>
-                <div className="pe-form-title">
-                  {mode === 'seller' ? 'List Your Business' : 'Register as Buyer'}
-                </div>
-                <div className="pe-form-subtitle">
-                  {mode === 'seller'
-                    ? 'Confidential. Your identity is protected until you choose to reveal it.'
-                    : 'Your profile is matched to relevant listings. No spam, no cold calls.'}
-                </div>
+        {view === 'form' && (
+          <div className="pe-form-page">
+            <div className="pe-form-page-header">
+              <button className="pe-back" onClick={function(){setView('home');}}>← Back</button>
+              <div className="pe-form-page-title">List Your Business</div>
+              <div className="pe-form-page-sub">
+                Confidential. Structured. Sequoia-grade information request.<br />
+                Your identity is never shared without explicit written consent.
               </div>
-              {mode === 'seller' ? <SellerForm onSuccess={handleSuccess} /> : <BuyerForm onSuccess={handleSuccess} />}
             </div>
-          )}
-        </div>
+            <SellerForm onSuccess={handleSuccess} />
+          </div>
+        )}
       </section>
 
-      {/* FOOTER CTA */}
-      <section className="pe-footer-cta">
-        <div className="pe-footer-cta-inner">
-          <div className="pe-footer-cta-label">NOCAP PE</div>
-          <h2 className="pe-footer-h2">India's businesses deserve a better market.</h2>
-          <p>We are building the infrastructure for SMB transactions in India. The brokers had their era. This is ours.</p>
-          <div className="pe-footer-cta-btns">
-            <button className="pe-btn-primary" onClick={() => handleIntent('seller')}>List a Business</button>
-            <button className="pe-btn-secondary" onClick={() => handleIntent('buyer')}>Register as Buyer</button>
+      {/* FOOTER */}
+      <footer className="pe-footer">
+        <div className="pe-footer-inner">
+          <div className="pe-footer-left">
+            <div className="pe-footer-brand">NOCAP PE</div>
+            <div className="pe-footer-sub">A product of NoCap VC · India's founder-first platform</div>
+          </div>
+          <div className="pe-footer-right">
+            <a href="/">NoCap VC</a>
+            <a href="/school">Founder School</a>
+            <a href="mailto:pe@nocapvc.in">Contact</a>
+            <a href="https://instagram.com/nocapvc" target="_blank" rel="noreferrer">@nocapvc</a>
           </div>
         </div>
-      </section>
+        <div className="pe-footer-line">© 2025 NoCap VC · NoCap PE · Micro Private Equity for India</div>
+      </footer>
 
     </div>
   );

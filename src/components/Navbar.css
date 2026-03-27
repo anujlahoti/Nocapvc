@@ -87,3 +87,38 @@ nav.scr { padding: 12px 48px; }
   .ham { display: flex; }
   .nav-school-btn { display: none; } /* hidden on mobile, shows in nav-links instead */
 }
+/* Add these to the END of your existing Navbar.css */
+
+.nav-product-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.2s;
+}
+
+.school-link { color: #FFE034; }
+.school-link:hover { opacity: 0.7; }
+
+.pe-link { color: #00E87A; }
+.pe-link:hover { opacity: 0.7; }
+
+.nav-spark {
+  font-size: 9px;
+  color: #FFE034;
+  opacity: 0.7;
+}
+
+.nav-pe-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 0.15em;
+  color: #00E87A;
+  border: 1px solid rgba(0,232,122,0.3);
+  padding: 2px 5px;
+  border-radius: 3px;
+  opacity: 0.8;
+}
