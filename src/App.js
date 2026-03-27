@@ -14,12 +14,14 @@ import Footer from './components/Footer';
 import InstagramFeed from './components/InstagramFeed';
 import PartnerModal from './components/PartnerModal';
 import School from './components/School/School';
-
+import AIInterview from './components/AIInterview';
+import NoCap_PE from './components/NoCap_PE';
 import useScrollReveal from './hooks/useScrollReveal';
 
 function MainSite() {
   useScrollReveal();
   const [partnerOpen, setPartnerOpen] = useState(false);
+
   return (
     <>
       <Cursor />
@@ -28,21 +30,21 @@ function MainSite() {
       <Problem />
       <HowItWorks />
       <FeedbackFramework />
-      <ForInvestors onPartnerClick={() => setPartnerOpen(true)} />
+      <ForInvestors onPartnerClick={function() { setPartnerOpen(true); }} />
       <ProofSection />
       <InstagramFeed />
       <ApplicationSection />
       <Footer />
       <PartnerModal
         isOpen={partnerOpen}
-        onClose={() => setPartnerOpen(false)}
+        onClose={function() { setPartnerOpen(false); }}
       />
     </>
   );
 }
 
 export default function App() {
-  useEffect(() => {
+  useEffect(function() {
     ReactGA.initialize(process.env.REACT_APP_GA_ID);
   }, []);
 
@@ -51,7 +53,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainSite />} />
         <Route path="/school/*" element={<School />} />
-        {/* <Route path="/interview" element={<AIInterview />} /> */}
+        <Route path="/interview" element={<AIInterview />} />
+        <Route path="/pe" element={<NoCap_PE />} />
       </Routes>
     </BrowserRouter>
   );
