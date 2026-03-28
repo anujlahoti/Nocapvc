@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import './AIInterview.css';
 
 const APPS_SCRIPT_URL = process.env.REACT_APP_GOOGLE_SCRIPT_URL;
-console.log(process.env.REACT_APP_GEMINI_KEY)
+const GEMINI_KEY = process.env.REACT_APP_GEMINI_KEY;
 
 const SYSTEM_PROMPT = `You are NoCap AI, a sharp investment analyst conducting founder interviews for NoCap VC — India's founder-first funding platform. You have the sharpness of a YC partner and the warmth of a mentor.
 
@@ -45,6 +45,23 @@ TONE: Sharp, warm, direct, intellectually curious. Like a brilliant friend who a
 
 OPENING: Start by briefly acknowledging what they have built from their application context, then ask your first question. Make it feel like a real conversation.`;
 
+function getErrorMessage(err) {
+  var msg = err?.message || '';
+  if (msg.includes('quota') || msg.includes('RESOURCE_EXHAUSTED') || msg.includes('429')) {
+    return 'The AI is experiencing high demand right now. Please wait a minute and try again.';
+  }
+  if (msg.includes('API key') || msg.includes('API_KEY') || msg.includes('403') || msg.includes('401')) {
+    return 'AI configuration error. Please contact support at contactus.nocapvc@gmail.com';
+  }
+  if (msg.includes('model') || msg.includes('404')) {
+    return 'AI model unavailable. Please try again in a few minutes.';
+  }
+  if (!navigator.onLine) {
+    return 'You appear to be offline. Please check your internet connection and try again.';
+  }
+  return 'Could not reach NoCap AI. Please check your connection and try again.';
+}
+
 export default function AIInterview() {
   const [phase, setPhase] = useState('loading');
   const [founder, setFounder] = useState(null);
@@ -54,6 +71,7 @@ export default function AIInterview() {
   const [sending, setSending] = useState(false);
   const [report, setReport] = useState(null);
   const [error, setError] = useState('');
+  const [startError, setStartError] = useState('');
   const [questionCount, setQuestionCount] = useState(0);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
@@ -72,7 +90,8 @@ export default function AIInterview() {
 
   const validateToken = async (t) => {
     try {
-      const res = await fetch(`${APPS_SCRIPT_URL}?token=${t}`);
+      const res = await fetch(`${APPS_SCRIPT_URL}?token=${encodeURIComponent(t)}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       if (data.valid) {
         setFounder(data.founder);
@@ -82,14 +101,20 @@ export default function AIInterview() {
       } else {
         setPhase('invalid');
       }
-    } catch {
-      setPhase('invalid');
+    } catch (err) {
+      // Distinguish network errors from invalid tokens
+      if (!navigator.onLine || err?.message?.includes('fetch') || err?.message?.includes('network')) {
+        setPhase('network-error');
+      } else {
+        setPhase('invalid');
+      }
     }
   };
 
   const callGemini = async (conversationHistory) => {
-    const key = process.env.REACT_APP_GEMINI_KEY;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
+    if (!GEMINI_KEY) throw new Error('API key not configured');
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
 
     const contents = conversationHistory.map(msg => ({
       role: msg.role === 'ai' ? 'model' : 'user',
@@ -100,25 +125,30 @@ export default function AIInterview() {
       { role: 'user', parts: [{ text: 'You are NoCap AI. Instructions:\n\n' + SYSTEM_PROMPT }] },
       { role: 'model', parts: [{ text: 'Understood. I am NoCap AI, ready to conduct the founder interview.' }] }
     ];
-    const allContents = [...systemTurn, ...contents];
 
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents: allContents,
+        contents: [...systemTurn, ...contents],
         generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
       })
     });
 
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error?.message || errData.error?.status || `HTTP ${res.status}`);
+    }
+
     const data = await res.json();
-    if (!data.candidates || !data.candidates[0]) {
-      throw new Error(data.error?.message || 'Gemini error');
+    if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
+      throw new Error(data.error?.message || 'Empty response from AI');
     }
     return data.candidates[0].content.parts[0].text;
   };
 
   const startInterview = async () => {
+    setStartError('');
     setPhase('interview');
     setSending(true);
 
@@ -136,11 +166,13 @@ Start the interview now. Acknowledge their application briefly and ask your firs
       const aiMessage = await callGemini([{ role: 'user', content: context }]);
       setMessages([{ role: 'ai', content: aiMessage, ts: Date.now() }]);
       setQuestionCount(1);
-    } catch {
-      setError('Connection issue. Please refresh and try again.');
+      setSending(false);
+      setTimeout(() => inputRef.current?.focus(), 100);
+    } catch (err) {
+      setSending(false);
+      setPhase('intro');
+      setStartError(getErrorMessage(err));
     }
-    setSending(false);
-    setTimeout(() => inputRef.current?.focus(), 100);
   };
 
   const sendMessage = async () => {
@@ -148,6 +180,7 @@ Start the interview now. Acknowledge their application briefly and ask your firs
 
     const userMessage = input.trim();
     setInput('');
+    setError('');
     setSending(true);
 
     const newMessages = [...messages, { role: 'user', content: userMessage, ts: Date.now() }];
@@ -176,8 +209,8 @@ Start the interview now. Acknowledge their application briefly and ask your firs
         setMessages(prev => [...prev, { role: 'ai', content: aiResponse, ts: Date.now() }]);
         setQuestionCount(prev => prev + 1);
       }
-    } catch {
-      setError('Connection issue. Please try again.');
+    } catch (err) {
+      setError(getErrorMessage(err));
     }
     setSending(false);
   };
@@ -194,7 +227,8 @@ Start the interview now. Acknowledge their application briefly and ask your firs
           startup_name: founder.startup,
           sector: founder.sector,
           report: parsedReport
-        })
+        }),
+        mode: 'no-cors'
       });
     } catch {
       // Still show done screen even if save fails
@@ -210,10 +244,23 @@ Start the interview now. Acknowledge their application briefly and ask your firs
     }
   };
 
+  /* ── SCREENS ── */
+
   if (phase === 'loading') return (
     <div className="iv-screen iv-center">
       <div className="iv-spinner" />
       <p className="iv-muted">Validating your interview link...</p>
+    </div>
+  );
+
+  if (phase === 'network-error') return (
+    <div className="iv-screen iv-center">
+      <div className="iv-badge">NOCAP VC</div>
+      <h2 className="iv-h2">Connection error</h2>
+      <p className="iv-muted">Could not reach NoCap servers. Please check your internet connection and try again.</p>
+      <button className="iv-btn-outline" onClick={() => { setPhase('loading'); validateToken(token); }}>
+        Retry
+      </button>
     </div>
   );
 
@@ -268,10 +315,17 @@ Start the interview now. Acknowledge their application briefly and ask your firs
         <div className="iv-tip">This is a conversation, not a quiz. Relax.</div>
       </div>
 
+      {startError && (
+        <div className="iv-start-error">
+          <span className="iv-start-error-icon">⚠</span>
+          {startError}
+        </div>
+      )}
+
       <button className="iv-btn-primary" onClick={startInterview}>
-        Start Interview
+        {startError ? 'Try Again' : 'Start Interview'}
       </button>
-      <p className="iv-muted-sm">Your answers are saved. You can take breaks if needed.</p>
+      {!startError && <p className="iv-muted-sm">Your answers are saved. You can take breaks if needed.</p>}
     </div>
   );
 
@@ -320,6 +374,7 @@ Start the interview now. Acknowledge their application briefly and ask your firs
     </div>
   );
 
+  /* ── INTERVIEW CHAT ── */
   return (
     <div className="iv-chat-root">
       <div className="iv-chat-header">
@@ -359,7 +414,12 @@ Start the interview now. Acknowledge their application briefly and ask your firs
           </div>
         )}
 
-        {error && <div className="iv-error">{error}</div>}
+        {error && (
+          <div className="iv-error">
+            <span>{error}</span>
+            <button className="iv-retry-btn" onClick={() => setError('')}>Dismiss & retry</button>
+          </div>
+        )}
         <div ref={bottomRef} />
       </div>
 
