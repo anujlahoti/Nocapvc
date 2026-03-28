@@ -81,7 +81,7 @@ function SellerForm(props) {
     employee_count:'', annual_revenue:'', revenue_growth:'', ebitda_margin:'',
     gross_margin:'', monthly_burn:'', cash_in_bank:'', debt:'',
     customer_type:'', active_customers:'', top_customers:'', churn_rate:'',
-    key_products:'', tech_ip:'', brand_value:'', physical_assets:'',
+    key_products:'', tech_ip:'', physical_assets:'',
     deal_type:'', asking_price:'', valuation_basis:'',
     reason_for_sale:'', founder_post_deal:'', what_buyer_needs:'',
     existing_team:'', key_person_risk:'', website:'', pitchdeck_url:'',
@@ -93,10 +93,19 @@ function SellerForm(props) {
   var set = function(k, v) { setForm(function(f) { return Object.assign({}, f, {[k]: v}); }); };
 
   var handleSubmit = async function() {
-    var required = ['business_name','founder_name','email','phone','sector','years_running',
-      'annual_revenue','ebitda_margin','deal_type','asking_price','reason_for_sale'];
+    var required = [
+      'business_name','trading_name','city','state','sector','business_model',
+      'geography','years_running','employee_count',
+      'annual_revenue','revenue_growth','ebitda_margin','gross_margin',
+      'monthly_burn','cash_in_bank','debt',
+      'customer_type','active_customers','churn_rate','top_customers',
+      'key_products','tech_ip','physical_assets','key_person_risk','existing_team',
+      'deal_type','asking_price','valuation_basis',
+      'reason_for_sale','founder_post_deal','what_buyer_needs',
+      'founder_name','email','phone','linkedin'
+    ];
     for (var i = 0; i < required.length; i++) {
-      if (!form[required[i]]) { setError('Please fill all required fields.'); return; }
+      if (!form[required[i]]) { setError('Please fill all required fields marked with *.'); return; }
     }
     setLoading(true);
     setError('');
@@ -107,7 +116,7 @@ function SellerForm(props) {
         body: JSON.stringify(Object.assign({}, form, {_type: 'pe_seller'})),
         mode: 'no-cors'
       });
-      onSuccess('seller');
+      onSuccess();
     } catch(e) {
       setError('Something went wrong. Please try again.');
       setLoading(false);
@@ -125,17 +134,17 @@ function SellerForm(props) {
             <input type="text" placeholder="Legal entity name" value={form.business_name} onChange={function(e){set('business_name',e.target.value);}} />
           </div>
           <div className="pe-f">
-            <label>Trading / brand name <span className="opt">optional</span></label>
-            <input type="text" placeholder="Name customers know you by" value={form.trading_name} onChange={function(e){set('trading_name',e.target.value);}} />
+            <label>Trading / brand name <span className="rq">*</span></label>
+            <input type="text" placeholder="Name customers know you by (or same as above)" value={form.trading_name} onChange={function(e){set('trading_name',e.target.value);}} />
           </div>
         </div>
         <div className="pe-row">
           <div className="pe-f">
-            <label>City <span className="opt">optional</span></label>
+            <label>City <span className="rq">*</span></label>
             <input type="text" placeholder="e.g. Mumbai" value={form.city} onChange={function(e){set('city',e.target.value);}} />
           </div>
           <div className="pe-f">
-            <label>State <span className="opt">optional</span></label>
+            <label>State <span className="rq">*</span></label>
             <input type="text" placeholder="e.g. Maharashtra" value={form.state} onChange={function(e){set('state',e.target.value);}} />
           </div>
         </div>
@@ -148,11 +157,11 @@ function SellerForm(props) {
         </div>
         <div className="pe-row">
           <div className="pe-f">
-            <label>Business model</label>
+            <label>Business model <span className="rq">*</span></label>
             <input type="text" placeholder="e.g. SaaS, marketplace, services, manufacturing" value={form.business_model} onChange={function(e){set('business_model',e.target.value);}} />
           </div>
           <div className="pe-f">
-            <label>Geographic presence</label>
+            <label>Geographic presence <span className="rq">*</span></label>
             <select value={form.geography} onChange={function(e){set('geography',e.target.value);}}>
               <option value="">Select</option>
               {GEOGRAPHY.map(function(g){ return <option key={g} value={g}>{g}</option>; })}
@@ -168,7 +177,7 @@ function SellerForm(props) {
             </select>
           </div>
           <div className="pe-f">
-            <label>Total employees</label>
+            <label>Total employees <span className="rq">*</span></label>
             <select value={form.employee_count} onChange={function(e){set('employee_count',e.target.value);}}>
               <option value="">Select</option>
               {EMPLOYEE_COUNT.map(function(ec){ return <option key={ec} value={ec}>{ec}</option>; })}
@@ -193,7 +202,7 @@ function SellerForm(props) {
             </select>
           </div>
           <div className="pe-f">
-            <label>Revenue growth rate</label>
+            <label>Revenue growth rate <span className="rq">*</span></label>
             <select value={form.revenue_growth} onChange={function(e){set('revenue_growth',e.target.value);}}>
               <option value="">Select</option>
               {GROWTH_RATE.map(function(g){ return <option key={g} value={g}>{g}</option>; })}
@@ -209,30 +218,30 @@ function SellerForm(props) {
             </select>
           </div>
           <div className="pe-f">
-            <label>Gross margin <span className="opt">optional</span></label>
+            <label>Gross margin <span className="rq">*</span></label>
             <input type="text" placeholder="e.g. 62%" value={form.gross_margin} onChange={function(e){set('gross_margin',e.target.value);}} />
           </div>
         </div>
         <div className="pe-row">
           <div className="pe-f">
-            <label>Monthly burn / fixed costs <span className="opt">optional</span></label>
+            <label>Monthly burn / fixed costs <span className="rq">*</span></label>
             <input type="text" placeholder="e.g. ₹8L/month" value={form.monthly_burn} onChange={function(e){set('monthly_burn',e.target.value);}} />
           </div>
           <div className="pe-f">
-            <label>Cash in bank <span className="opt">optional</span></label>
+            <label>Cash in bank <span className="rq">*</span></label>
             <input type="text" placeholder="e.g. ₹45L" value={form.cash_in_bank} onChange={function(e){set('cash_in_bank',e.target.value);}} />
           </div>
         </div>
         <div className="pe-f">
-          <label>Outstanding debt / liabilities <span className="opt">optional</span></label>
-          <input type="text" placeholder="e.g. ₹12L bank loan, 0 external debt..." value={form.debt} onChange={function(e){set('debt',e.target.value);}} />
+          <label>Outstanding debt / liabilities <span className="rq">*</span></label>
+          <input type="text" placeholder="e.g. ₹12L bank loan, or 'None'" value={form.debt} onChange={function(e){set('debt',e.target.value);}} />
         </div>
       </div>
 
       <div className="pe-form-block">
         <div className="pe-form-block-title"><span>03</span> Customers & Revenue Quality</div>
         <div className="pe-f">
-          <label>Customer type</label>
+          <label>Customer type <span className="rq">*</span></label>
           <div className="pe-chips">
             {CUSTOMER_TYPE.map(function(c){
               return <div key={c} className={'pe-chip' + (form.customer_type === c ? ' on' : '')} onClick={function(){set('customer_type',c);}}>{c}</div>;
@@ -241,16 +250,16 @@ function SellerForm(props) {
         </div>
         <div className="pe-row">
           <div className="pe-f">
-            <label>Number of active customers <span className="opt">optional</span></label>
+            <label>Number of active customers <span className="rq">*</span></label>
             <input type="text" placeholder="e.g. 340 active clients" value={form.active_customers} onChange={function(e){set('active_customers',e.target.value);}} />
           </div>
           <div className="pe-f">
-            <label>Monthly churn rate <span className="opt">optional</span></label>
-            <input type="text" placeholder="e.g. 2% monthly, or N/A for B2B" value={form.churn_rate} onChange={function(e){set('churn_rate',e.target.value);}} />
+            <label>Monthly churn rate <span className="rq">*</span></label>
+            <input type="text" placeholder="e.g. 2% monthly, or 'N/A' for B2B contracts" value={form.churn_rate} onChange={function(e){set('churn_rate',e.target.value);}} />
           </div>
         </div>
         <div className="pe-f">
-          <label>Top 3 customers / revenue concentration <span className="opt">optional</span></label>
+          <label>Top customers / revenue concentration <span className="rq">*</span></label>
           <textarea rows="2" placeholder="e.g. Top 3 clients = 40% of revenue. No single client above 20%." value={form.top_customers} onChange={function(e){set('top_customers',e.target.value);}} />
         </div>
       </div>
@@ -258,23 +267,23 @@ function SellerForm(props) {
       <div className="pe-form-block">
         <div className="pe-form-block-title"><span>04</span> Business Assets & Moat</div>
         <div className="pe-f">
-          <label>Key products / services <span className="opt">optional</span></label>
+          <label>Key products / services <span className="rq">*</span></label>
           <textarea rows="2" placeholder="What does the business actually sell? What are your top 3 revenue drivers?" value={form.key_products} onChange={function(e){set('key_products',e.target.value);}} />
         </div>
         <div className="pe-f">
-          <label>Technology / IP / proprietary assets <span className="opt">optional</span></label>
-          <textarea rows="2" placeholder="Software, patents, brand, proprietary process, exclusive contracts, licenses..." value={form.tech_ip} onChange={function(e){set('tech_ip',e.target.value);}} />
+          <label>Technology / IP / proprietary assets <span className="rq">*</span></label>
+          <textarea rows="2" placeholder="Software, patents, brand, proprietary process, licenses — or 'None'" value={form.tech_ip} onChange={function(e){set('tech_ip',e.target.value);}} />
         </div>
         <div className="pe-f">
-          <label>Physical / hard assets <span className="opt">optional</span></label>
-          <input type="text" placeholder="e.g. 2 delivery vehicles, leased warehouse 5000 sqft, production equipment" value={form.physical_assets} onChange={function(e){set('physical_assets',e.target.value);}} />
+          <label>Physical / hard assets <span className="rq">*</span></label>
+          <input type="text" placeholder="e.g. 2 delivery vehicles, 5000 sqft warehouse — or 'None'" value={form.physical_assets} onChange={function(e){set('physical_assets',e.target.value);}} />
         </div>
         <div className="pe-f">
-          <label>Key person risk <span className="opt">optional</span></label>
-          <input type="text" placeholder="Is the business dependent on you or one person? Who?" value={form.key_person_risk} onChange={function(e){set('key_person_risk',e.target.value);}} />
+          <label>Key person risk <span className="rq">*</span></label>
+          <input type="text" placeholder="Is the business dependent on you or one person? Be honest." value={form.key_person_risk} onChange={function(e){set('key_person_risk',e.target.value);}} />
         </div>
         <div className="pe-f">
-          <label>Team details <span className="opt">optional</span></label>
+          <label>Team details <span className="rq">*</span></label>
           <textarea rows="2" placeholder="Who are the key people? Will they stay post-acquisition? Any employment contracts?" value={form.existing_team} onChange={function(e){set('existing_team',e.target.value);}} />
         </div>
       </div>
@@ -303,7 +312,7 @@ function SellerForm(props) {
           </div>
         </div>
         <div className="pe-f">
-          <label>Valuation basis <span className="opt">optional</span></label>
+          <label>Valuation basis <span className="rq">*</span></label>
           <input type="text" placeholder="e.g. 3x revenue, 6x EBITDA, asset value, comparable transactions..." value={form.valuation_basis} onChange={function(e){set('valuation_basis',e.target.value);}} />
         </div>
         <div className="pe-f">
@@ -312,11 +321,11 @@ function SellerForm(props) {
           <div className="pe-cc">{form.reason_for_sale.length}/600</div>
         </div>
         <div className="pe-f">
-          <label>Your role post-transaction <span className="opt">optional</span></label>
-          <input type="text" placeholder="e.g. Will stay 12 months for handover. Open to advisory role. Full exit preferred." value={form.founder_post_deal} onChange={function(e){set('founder_post_deal',e.target.value);}} />
+          <label>Your role post-transaction <span className="rq">*</span></label>
+          <input type="text" placeholder="e.g. Will stay 12 months for handover. Open to advisory. Full exit preferred." value={form.founder_post_deal} onChange={function(e){set('founder_post_deal',e.target.value);}} />
         </div>
         <div className="pe-f">
-          <label>What do you need from the right buyer? <span className="opt">optional</span></label>
+          <label>What do you need from the right buyer? <span className="rq">*</span></label>
           <textarea rows="2" placeholder="Domain expertise, distribution network, brand upgrade, operational bandwidth, just capital..." value={form.what_buyer_needs} onChange={function(e){set('what_buyer_needs',e.target.value);}} />
         </div>
         <div className="pe-f">
@@ -334,7 +343,7 @@ function SellerForm(props) {
           </div>
           <div className="pe-f">
             <label>Co-founders <span className="opt">optional</span></label>
-            <input type="text" placeholder="Names and roles of other founders" value={form.co_founders} onChange={function(e){set('co_founders',e.target.value);}} />
+            <input type="text" placeholder="Names and roles, or leave blank if sole founder" value={form.co_founders} onChange={function(e){set('co_founders',e.target.value);}} />
           </div>
         </div>
         <div className="pe-row">
@@ -348,7 +357,7 @@ function SellerForm(props) {
           </div>
         </div>
         <div className="pe-f">
-          <label>LinkedIn <span className="opt">optional</span></label>
+          <label>LinkedIn <span className="rq">*</span></label>
           <input type="url" placeholder="linkedin.com/in/yourprofile" value={form.linkedin} onChange={function(e){set('linkedin',e.target.value);}} />
         </div>
         <div className="pe-f">
@@ -370,10 +379,85 @@ function SellerForm(props) {
   );
 }
 
+function SuccessScreen(props) {
+  var refId = props.refId;
+  var nextSteps = [
+    {
+      n: '01',
+      t: 'Manual review — within 24 hours',
+      b: 'Our deal team reviews your submission for completeness, financial credibility, and deal readiness. Every listing is assessed individually before any buyer is approached.'
+    },
+    {
+      n: '02',
+      t: 'Buyer matching — within 48 hours',
+      b: 'We identify 2–5 qualified buyers whose investment mandate, sector focus, and deal size align precisely with your listing. No blind introductions. No unsolicited outreach to your competitors.'
+    },
+    {
+      n: '03',
+      t: 'Your approval — always required',
+      b: 'Before any buyer learns your identity, you review and approve the match. We share only an anonymised business summary until you give explicit written consent. You stay in control at every step.'
+    },
+    {
+      n: '04',
+      t: 'Deal room activation — on your signal',
+      b: 'Once you approve a match, we activate a private deal room: NDA, due diligence framework, valuation benchmarks, and a direct channel. Structured from the first conversation.'
+    },
+  ];
+
+  return (
+    <div className="pe-success-screen">
+      <div className="pe-ss-check-wrap">
+        <div className="pe-ss-check">✓</div>
+      </div>
+      <div className="pe-ss-ref">Listing Reference · {refId}</div>
+      <h2 className="pe-ss-title">Your listing has been received.</h2>
+      <p className="pe-ss-lead">
+        What happens next is structured, confidential, and designed to protect your interests at every stage.
+        You will not be contacted by any buyer without your prior written approval.
+      </p>
+
+      <div className="pe-ss-divider" />
+
+      <div className="pe-ss-steps-label">WHAT HAPPENS NEXT</div>
+      <div className="pe-ss-steps">
+        {nextSteps.map(function(s) {
+          return (
+            <div key={s.n} className="pe-ss-step">
+              <div className="pe-ss-step-num">{s.n}</div>
+              <div className="pe-ss-step-body">
+                <div className="pe-ss-step-title">{s.t}</div>
+                <div className="pe-ss-step-text">{s.b}</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="pe-ss-divider" />
+
+      <div className="pe-ss-contact-block">
+        <div className="pe-ss-contact-label">YOUR POINT OF CONTACT</div>
+        <div className="pe-ss-contact-email">pe@nocapvc.in</div>
+        <div className="pe-ss-contact-note">
+          Expect your first communication within 2 business days.
+          All correspondence from NoCap PE will originate from this address — treat any other contact as unsolicited.
+        </div>
+      </div>
+
+      <div className="pe-ss-footer-note">
+        You built something real. It deserves a structured, dignified exit — not a broker's cold call or a WhatsApp negotiation.
+        We will treat your business with the seriousness it has earned.
+      </div>
+
+      <a href="/" className="pe-ss-home-btn">← Return to NoCap VC</a>
+    </div>
+  );
+}
+
 export default function NoCap_PE() {
   useScrollReveal();
   var [view, setView] = useState('home');
-  var [success, setSuccess] = useState(false);
+  var [refId, setRefId] = useState('');
   var formRef = useRef(null);
 
   var goToForm = function() {
@@ -384,9 +468,12 @@ export default function NoCap_PE() {
   };
 
   var handleSuccess = function() {
-    setSuccess(true);
-    setView('home');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    var id = 'PE-' + String(Date.now()).slice(-6);
+    setRefId(id);
+    setView('success');
+    setTimeout(function() {
+      formRef.current && formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
   };
 
   return (
@@ -453,17 +540,6 @@ export default function NoCap_PE() {
           </div>
         </div>
       </section>
-
-      {/* SUCCESS BANNER */}
-      {success && (
-        <div className="pe-success-banner">
-          <div className="pe-sb-check">✓</div>
-          <div>
-            <div className="pe-sb-title">Your listing is in. We review within 48 hours.</div>
-            <div className="pe-sb-sub">Your identity stays confidential until you approve a buyer. Expect our first outreach within 2 business days.</div>
-          </div>
-        </div>
-      )}
 
       {/* STATS */}
       <section className="pe-stats-row pe-reveal">
@@ -564,7 +640,7 @@ export default function NoCap_PE() {
         </div>
       </section>
 
-      {/* FORM SECTION */}
+      {/* FORM / SUCCESS SECTION */}
       <section className="pe-form-section" ref={formRef} id="list">
         {view === 'home' && (
           <div className="pe-form-cta-wrap pe-reveal">
@@ -592,6 +668,10 @@ export default function NoCap_PE() {
             </div>
             <SellerForm onSuccess={handleSuccess} />
           </div>
+        )}
+
+        {view === 'success' && (
+          <SuccessScreen refId={refId} />
         )}
       </section>
 
