@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=JetBrains+Mono:wght@300;400;500&family=Syne:wght@400;700;800&display=swap');
 
 /* ── ROOT ─────────────────────────────────────────────────── */
-:root {
+/* Scoped to .pe-root — variables only apply inside the PE page,
+   not globally. This prevents overriding the main site's :root vars. */
+.pe-root {
   --g: #00E87A;
   --g2: #00C060;
   --g-dim: rgba(0,232,122,0.12);
