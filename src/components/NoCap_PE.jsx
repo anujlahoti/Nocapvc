@@ -143,7 +143,7 @@ function SellerForm(props) {
           <label>Sector <span className="rq">*</span></label>
           <select value={form.sector} onChange={function(e){set('sector',e.target.value);}}>
             <option value="">Select sector</option>
-            {SECTORS.map(function(s){ return <option key={s}>{s}</option>; })}
+            {SECTORS.map(function(s){ return <option key={s} value={s}>{s}</option>; })}
           </select>
         </div>
         <div className="pe-row">
@@ -155,7 +155,7 @@ function SellerForm(props) {
             <label>Geographic presence</label>
             <select value={form.geography} onChange={function(e){set('geography',e.target.value);}}>
               <option value="">Select</option>
-              {GEOGRAPHY.map(function(g){ return <option key={g}>{g}</option>; })}
+              {GEOGRAPHY.map(function(g){ return <option key={g} value={g}>{g}</option>; })}
             </select>
           </div>
         </div>
@@ -164,14 +164,14 @@ function SellerForm(props) {
             <label>Years in operation <span className="rq">*</span></label>
             <select value={form.years_running} onChange={function(e){set('years_running',e.target.value);}}>
               <option value="">Select</option>
-              {YEARS_RUNNING.map(function(y){ return <option key={y}>{y}</option>; })}
+              {YEARS_RUNNING.map(function(y){ return <option key={y} value={y}>{y}</option>; })}
             </select>
           </div>
           <div className="pe-f">
             <label>Total employees</label>
             <select value={form.employee_count} onChange={function(e){set('employee_count',e.target.value);}}>
               <option value="">Select</option>
-              {EMPLOYEE_COUNT.map(function(e){ return <option key={e}>{e}</option>; })}
+              {EMPLOYEE_COUNT.map(function(ec){ return <option key={ec} value={ec}>{ec}</option>; })}
             </select>
           </div>
         </div>
@@ -189,14 +189,14 @@ function SellerForm(props) {
             <label>Annual revenue (FY24) <span className="rq">*</span></label>
             <select value={form.annual_revenue} onChange={function(e){set('annual_revenue',e.target.value);}}>
               <option value="">Select range</option>
-              {REVENUE_BANDS.map(function(r){ return <option key={r}>{r}</option>; })}
+              {REVENUE_BANDS.map(function(r){ return <option key={r} value={r}>{r}</option>; })}
             </select>
           </div>
           <div className="pe-f">
             <label>Revenue growth rate</label>
             <select value={form.revenue_growth} onChange={function(e){set('revenue_growth',e.target.value);}}>
               <option value="">Select</option>
-              {GROWTH_RATE.map(function(g){ return <option key={g}>{g}</option>; })}
+              {GROWTH_RATE.map(function(g){ return <option key={g} value={g}>{g}</option>; })}
             </select>
           </div>
         </div>
@@ -205,7 +205,7 @@ function SellerForm(props) {
             <label>EBITDA margin <span className="rq">*</span></label>
             <select value={form.ebitda_margin} onChange={function(e){set('ebitda_margin',e.target.value);}}>
               <option value="">Select</option>
-              {EBITDA_OPTIONS.map(function(e){ return <option key={e}>{e}</option>; })}
+              {EBITDA_OPTIONS.map(function(eo){ return <option key={eo} value={eo}>{eo}</option>; })}
             </select>
           </div>
           <div className="pe-f">
@@ -375,13 +375,12 @@ export default function NoCap_PE() {
   var [view, setView] = useState('home');
   var [success, setSuccess] = useState(false);
   var formRef = useRef(null);
-  var topRef = useRef(null);
 
   var goToForm = function() {
     setView('form');
     setTimeout(function() {
-      topRef.current && topRef.current.scrollIntoView({ behavior: 'smooth' });
-    }, 50);
+      formRef.current && formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
   };
 
   var handleSuccess = function() {
@@ -391,7 +390,7 @@ export default function NoCap_PE() {
   };
 
   return (
-    <div className="pe-root" ref={topRef}>
+    <div className="pe-root">
 
       {/* TOP NAV */}
       <nav className="pe-nav">
