@@ -26,6 +26,13 @@ const GROWTH_RATE = ['Declining','Flat (0–5%)','Moderate (5–20%)','Strong (2
 const CUSTOMER_TYPE = ['B2C — direct consumers','B2B — businesses','B2B2C — both','Government / Institutional','D2C — direct to consumer'];
 const GEOGRAPHY = ['Single city','State-wide','Pan India','India + International'];
 
+const TICKET_SIZES = ['Under ₹25L','₹25L–₹1Cr','₹1Cr–₹5Cr','₹5Cr–₹25Cr','₹25Cr–₹100Cr','Above ₹100Cr','Flexible / deal-dependent'];
+const CAPITAL_STATUS = ['Committed — ready to deploy immediately','Sourcing / in process of raising','Subject to the specific deal and diligence'];
+const DEAL_TIMELINE = ['Within 3 months','3–6 months','6–12 months','No fixed timeline — right deal only'];
+const PRIOR_ACQ = ['Yes — I have acquired or invested in businesses before','No — this will be my first acquisition'];
+const BUYER_TYPES = ['Individual operator / entrepreneur','Family office','HNI / angel investor','Micro-PE / search fund','Corporate strategic buyer','Other'];
+
+/* ── SCROLL REVEAL ─────────────────────────────────────────── */
 function useScrollReveal() {
   useEffect(function() {
     var els = document.querySelectorAll('.pe-reveal');
@@ -34,11 +41,19 @@ function useScrollReveal() {
         if (e.isIntersecting) { e.target.classList.add('pe-revealed'); obs.unobserve(e.target); }
       });
     }, { threshold: 0.1 });
-    els.forEach(function(el) { obs.observe(el); });
+    els.forEach(function(el) {
+      var rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add('pe-revealed');
+      } else {
+        obs.observe(el);
+      }
+    });
     return function() { obs.disconnect(); };
   }, []);
 }
 
+/* ── STAT COUNTER ──────────────────────────────────────────── */
 function StatCounter(props) {
   var value = props.value;
   var suffix = props.suffix || '';
@@ -72,6 +87,7 @@ function StatCounter(props) {
   );
 }
 
+/* ── SELLER FORM ───────────────────────────────────────────── */
 function SellerForm(props) {
   var onSuccess = props.onSuccess;
   var [form, setForm] = useState({
@@ -379,45 +395,207 @@ function SellerForm(props) {
   );
 }
 
+/* ── BUYER FORM ────────────────────────────────────────────── */
+function BuyerForm(props) {
+  var onSuccess = props.onSuccess;
+  var [form, setForm] = useState({
+    name:'', email:'', phone:'', linkedin:'',
+    buyer_type:'', current_role:'',
+    sectors_interest:[], deal_type_pref:'', ticket_size:'',
+    capital_status:'', prior_acquisitions:'',
+    operating_experience:'', beyond_capital:'',
+    timeline:'', additional_notes:''
+  });
+  var [loading, setLoading] = useState(false);
+  var [error, setError] = useState('');
+
+  var set = function(k, v) { setForm(function(f) { return Object.assign({}, f, {[k]: v}); }); };
+
+  var toggleSector = function(s) {
+    setForm(function(f) {
+      var arr = f.sectors_interest.slice();
+      var idx = arr.indexOf(s);
+      if (idx === -1) { arr.push(s); } else { arr.splice(idx, 1); }
+      return Object.assign({}, f, { sectors_interest: arr });
+    });
+  };
+
+  var handleSubmit = async function() {
+    var required = ['name','email','phone','linkedin','buyer_type','current_role',
+      'deal_type_pref','ticket_size','capital_status','prior_acquisitions',
+      'operating_experience','beyond_capital','timeline'];
+    for (var i = 0; i < required.length; i++) {
+      if (!form[required[i]]) { setError('Please fill all required fields marked with *.'); return; }
+    }
+    if (form.sectors_interest.length === 0) { setError('Please select at least one sector of interest.'); return; }
+    setLoading(true);
+    setError('');
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(Object.assign({}, form, {
+          _type: 'pe_buyer',
+          sectors_interest: form.sectors_interest.join(', ')
+        })),
+        mode: 'no-cors'
+      });
+      onSuccess();
+    } catch(e) {
+      setError('Something went wrong. Please try again.');
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="pe-form-wrap">
+
+      <div className="pe-form-block">
+        <div className="pe-form-block-title"><span>01</span> Who You Are</div>
+        <p className="pe-form-note-inline">Your identity is kept confidential. Sellers never see your details until you both approve a match.</p>
+        <div className="pe-row">
+          <div className="pe-f">
+            <label>Full name <span className="rq">*</span></label>
+            <input type="text" placeholder="Your full name" value={form.name} onChange={function(e){set('name',e.target.value);}} />
+          </div>
+          <div className="pe-f">
+            <label>Current role / title <span className="rq">*</span></label>
+            <input type="text" placeholder="e.g. CEO at XYZ, Partner at ABC Family Office" value={form.current_role} onChange={function(e){set('current_role',e.target.value);}} />
+          </div>
+        </div>
+        <div className="pe-row">
+          <div className="pe-f">
+            <label>Email <span className="rq">*</span></label>
+            <input type="email" placeholder="your@email.com" value={form.email} onChange={function(e){set('email',e.target.value);}} />
+          </div>
+          <div className="pe-f">
+            <label>Phone <span className="rq">*</span></label>
+            <input type="tel" placeholder="+91 98765 43210" value={form.phone} onChange={function(e){set('phone',e.target.value);}} />
+          </div>
+        </div>
+        <div className="pe-f">
+          <label>LinkedIn <span className="rq">*</span></label>
+          <input type="url" placeholder="linkedin.com/in/yourprofile" value={form.linkedin} onChange={function(e){set('linkedin',e.target.value);}} />
+        </div>
+        <div className="pe-f">
+          <label>Buyer profile <span className="rq">*</span></label>
+          <div className="pe-chips">
+            {BUYER_TYPES.map(function(b){
+              return <div key={b} className={'pe-chip' + (form.buyer_type === b ? ' on' : '')} onClick={function(){set('buyer_type',b);}}>{b}</div>;
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="pe-form-block">
+        <div className="pe-form-block-title"><span>02</span> Acquisition Mandate</div>
+        <div className="pe-f">
+          <label>Sectors of interest <span className="rq">*</span></label>
+          <p className="pe-form-note-inline" style={{marginBottom:'10px'}}>Select all that apply.</p>
+          <div className="pe-chips">
+            {SECTORS.map(function(s){
+              return <div key={s} className={'pe-chip' + (form.sectors_interest.indexOf(s) !== -1 ? ' on' : '')} onClick={function(){toggleSector(s);}}>{s}</div>;
+            })}
+          </div>
+        </div>
+        <div className="pe-f">
+          <label>Deal structure preference <span className="rq">*</span></label>
+          <div className="pe-deal-grid" style={{gridTemplateColumns:'repeat(2, 1fr)'}}>
+            {DEAL_TYPES.map(function(dt){
+              return (
+                <div key={dt.id} className={'pe-deal-card' + (form.deal_type_pref === dt.id ? ' on' : '')} onClick={function(){set('deal_type_pref',dt.id);}}>
+                  <div className="pe-deal-lbl">{dt.label}</div>
+                  <div className="pe-deal-sub">{dt.sub}</div>
+                </div>
+              );
+            })}
+            <div className={'pe-deal-card' + (form.deal_type_pref === 'open' ? ' on' : '')} onClick={function(){set('deal_type_pref','open');}}>
+              <div className="pe-deal-lbl">Open to All</div>
+              <div className="pe-deal-sub">Structure depends on the deal</div>
+            </div>
+          </div>
+        </div>
+        <div className="pe-f">
+          <label>Investment ticket size <span className="rq">*</span></label>
+          <div className="pe-chips wrap">
+            {TICKET_SIZES.map(function(t){
+              return <div key={t} className={'pe-chip' + (form.ticket_size === t ? ' on' : '')} onClick={function(){set('ticket_size',t);}}>{t}</div>;
+            })}
+          </div>
+        </div>
+        <div className="pe-f">
+          <label>Capital readiness <span className="rq">*</span></label>
+          <div className="pe-chips" style={{flexDirection:'column', gap:'8px'}}>
+            {CAPITAL_STATUS.map(function(c){
+              return <div key={c} className={'pe-chip' + (form.capital_status === c ? ' on' : '')} onClick={function(){set('capital_status',c);}} style={{borderRadius:'6px', whiteSpace:'normal', lineHeight:'1.5'}}>{c}</div>;
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="pe-form-block">
+        <div className="pe-form-block-title"><span>03</span> Your Edge & Track Record</div>
+        <div className="pe-f">
+          <label>Prior acquisitions / investments <span className="rq">*</span></label>
+          <div className="pe-chips" style={{flexDirection:'column', gap:'8px'}}>
+            {PRIOR_ACQ.map(function(p){
+              return <div key={p} className={'pe-chip' + (form.prior_acquisitions === p ? ' on' : '')} onClick={function(){set('prior_acquisitions',p);}} style={{borderRadius:'6px', whiteSpace:'normal', lineHeight:'1.5'}}>{p}</div>;
+            })}
+          </div>
+        </div>
+        <div className="pe-f">
+          <label>Relevant operating experience <span className="rq">*</span></label>
+          <textarea rows="3" placeholder="Describe your domain experience relevant to the sectors you want to acquire. What have you built, run, or scaled?" value={form.operating_experience} onChange={function(e){set('operating_experience',e.target.value);}} maxLength={500} />
+          <div className="pe-cc">{form.operating_experience.length}/500</div>
+        </div>
+        <div className="pe-f">
+          <label>What do you bring beyond capital? <span className="rq">*</span></label>
+          <textarea rows="3" placeholder="Distribution network, brand relationships, operational bandwidth, technology, team-building capability, sector expertise..." value={form.beyond_capital} onChange={function(e){set('beyond_capital',e.target.value);}} maxLength={400} />
+          <div className="pe-cc">{form.beyond_capital.length}/400</div>
+        </div>
+        <div className="pe-f">
+          <label>Acquisition timeline <span className="rq">*</span></label>
+          <div className="pe-chips wrap">
+            {DEAL_TIMELINE.map(function(t){
+              return <div key={t} className={'pe-chip' + (form.timeline === t ? ' on' : '')} onClick={function(){set('timeline',t);}}>{t}</div>;
+            })}
+          </div>
+        </div>
+        <div className="pe-f">
+          <label>Anything else we should know? <span className="opt">optional</span></label>
+          <textarea rows="2" placeholder="Specific businesses you've looked at, deal criteria, red lines, preferred geographies..." value={form.additional_notes} onChange={function(e){set('additional_notes',e.target.value);}} />
+        </div>
+      </div>
+
+      {error && <div className="pe-error-box">{error}</div>}
+
+      <button className="pe-cta-btn" onClick={handleSubmit} disabled={loading}>
+        {loading ? 'Submitting your mandate...' : 'Submit Acquisition Mandate →'}
+      </button>
+      <p className="pe-privacy-note">
+        Strictly confidential. Your identity is never shared with any seller without your explicit approval.
+        NoCap PE reviews every buyer mandate before initiating any match.
+      </p>
+    </div>
+  );
+}
+
+/* ── SELLER SUCCESS ────────────────────────────────────────── */
 function SuccessScreen(props) {
   var refId = props.refId;
   var nextSteps = [
-    {
-      n: '01',
-      t: 'Manual review — within 24 hours',
-      b: 'Our deal team reviews your submission for completeness, financial credibility, and deal readiness. Every listing is assessed individually before any buyer is approached.'
-    },
-    {
-      n: '02',
-      t: 'Buyer matching — within 48 hours',
-      b: 'We identify 2–5 qualified buyers whose investment mandate, sector focus, and deal size align precisely with your listing. No blind introductions. No unsolicited outreach to your competitors.'
-    },
-    {
-      n: '03',
-      t: 'Your approval — always required',
-      b: 'Before any buyer learns your identity, you review and approve the match. We share only an anonymised business summary until you give explicit written consent. You stay in control at every step.'
-    },
-    {
-      n: '04',
-      t: 'Deal room activation — on your signal',
-      b: 'Once you approve a match, we activate a private deal room: NDA, due diligence framework, valuation benchmarks, and a direct channel. Structured from the first conversation.'
-    },
+    { n:'01', t:'Manual review — within 24 hours', b:'Our deal team reviews your submission for completeness, financial credibility, and deal readiness. Every listing is assessed individually before any buyer is approached.' },
+    { n:'02', t:'Buyer matching — within 48 hours', b:'We identify 2–5 qualified buyers whose investment mandate, sector focus, and deal size align precisely with your listing. No blind introductions. No unsolicited outreach to your competitors.' },
+    { n:'03', t:'Your approval — always required', b:'Before any buyer learns your identity, you review and approve the match. We share only an anonymised business summary until you give explicit written consent.' },
+    { n:'04', t:'Deal room activation — on your signal', b:'Once you approve a match, we activate a private deal room: NDA, due diligence framework, valuation benchmarks, and a direct channel. Structured from the first conversation.' },
   ];
-
   return (
     <div className="pe-success-screen">
-      <div className="pe-ss-check-wrap">
-        <div className="pe-ss-check">✓</div>
-      </div>
+      <div className="pe-ss-check-wrap"><div className="pe-ss-check">✓</div></div>
       <div className="pe-ss-ref">Listing Reference · {refId}</div>
       <h2 className="pe-ss-title">Your listing has been received.</h2>
-      <p className="pe-ss-lead">
-        What happens next is structured, confidential, and designed to protect your interests at every stage.
-        You will not be contacted by any buyer without your prior written approval.
-      </p>
-
+      <p className="pe-ss-lead">What happens next is structured, confidential, and designed to protect your interests at every stage. You will not be contacted by any buyer without your prior written approval.</p>
       <div className="pe-ss-divider" />
-
       <div className="pe-ss-steps-label">WHAT HAPPENS NEXT</div>
       <div className="pe-ss-steps">
         {nextSteps.map(function(s) {
@@ -432,28 +610,61 @@ function SuccessScreen(props) {
           );
         })}
       </div>
-
       <div className="pe-ss-divider" />
-
       <div className="pe-ss-contact-block">
         <div className="pe-ss-contact-label">YOUR POINT OF CONTACT</div>
         <div className="pe-ss-contact-email">help.nocappe@gmail.com</div>
-        <div className="pe-ss-contact-note">
-          Expect your first communication within 2 business days.
-          All correspondence from NoCap PE will originate from this address — treat any other contact as unsolicited.
-        </div>
+        <div className="pe-ss-contact-note">Expect your first communication within 2 business days. All correspondence from NoCap PE will originate from this address — treat any other contact as unsolicited.</div>
       </div>
-
-      <div className="pe-ss-footer-note">
-        You built something real. It deserves a structured, dignified exit — not a broker's cold call or a WhatsApp negotiation.
-        We will treat your business with the seriousness it has earned.
-      </div>
-
+      <div className="pe-ss-footer-note">You built something real. It deserves a structured, dignified exit — not a broker's cold call or a WhatsApp negotiation. We will treat your business with the seriousness it has earned.</div>
       <a href="/" className="pe-ss-home-btn">← Return to NoCap VC</a>
     </div>
   );
 }
 
+/* ── BUYER SUCCESS ─────────────────────────────────────────── */
+function BuyerSuccessScreen(props) {
+  var refId = props.refId;
+  var nextSteps = [
+    { n:'01', t:'Mandate review — within 24 hours', b:'Our deal team reviews your acquisition mandate against our active listing pipeline. We assess fit across sector, ticket size, deal structure, and your operating profile.' },
+    { n:'02', t:'Curated deal teasers — within 48 hours', b:'We send you anonymised, one-page teasers of businesses that match your mandate. No names, no identities — just the commercial fundamentals you need to make a go / no-go decision.' },
+    { n:'03', t:'You decide who to meet', b:'For every teaser you express interest in, we seek the seller\'s approval. Only when both sides agree do we open the introductory channel. No cold drops, no pressure.' },
+    { n:'04', t:'Deal room — when both sides are ready', b:'Once introductions are approved, we activate a structured deal room with NDA, due diligence framework, and valuation reference points. We stay involved as a neutral facilitator throughout.' },
+  ];
+  return (
+    <div className="pe-success-screen">
+      <div className="pe-ss-check-wrap"><div className="pe-ss-check">✓</div></div>
+      <div className="pe-ss-ref">Buyer Reference · {refId}</div>
+      <h2 className="pe-ss-title">Your mandate is on file.</h2>
+      <p className="pe-ss-lead">We don't send mass deal flow. Every teaser you receive will be handpicked against your mandate. Expect quality over quantity — and full confidentiality on both sides.</p>
+      <div className="pe-ss-divider" />
+      <div className="pe-ss-steps-label">WHAT HAPPENS NEXT</div>
+      <div className="pe-ss-steps">
+        {nextSteps.map(function(s) {
+          return (
+            <div key={s.n} className="pe-ss-step">
+              <div className="pe-ss-step-num">{s.n}</div>
+              <div className="pe-ss-step-body">
+                <div className="pe-ss-step-title">{s.t}</div>
+                <div className="pe-ss-step-text">{s.b}</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="pe-ss-divider" />
+      <div className="pe-ss-contact-block">
+        <div className="pe-ss-contact-label">YOUR POINT OF CONTACT</div>
+        <div className="pe-ss-contact-email">help.nocappe@gmail.com</div>
+        <div className="pe-ss-contact-note">Expect your first deal teaser within 2 business days if active listings match your mandate. All outreach from NoCap PE originates from this address only.</div>
+      </div>
+      <div className="pe-ss-footer-note">The best acquisitions aren't found — they're matched. We'll do the work. You make the call.</div>
+      <a href="/" className="pe-ss-home-btn">← Return to NoCap VC</a>
+    </div>
+  );
+}
+
+/* ── MAIN PAGE ─────────────────────────────────────────────── */
 export default function NoCap_PE() {
   useScrollReveal();
   var [view, setView] = useState('home');
@@ -467,10 +678,26 @@ export default function NoCap_PE() {
     }, 80);
   };
 
-  var handleSuccess = function() {
+  var goToBuyerForm = function() {
+    setView('buyer-form');
+    setTimeout(function() {
+      formRef.current && formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  };
+
+  var handleSellerSuccess = function() {
     var id = 'PE-' + String(Date.now()).slice(-6);
     setRefId(id);
     setView('success');
+    setTimeout(function() {
+      formRef.current && formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  };
+
+  var handleBuyerSuccess = function() {
+    var id = 'BU-' + String(Date.now()).slice(-6);
+    setRefId(id);
+    setView('buyer-success');
     setTimeout(function() {
       formRef.current && formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 80);
@@ -523,7 +750,7 @@ export default function NoCap_PE() {
                 <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
-            <a href="mailto:pe@nocapvc.in" className="pe-btn-ghost">I want to acquire →</a>
+            <button className="pe-btn-ghost" onClick={goToBuyerForm}>I want to acquire →</button>
           </div>
 
           <div className="pe-hero-scroll pe-reveal">
@@ -642,17 +869,29 @@ export default function NoCap_PE() {
 
       {/* FORM / SUCCESS SECTION */}
       <section className="pe-form-section" ref={formRef} id="list">
+
         {view === 'home' && (
-          <div className="pe-form-cta-wrap pe-reveal">
-            <div className="pe-section-tag">LIST YOUR BUSINESS</div>
-            <h2 className="pe-section-h2">Ready to find the right buyer?</h2>
-            <p className="pe-form-cta-sub">The most detailed, most confidential business listing form in India. Built with the same rigour Sequoia's deal team would expect. Takes 12 minutes.</p>
-            <button className="pe-btn-green large" onClick={goToForm}>
-              Start Listing My Business
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
+          <div className="pe-home-cta-grid pe-reveal">
+            <div className="pe-cta-card seller">
+              <div className="pe-section-tag">SELL YOUR BUSINESS</div>
+              <h2 className="pe-section-h2">Ready to find the right buyer?</h2>
+              <p className="pe-form-cta-sub">The most detailed, most confidential business listing form in India. Built with the same rigour Sequoia's deal team would expect. Takes 12 minutes.</p>
+              <button className="pe-btn-green large" onClick={goToForm}>
+                Start Listing My Business
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <div className="pe-cta-divider" />
+            <div className="pe-cta-card buyer">
+              <div className="pe-section-tag">ACQUIRE A BUSINESS</div>
+              <h2 className="pe-section-h2">Looking for your next acquisition?</h2>
+              <p className="pe-form-cta-sub">Submit your acquisition mandate. We'll match you to verified, off-market businesses that fit your sector, ticket size, and deal structure. No cold deal flow.</p>
+              <button className="pe-btn-ghost-lg" onClick={goToBuyerForm}>
+                Register as a Buyer →
+              </button>
+            </div>
           </div>
         )}
 
@@ -666,13 +905,27 @@ export default function NoCap_PE() {
                 Your identity is never shared without explicit written consent.
               </div>
             </div>
-            <SellerForm onSuccess={handleSuccess} />
+            <SellerForm onSuccess={handleSellerSuccess} />
           </div>
         )}
 
-        {view === 'success' && (
-          <SuccessScreen refId={refId} />
+        {view === 'buyer-form' && (
+          <div className="pe-form-page">
+            <div className="pe-form-page-header">
+              <button className="pe-back" onClick={function(){setView('home');}}>← Back</button>
+              <div className="pe-form-page-title">Register as a Buyer</div>
+              <div className="pe-form-page-sub">
+                Your acquisition mandate. Three focused sections. Under 8 minutes.<br />
+                We match — you decide. Every introduction requires your approval.
+              </div>
+            </div>
+            <BuyerForm onSuccess={handleBuyerSuccess} />
+          </div>
         )}
+
+        {view === 'success' && <SuccessScreen refId={refId} />}
+        {view === 'buyer-success' && <BuyerSuccessScreen refId={refId} />}
+
       </section>
 
       {/* FOOTER */}
@@ -685,7 +938,7 @@ export default function NoCap_PE() {
           <div className="pe-footer-right">
             <a href="/">NoCap VC</a>
             <a href="/school">Founder School</a>
-            <a href="mailto:pe@nocapvc.in">Contact</a>
+            <a href="mailto:help.nocappe@gmail.com">Contact</a>
             <a href="https://instagram.com/nocapvc" target="_blank" rel="noreferrer">@nocapvc</a>
           </div>
         </div>
