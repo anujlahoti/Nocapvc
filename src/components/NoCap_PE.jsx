@@ -437,7 +437,7 @@ function SuccessScreen(props) {
 
       <div className="pe-ss-contact-block">
         <div className="pe-ss-contact-label">YOUR POINT OF CONTACT</div>
-        <div className="pe-ss-contact-email">pe@nocapvc.in</div>
+        <div className="pe-ss-contact-email">help.nocappe@gmail.com</div>
         <div className="pe-ss-contact-note">
           Expect your first communication within 2 business days.
           All correspondence from NoCap PE will originate from this address — treat any other contact as unsolicited.
