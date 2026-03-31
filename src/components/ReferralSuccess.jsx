@@ -34,8 +34,8 @@ export default function ReferralSuccess({ referralCode, founderName }) {
       <div className="ref-divider" />
 
       <div className="ref-share-block">
-        <div className="ref-share-label">TAG 2 FOUNDERS WHO SHOULD APPLY</div>
-        <p className="ref-share-sub">Share your link — they get priority in review queue.</p>
+        <div className="ref-share-label">YOUR REFERRAL IS YOUR SIGNAL</div>
+        <p className="ref-share-sub">Investors evaluate networks, not just ideas. Founders who refer quality builders rank higher in our selection — your referral reflects directly on you.</p>
 
         <div className="ref-link-box">
           <span className="ref-link-text">{referralLink}</span>

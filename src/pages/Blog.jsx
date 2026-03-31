@@ -87,7 +87,7 @@ export default function Blog() {
         </Link>
         <div className="bl-nav-right">
           <Link to="/" className="bl-nav-link">← Home</Link>
-          <Link to="/#apply" className="bl-nav-cta">Apply Now →</Link>
+          <Link to="/#apply-form" className="bl-nav-cta">Apply Now →</Link>
         </div>
       </nav>
 

@@ -161,7 +161,7 @@ export default function ApplicationForm() {
   }
 
   return (
-    <div className="form-box">
+    <div className="form-box" id="apply-form">
       <div className="prog-wrap">
         <div className="prog-meta">
           <span className="prog-lbl">Progress</span>

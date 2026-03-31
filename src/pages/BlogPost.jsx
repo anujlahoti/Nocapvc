@@ -47,7 +47,7 @@ export default function BlogPost() {
         </Link>
         <div className="bp-nav-right">
           <Link to="/blog" className="bp-nav-link">← All articles</Link>
-          <a href="/#apply" className="bp-nav-cta">Apply Now →</a>
+          <a href="/#apply-form" className="bp-nav-cta">Apply Now →</a>
         </div>
       </nav>
 
@@ -92,7 +92,7 @@ export default function BlogPost() {
             Your application takes 12 minutes. AI screens it in 48 hours.<br />
             Structured feedback guaranteed. No ghosting.
           </p>
-          <a href="/#apply" className="bp-cta-btn">Apply Now → nocapvc.in</a>
+          <a href="/#apply-form" className="bp-cta-btn">Apply Now → nocapvc.in</a>
         </div>
       </section>
 

@@ -27,7 +27,7 @@ export default function Navbar() {
         <li><button onClick={function(){ scrollTo('how'); }}>How it works</button></li>
         <li><button onClick={function(){ scrollTo('feedback'); }}>Feedback</button></li>
         <li><button onClick={function(){ scrollTo('investors'); }}>For Investors</button></li>
-        <li><button onClick={function(){ scrollTo('apply'); }}>Apply</button></li>
+        <li><button onClick={function(){ scrollTo('apply-form'); }}>Apply</button></li>
         <li><a href="/blog" className="nav-blog-link">Blog</a></li>
         <li>
           <a href="/school" className="nav-product-link school-link">
@@ -40,7 +40,7 @@ export default function Navbar() {
           </a>
         </li>
       </ul>
-      <button className="nav-cta" onClick={function(){ scrollTo('apply'); }}>Apply Now →</button>
+      <button className="nav-cta" onClick={function(){ scrollTo('apply-form'); }}>Apply Now →</button>
       <button
         className="ham"
         id="ham"
