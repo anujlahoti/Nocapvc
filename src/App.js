@@ -16,6 +16,8 @@ import PartnerModal from './components/PartnerModal';
 import School from './components/School/School';
 import AIInterview from './components/AIInterview';
 import NoCaPE from './components/NoCap_PE';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 import useScrollReveal from './hooks/useScrollReveal';
 
 function MainSite() {
@@ -55,6 +57,8 @@ export default function App() {
         <Route path="/school/*" element={<School />} />
         <Route path="/interview" element={<AIInterview />} />
         <Route path="/pe" element={<NoCaPE />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
       </Routes>
     </BrowserRouter>
   );

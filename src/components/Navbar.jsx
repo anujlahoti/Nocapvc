@@ -28,6 +28,7 @@ export default function Navbar() {
         <li><button onClick={function(){ scrollTo('feedback'); }}>Feedback</button></li>
         <li><button onClick={function(){ scrollTo('investors'); }}>For Investors</button></li>
         <li><button onClick={function(){ scrollTo('apply'); }}>Apply</button></li>
+        <li><a href="/blog" className="nav-blog-link">Blog</a></li>
         <li>
           <a href="/school" className="nav-product-link school-link">
             Founder School <span className="nav-spark">✦</span>

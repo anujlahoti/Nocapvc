@@ -1,0 +1,137 @@
+.ref-wrap {
+  text-align: center;
+  padding: 48px 32px;
+}
+
+.ref-icon {
+  font-size: 40px;
+  margin-bottom: 16px;
+}
+
+.ref-title {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.ref-title em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--yellow);
+}
+
+.ref-body {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--muted2);
+  line-height: 1.8;
+  margin-bottom: 0;
+}
+
+.ref-promise {
+  color: var(--yellow);
+}
+
+.ref-divider {
+  height: 1px;
+  background: var(--b2);
+  margin: 28px 0;
+}
+
+.ref-share-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.ref-share-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--yellow);
+  text-transform: uppercase;
+}
+
+.ref-share-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.ref-link-box {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--g3);
+  border: 1px solid var(--b2);
+  border-radius: 6px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 420px;
+}
+
+.ref-link-text {
+  flex: 1;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted2);
+  padding: 12px 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+.ref-copy-btn {
+  background: var(--yellow);
+  color: var(--black);
+  border: none;
+  padding: 12px 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.ref-copy-btn:hover {
+  opacity: 0.85;
+}
+
+.ref-wa-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: #25D366;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  padding: 13px 24px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: opacity 0.15s;
+  width: 100%;
+  max-width: 420px;
+  justify-content: center;
+}
+
+.ref-wa-btn:hover {
+  opacity: 0.88;
+}
+
+@media (max-width: 480px) {
+  .ref-wrap { padding: 32px 16px; }
+  .ref-title { font-size: 28px; }
+}

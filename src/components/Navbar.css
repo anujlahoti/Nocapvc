@@ -30,6 +30,15 @@ nav.scr { padding: 12px 48px; }
 }
 .nav-links li button:hover { color: var(--yellow); }
 
+/* Blog link */
+.nav-blog-link {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: .12em; color: var(--muted2);
+  text-transform: uppercase; text-decoration: none;
+  transition: color .2s;
+}
+.nav-blog-link:hover { color: var(--yellow); }
+
 /* Founder School link inside mobile nav */
 .nav-school-link {
   font-family: 'DM Mono', monospace; font-size: 11px;

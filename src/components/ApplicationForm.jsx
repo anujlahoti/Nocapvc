@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './ApplicationForm.css';
+import ReferralSuccess from './ReferralSuccess';
 
 const GOOGLE_SCRIPT_URL = process.env.REACT_APP_GOOGLE_SCRIPT_URL || 'YOUR_APPS_SCRIPT_URL_HERE';
 
@@ -26,6 +27,20 @@ export default function ApplicationForm() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [hasCofounder, setHasCofounder] = useState(false);
+  const [refCode, setRefCode] = useState('');
+  const [referralCode, setReferralCode] = useState('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if (ref) {
+      setRefCode(ref);
+      localStorage.setItem('nocap_ref', ref);
+    } else {
+      const stored = localStorage.getItem('nocap_ref');
+      if (stored) setRefCode(stored);
+    }
+  }, []);
 
   const progress = Math.round((answered.size / TOTAL_FIELDS) * 100);
 
@@ -83,6 +98,9 @@ export default function ApplicationForm() {
       if (form.need_validation) needs.push('Validation');
       if (form.need_technical) needs.push('Technical Help');
 
+      const generatedCode = form.name.split(' ')[0].toUpperCase().slice(0, 4)
+        + Math.random().toString(36).slice(2, 6).toUpperCase();
+
       const payload = {
         name: form.name,
         email: form.email,
@@ -109,9 +127,10 @@ export default function ApplicationForm() {
         revenue_model: form.revenue_model,
         video_url: form.video_url,
         phone: form.phone,
-      
         pitchdeck_url: form.pitchdeck_url,
         website: form.website,
+        referred_by: refCode || '',
+        referral_code: generatedCode,
         submitted_at: new Date().toISOString(),
       };
 
@@ -122,6 +141,8 @@ export default function ApplicationForm() {
         mode: 'no-cors',
       });
 
+      setReferralCode(generatedCode);
+      localStorage.removeItem('nocap_ref');
       setSuccess(true);
       window.scrollTo({ top: document.getElementById('apply').offsetTop, behavior: 'smooth' });
     } catch (err) {
@@ -134,16 +155,7 @@ export default function ApplicationForm() {
   if (success) {
     return (
       <div className="form-box">
-        <div className="success">
-          <div className="success-ico">🎯</div>
-          <div className="success-t">You're <em>in.</em></div>
-          <p className="success-b">
-            Application submitted successfully.<br /><br />
-            Our partners will review it within <strong>14 days.</strong><br />
-            You'll receive structured feedback — what worked, what didn't, exactly what to fix.<br /><br />
-            <span style={{ color: 'var(--yellow)' }}>No ghosting. That's the NoCap promise.</span>
-          </p>
-        </div>
+        <ReferralSuccess referralCode={referralCode} founderName={form.name} />
       </div>
     );
   }
