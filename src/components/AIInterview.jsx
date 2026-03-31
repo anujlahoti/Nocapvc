@@ -159,7 +159,14 @@ export default function AIInterview() {
   const callGemini = async (conversationHistory) => {
     if (!GEMINI_KEY) throw new Error('API key not configured');
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+
+    // Gemini requires conversation to start with a user turn
+    // Inject system prompt as first user/model exchange
+    const systemTurn = [
+      { role: 'user', parts: [{ text: SYSTEM_PROMPT }] },
+      { role: 'model', parts: [{ text: 'Understood. I am NoCap AI, ready to conduct the founder interview.' }] }
+    ];
 
     const contents = conversationHistory.map(msg => ({
       role: msg.role === 'ai' ? 'model' : 'user',
@@ -170,20 +177,23 @@ export default function AIInterview() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents,
+        contents: [...systemTurn, ...contents],
         generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
       })
     });
 
     if (!res.ok) {
       const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.error?.message || errData.error?.status || `HTTP ${res.status}`);
+      const errMsg = errData.error?.message || errData.error?.status || `HTTP ${res.status}`;
+      console.error('Gemini API error:', errMsg, errData);
+      throw new Error(errMsg);
     }
 
     const data = await res.json();
     if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
-      throw new Error(data.error?.message || 'Empty response from AI');
+      const errMsg = data.error?.message || JSON.stringify(data);
+      console.error('Gemini empty response:', errMsg);
+      throw new Error(errMsg);
     }
     return data.candidates[0].content.parts[0].text;
   };
