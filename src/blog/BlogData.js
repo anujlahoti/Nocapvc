@@ -484,6 +484,12 @@ export const posts = [
   {
     id: '007',
     slug: 'how-to-apply-y-combinator-from-india',
+    faqs: [
+      { q: 'Can I apply to Y Combinator from India?', a: 'Yes. Y Combinator accepts applications from founders worldwide regardless of location. India has produced multiple YC-backed unicorns including Razorpay, Meesho, ClearTax, and Zepto.' },
+      { q: 'What does Y Combinator invest in Indian startups?', a: 'YC invests $500K for approximately 7% equity (verify current terms at ycombinator.com). Companies must be incorporated as Delaware C-Corps before funding — Indian Private Limited companies can flip to Delaware before or after acceptance.' },
+      { q: 'When is the Y Combinator application deadline for Indian founders?', a: 'YC runs two batches per year. Winter batch applications open in October–November. Summer batch applications open in February–March. Check ycombinator.com/apply for exact current deadlines.' },
+      { q: 'Do I need traction to apply to Y Combinator?', a: 'No minimum traction is required. However, any evidence of demand — paying customers, active users, a waitlist, or early pilots — significantly improves your chances. Applications with zero evidence of market testing are accepted but at lower rates.' },
+    ],
     title: 'How to Apply to Y Combinator from India: The Complete 2025 Guide',
     excerpt: 'India has produced more YC-backed unicorns than any country outside the US. Here is exactly how to apply — what YC looks for, what kills applications, and what Indian founders get wrong.',
     category: 'funding-intelligence',
@@ -557,6 +563,12 @@ export const posts = [
   {
     id: '008',
     slug: 'best-incubators-india-early-stage-startups',
+    faqs: [
+      { q: 'What is the best incubator for early-stage startups in India?', a: 'For technology startups: SINE IIT Bombay. For social impact, agritech, or cleantech: CIIE IIM Ahmedabad. For any sector at idea or prototype stage: NSRCEL IIM Bangalore, which explicitly supports very early-stage founders. For scale and corporate partnerships: T-Hub Hyderabad.' },
+      { q: 'Do Indian incubators provide funding?', a: 'Yes. IIT and IIM-affiliated incubators typically provide ₹25–50 lakh in seed funding. Private incubators like 100X.VC provide ₹25 lakh for 1.5% equity. Government-backed incubators like T-Hub primarily offer workspace, mentorship, and investor network access rather than direct capital.' },
+      { q: 'How do I apply to an incubator in India?', a: 'Most incubators have online applications on their official websites. NoCap VC sends one application to multiple partner incubators simultaneously, removing the need to research and apply individually.' },
+      { q: 'Is DPIIT recognition required to join an Indian incubator?', a: 'Not required at application stage, but most recognised incubators will ask you to apply for DPIIT recognition during or after the incubation period. The process is free and takes 2–10 business days at startupindia.gov.in.' },
+    ],
     title: 'Best Incubators in India for Early-Stage Startups (2025 List)',
     excerpt: 'Not all Indian incubators are equal. Some offer capital and credibility. Others offer mostly coworking space. Here is how to tell the difference — and which ones are worth your time.',
     category: 'funding-intelligence',
@@ -632,6 +644,11 @@ India's largest angel network and incubation platform by deal volume. VCats writ
   {
     id: '009',
     slug: 'how-to-get-startup-funding-india-without-connections',
+    faqs: [
+      { q: 'Can I get startup funding in India without knowing any investors?', a: 'Yes. Platforms like LVX (formerly LetsVenture), AngelList India, Indian Angel Network, Inflection Point Ventures, and NoCap VC evaluate applications on merit without requiring introductions from existing portfolio founders or investors.' },
+      { q: 'How do first-time Indian founders get their first funding?', a: 'Most first funding for unknown founders comes through structured platforms (NoCap VC, LVX, AngelList India), incubator programmes (NSRCEL, SINE, T-Hub), or government schemes (SIDBI Startup Fund, Startup India Seed Fund). A strong application with evidence of demand matters more than network access at this stage.' },
+      { q: 'What is the fastest way to get seed funding in India?', a: 'Build evidence first — any paying customer, active users, or a waitlist of validated demand. Then apply through structured platforms that can surface your application to multiple investors simultaneously. NoCap VC sends one application to 5 angel investors and 2 incubators with structured feedback within 14 days.' },
+    ],
     title: 'How to Get Startup Funding in India Without Connections',
     excerpt: 'Most Indian founders believe you need to know someone to get funded. The data says otherwise. Here is the systematic approach that works — regardless of your network.',
     category: 'founder-playbooks',
@@ -700,6 +717,12 @@ India's largest angel network and incubation platform by deal volume. VCats writ
   {
     id: '010',
     slug: 'what-is-good-tam-startup-india',
+    faqs: [
+      { q: 'What TAM do I need to raise seed funding in India?', a: 'Angel investors and seed-stage funds in India typically want to see a Serviceable Addressable Market (SAM) of ₹100–500 crore. Series A institutional investors expect a total addressable market of ₹1,000 crore or more.' },
+      { q: 'What is the difference between TAM, SAM, and SOM?', a: 'TAM (Total Addressable Market) is the entire market at 100% share. SAM (Serviceable Addressable Market) is the portion you can realistically reach with your current model and geography. SOM (Serviceable Obtainable Market) is what you can actually win in year 1–2. Investors focus most on SAM and your reasoning behind it.' },
+      { q: 'How do I calculate TAM for an Indian startup?', a: 'Use a bottom-up approach: define your specific customer cohort using NSSO, Census, or Ministry data; determine what they will realistically pay per year; multiply. For example: 2.3 million target customers × ₹2,400 annual fee = ₹552 crore SAM. Always cite your data source.' },
+      { q: 'Is a ₹500 crore TAM enough to raise funding in India?', a: 'At seed stage, a ₹500 crore SAM (not TAM) can be sufficient if your unit economics are strong and your path to capturing 5–10% of that market is credible. The quality of your reasoning matters more than the headline number.' },
+    ],
     title: 'What Is a "Good" TAM for a Startup? The India Answer.',
     excerpt: 'Investors do not have a fixed TAM number that triggers a yes. They have a question: does this founder understand their market well enough to build a real business? Here is what that looks like.',
     category: 'funding-intelligence',
@@ -763,6 +786,12 @@ India's largest angel network and incubation platform by deal volume. VCats writ
   {
     id: '011',
     slug: 'angel-investors-india-early-stage-startups',
+    faqs: [
+      { q: 'Who are the most active angel investors in India in 2025?', a: 'Active individual angels include Kunal Shah (CRED founder), Anupam Mittal (Shaadi.com), Nithin Kamath (Zerodha co-founder), and Girish Mathrubootham (Freshworks founder). Active networks include Indian Angel Network (500+ angels), Inflection Point Ventures, LVX, and AngelList India (120 deals in 2024).' },
+      { q: 'What is the typical cheque size for angel investors in India?', a: 'Individual angels typically invest ₹25 lakh to ₹75 lakh at pre-seed stage. Organised networks like Indian Angel Network invest ₹30 lakh to ₹6 crore. Inflection Point Ventures and Venture Catalysts write ₹50 lakh to ₹1 crore.' },
+      { q: 'How do I approach angel investors in India?', a: 'Use structured platforms (LVX, AngelList India, NoCap VC, Indian Angel Network) rather than cold LinkedIn outreach. Build a strong application with specific evidence of demand. Angel investors on platforms are in an active deal-evaluation mindset — cold messages to their personal profiles have very low response rates.' },
+      { q: 'What sectors are Indian angel investors most interested in in 2025?', a: 'In 2024–2025, 56% of early-stage investors prioritised AI and GenAI startups, followed by cleantech (43%), fintech (39%), ecommerce (33%), and healthtech (30%), according to Inc42 data.' },
+    ],
     title: '32 Active Angel Investors in India for Early-Stage Startups (2025)',
     excerpt: 'A verified list of India\'s most active angel investors — sector focus, typical cheque size, and how to approach them. Updated for 2025.',
     category: 'funding-intelligence',
@@ -842,6 +871,12 @@ India's largest angel network and incubation platform by deal volume. VCats writ
   {
     id: '012',
     slug: 'how-to-write-startup-pitch-deck-india',
+    faqs: [
+      { q: 'How many slides should an Indian startup pitch deck have?', a: '10–14 slides for a first-meeting deck. The essential slides are: problem, solution, market size, business model, traction, team, competition, and the ask. Remove anything that does not directly advance the investment case.' },
+      { q: 'What is the most important slide in a startup pitch deck?', a: 'The problem slide. It establishes whether the startup is solving something real and painful. A vague problem slide signals insufficient customer research. Describe who has the problem, how often, what it costs them, and why existing solutions are inadequate.' },
+      { q: 'What do Indian investors look for in a pitch deck?', a: 'Indian investors pay particular attention to: a bottom-up TAM calculation (not a global market report), gross margins and unit economics, founder-market fit (why this team), and traction — any evidence that real customers want the product. Show Indian market comparables, not just global ones.' },
+      { q: 'Should I include financial projections in my pitch deck?', a: 'Yes. Include a 3-year model with clearly stated assumptions. Investors are not checking whether projections are accurate — they are checking whether you can model a business logically. Show your CAC, LTV, gross margin, and projected breakeven date.' },
+    ],
     title: 'How to Write a Startup Pitch Deck in India: The 12-Slide Structure That Gets Funded',
     excerpt: 'Most Indian pitch decks fail before the third slide. Not because the startup is bad — because the deck answers questions investors are not asking. Here is the structure that works.',
     category: 'founder-playbooks',
@@ -907,6 +942,13 @@ India's largest angel network and incubation platform by deal volume. VCats writ
   {
     id: '013',
     slug: 'dpiit-recognition-startup-india-benefits',
+    faqs: [
+      { q: 'What is DPIIT recognition for startups in India?', a: 'DPIIT recognition is a free government certification under the Startup India programme that gives your company legal startup status. It unlocks income tax exemptions, angel tax protection, 80% rebate on patent filing, and fast-track winding up within 90 days under the Insolvency and Bankruptcy Code.' },
+      { q: 'How long does DPIIT recognition take?', a: 'Typically 2–10 business days. The application is free and entirely online at startupindia.gov.in. You need your incorporation certificate, PAN card, and a description of your innovative product or service.' },
+      { q: 'Does DPIIT recognition give income tax benefits?', a: 'Yes. After DPIIT recognition, you can apply for a Certificate of Eligibility under Section 80-IAC, which exempts your startup from income tax for any 3 consecutive years within the first 10 years of incorporation. This requires a separate application to the Inter-Ministerial Board.' },
+      { q: 'Who is eligible for DPIIT startup recognition?', a: 'Any Indian company (private limited, LLP, or partnership firm) that is less than 10 years old from date of incorporation, has annual turnover below ₹100 crore, and is working towards innovation, development, or improvement of a product or service. Not applicable to companies formed by splitting or restructuring an existing business.' },
+      { q: 'Does DPIIT recognition protect from angel tax?', a: 'Yes. DPIIT-recognised startups are exempt from Section 56(2)(viib) — the angel tax provision that treats investment above Fair Market Value as taxable income. This is one of the most important benefits for startups raising angel rounds at aspirational valuations.' },
+    ],
     title: 'DPIIT Startup Recognition: 10 Benefits and How to Apply (2025)',
     excerpt: 'DPIIT recognition is free, takes under a week, and gives Indian startups income tax exemptions, angel tax protection, 80% off patent filing, and fast-track winding up. Most founders still have not done it.',
     category: 'founder-playbooks',

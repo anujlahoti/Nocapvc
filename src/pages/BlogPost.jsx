@@ -3,6 +3,21 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { getPostBySlug, posts, CATEGORIES } from '../blog/BlogData';
 import './BlogPost.css';
 
+function FaqItem({ q, a }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`bp-faq-item${open ? ' open' : ''}`}>
+      <button className="bp-faq-q" onClick={() => setOpen(o => !o)}>
+        <span>{q}</span>
+        <svg className="bp-faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+      {open && <div className="bp-faq-a">{a}</div>}
+    </div>
+  );
+}
+
 export default function BlogPost() {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -13,6 +28,37 @@ export default function BlogPost() {
   useEffect(() => {
     if (!post) { navigate('/blog', { replace: true }); return; }
     window.scrollTo(0, 0);
+
+    // Dynamic page title + meta description for SEO
+    document.title = `${post.title} | NoCap VC`;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', post.excerpt);
+
+    // FAQ JSON-LD schema for Google + LLM citation
+    if (post.faqs && post.faqs.length > 0) {
+      const schema = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: post.faqs.map(f => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      };
+      const existing = document.getElementById('faq-schema');
+      if (existing) existing.remove();
+      const script = document.createElement('script');
+      script.id = 'faq-schema';
+      script.type = 'application/ld+json';
+      script.textContent = JSON.stringify(schema);
+      document.head.appendChild(script);
+    }
+
+    return () => {
+      document.title = 'NoCap VC | One Form, Opens Many Funding Doors';
+      const s = document.getElementById('faq-schema');
+      if (s) s.remove();
+    };
   }, [slug, post, navigate]);
 
   useEffect(() => {
@@ -82,6 +128,20 @@ export default function BlogPost() {
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </main>
+
+      {/* ── FAQ SECTION ── */}
+      {post.faqs && post.faqs.length > 0 && (
+        <section className="bp-faq">
+          <div className="bp-faq-inner">
+            <div className="bp-faq-label">FREQUENTLY ASKED</div>
+            <div className="bp-faq-list">
+              {post.faqs.map((f, i) => (
+                <FaqItem key={i} q={f.q} a={f.a} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── ARTICLE CTA ── */}
       <section className="bp-cta">
