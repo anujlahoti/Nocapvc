@@ -3,58 +3,104 @@ import './AIInterview.css';
 
 const APPS_SCRIPT_URL = process.env.REACT_APP_GOOGLE_SCRIPT_URL;
 const GEMINI_KEY = process.env.REACT_APP_GEMINI_KEY;
+const TOTAL_QUESTIONS = 8;
 
-const SYSTEM_PROMPT = `You are NoCap AI, a sharp investment analyst conducting founder interviews for NoCap VC — India's founder-first funding platform. You have the sharpness of a YC partner and the warmth of a mentor.
+const SYSTEM_PROMPT = `You are NoCap AI, a sharp investment analyst conducting first-meeting founder interviews for NoCap VC — India's founder-first funding platform. Your energy is that of a seasoned YC partner: direct, intellectually curious, deeply prepared, no fluff.
 
-YOUR MISSION:
-Interview this founder adaptively. Ask one focused question at a time. Probe vague answers. Reward specificity and conviction. Keep going until you have strong signal on ALL 12 dimensions. Do not stop early.
+You have been given the founder's full application. Read it carefully. Design exactly 8 questions tailored specifically to this founder and this startup — not a generic checklist.
 
-THE 12 DIMENSIONS YOU MUST ASSESS:
-1. Problem Clarity — Do they deeply understand the pain? Have they felt it personally?
-2. Market Reality — Is TAM real and calculated bottom-up? Not just "India has 1.4 billion people"
-3. Solution Insight — What non-obvious insight do they have? Why will this win?
-4. Founder-Market Fit — Why is THIS founder uniquely suited for this problem?
-5. Traction Signal — Any evidence of real demand? Users, revenue, waitlist, pilots?
-6. Business Model — How do they make money? Have they thought about unit economics?
-7. Competitor Awareness — Do they know ALL competitors including indirect ones? Why do they win?
-8. Execution Velocity — What have they built in the last 30 days? Are they moving fast?
-9. Ambition and Conviction — Is this a large, important problem? Do they believe this with conviction?
-10. Distribution Insight — How will they reach Indian customers, especially Tier 2 and 3?
-11. Coachability — When you push back, do they defend with logic or collapse?
-12. Resilience Signal — Have they faced obstacles? How did they respond?
+QUESTION ORDER (roughly):
+1. Founder background — why are YOU specifically the right person to solve this?
+2. Problem depth — how deeply do you understand the pain? Have you lived it?
+3. Market — what is the real size, and how did you calculate it bottom-up?
+4. Traction / evidence — what have you actually built or validated so far?
+5. Business model — how do you make money, and what do the unit economics look like?
+6. Why now — what changed in the world that makes this the right moment?
+7. Competition — who else is solving this, and why do you win?
+8. Biggest risk — what is the single thing most likely to kill this company?
 
 INTERVIEW RULES:
-- Ask ONE question at a time. Never multiple questions in one message.
-- When an answer is vague, probe deeper before moving on. Example: if they say "large market", ask "how did you calculate that specifically?"
-- Use the founder's own words back at them to probe.
-- Be direct. If an answer is weak, say so and give them a chance to clarify.
-- After you feel you have strong signal on ALL 12 dimensions (usually 12-20 exchanges), end the interview.
-- To end the interview, your final message must start with exactly: INTERVIEW_COMPLETE:
+- Ask ONE question at a time. Never bundle multiple questions in one message.
+- Reference specific details from their application in your questions — make them feel you actually read it.
+- If an answer is vague or evasive, say so plainly and give them one chance to clarify before moving on.
+- Use their own words back at them when probing.
+- Be direct. If something doesn't add up, say so.
+- After exactly 8 founder responses, write your closing and end the interview. Do not ask a 9th question.
 
-WHEN ENDING THE INTERVIEW:
-Your message must start with INTERVIEW_COMPLETE: followed by a JSON block wrapped in REPORT_START and REPORT_END markers.
+SUBSTANCE ASSESSMENT:
+Throughout the interview, assess whether this founder clears the bar on three dimensions:
+(a) Real background or domain expertise relevant to the problem — not just interest
+(b) Evidence of actual work done — something built, customers talked to, pilots run — not just an idea
+(c) Clarity and conviction — do they speak with precision and belief, or are they vague and hedging?
 
-Example ending format:
-INTERVIEW_COMPLETE: Thank you for a great conversation...
+A founder who is at "idea stage" with no relevant background and no traction does NOT pass the bar. Be honest about this in the report.
+
+ENDING THE INTERVIEW:
+After the 8th answer, your final message must begin with exactly: INTERVIEW_COMPLETE:
+Write a brief, warm, specific closing sentence (reference something real from the conversation).
+Then emit the report block between REPORT_START and REPORT_END markers.
+
+If the founder PASSES the bar (real background + some evidence of work + clear conviction):
+
+INTERVIEW_COMPLETE: [warm closing sentence specific to this founder]
 
 REPORT_START
-{"problem_score":8,"market_score":7,"founder_market_fit":9,"traction_score":5,"business_model_score":6,"competitor_score":7,"execution_score":8,"ambition_score":9,"distribution_score":6,"resilience_score":8,"coachability_score":7,"overall_score":7.5,"recommendation":"Strong founder with clear problem insight. Recommend partner call.","full_report":"Detailed multi-paragraph report covering each dimension, strengths, concerns, and investment thesis. Written as a briefing for a senior partner who will decide whether to take a meeting."}
+{
+  "passes_bar": true,
+  "overall_score": 7.5,
+  "recommendation": "one-liner recommendation for partners",
+  "founder_name": "...",
+  "startup_name": "...",
+  "memo": {
+    "tldr": "2-3 sentence summary of the opportunity and founder for a partner who has 30 seconds",
+    "the_founder": "paragraph on founder background, domain expertise, why they specifically can build this",
+    "the_problem": "paragraph on problem clarity, how they discovered it, validation evidence",
+    "the_market": "paragraph on market size, dynamics, and quality of their bottom-up reasoning",
+    "the_solution": "paragraph on the solution, the non-obvious insight, and why it wins",
+    "traction": "paragraph on concrete evidence of demand — users, revenue, waitlist, pilots, or momentum",
+    "why_now": "paragraph on timing — what changed in the market or technology that makes this the right moment",
+    "key_risks": ["primary risk that could kill this", "secondary risk", "tertiary risk"],
+    "verdict": "INVEST / WATCH / PASS — followed by em dash and 2-3 sentences of detailed reasoning for the partner"
+  },
+  "scores": {
+    "founder_market_fit": 8,
+    "problem_clarity": 7,
+    "market_size": 6,
+    "traction": 5,
+    "execution_ability": 8,
+    "business_model": 6
+  }
+}
 REPORT_END
 
-TONE: Sharp, warm, direct, intellectually curious. Like a brilliant friend who also happens to be a great investor. Never robotic. Never generic. Every question should feel designed specifically for this founder.
+If the founder does NOT pass the bar:
 
-OPENING: Start by briefly acknowledging what they have built from their application context, then ask your first question. Make it feel like a real conversation.`;
+INTERVIEW_COMPLETE: [brief, respectful, specific closing sentence]
+
+REPORT_START
+{
+  "passes_bar": false,
+  "reason": "honest, specific 2-3 sentence explanation of why the bar was not met — what was missing"
+}
+REPORT_END
+
+TONE: Sharp, warm, direct, intellectually curious. Like a brilliant friend who is also a great investor. Every question must feel written specifically for this founder after reading their application carefully. Never robotic, never generic.
+
+OPENING: Start by naming one specific thing from their application that caught your attention — something interesting or promising. Then ask your first question. Make it feel like a real first meeting, not a form.`;
 
 function getErrorMessage(err) {
-  var msg = err?.message || '';
-  if (msg.includes('quota') || msg.includes('RESOURCE_EXHAUSTED') || msg.includes('429')) {
+  const msg = err?.message || '';
+  if (msg.includes('quota') || msg.includes('RESOURCE_EXHAUSTED') || msg.includes('429') || msg.includes('rate_limit')) {
     return 'The AI is experiencing high demand right now. Please wait a minute and try again.';
   }
-  if (msg.includes('API key') || msg.includes('API_KEY') || msg.includes('403') || msg.includes('401')) {
+  if (msg.includes('API key') || msg.includes('API_KEY') || msg.includes('403') || msg.includes('401') || msg.includes('authentication')) {
     return 'AI configuration error. Please contact support at contactus.nocapvc@gmail.com';
   }
-  if (msg.includes('model') || msg.includes('404')) {
+  if (msg.includes('model') || msg.includes('404') || msg.includes('not_found')) {
     return 'AI model unavailable. Please try again in a few minutes.';
+  }
+  if (msg.includes('overloaded') || msg.includes('529')) {
+    return 'The AI is overloaded right now. Please wait a moment and try again.';
   }
   if (!navigator.onLine) {
     return 'You appear to be offline. Please check your internet connection and try again.';
@@ -102,7 +148,6 @@ export default function AIInterview() {
         setPhase('invalid');
       }
     } catch (err) {
-      // Distinguish network errors from invalid tokens
       if (!navigator.onLine || err?.message?.includes('fetch') || err?.message?.includes('network')) {
         setPhase('network-error');
       } else {
@@ -131,7 +176,7 @@ export default function AIInterview() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [...systemTurn, ...contents],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
+        generationConfig: { temperature: 0.7, maxOutputTokens: 3000 }
       })
     });
 
@@ -152,15 +197,33 @@ export default function AIInterview() {
     setPhase('interview');
     setSending(true);
 
-    const context = `FOUNDER CONTEXT from their application:
-Name: ${founder.name}
-Startup: ${founder.startup}
-Sector: ${founder.sector}
-Stage: ${founder.stage}
-One liner: ${founder.one_liner}
-Problem they are solving: ${founder.problem}
+    const fieldMap = {
+      'Name': founder.name,
+      'Startup': founder.startup,
+      'Sector': founder.sector,
+      'Stage': founder.stage,
+      'One-liner': founder.one_liner,
+      'Problem they are solving': founder.problem,
+      'Why this idea': founder.why_this,
+      'Target customer': founder.target_customer,
+      'Product description': founder.product_description,
+      'Domain expertise / why you': founder.domain_expertise,
+      'Competitors': founder.competitors,
+      'Revenue model': founder.revenue_model,
+      'Biggest challenge': founder.biggest_challenge,
+      'Success vision in 2 years': founder.success_vision,
+      'Why not just get a job': founder.why_not_job,
+      'What they need from NoCap': founder.needs,
+      'LinkedIn': founder.linkedin_url,
+      'Website / prototype': founder.website,
+    };
 
-Start the interview now. Acknowledge their application briefly and ask your first question.`;
+    const contextLines = Object.entries(fieldMap)
+      .filter(([, v]) => v && v.toString().trim() !== '')
+      .map(([k, v]) => `${k}: ${v}`)
+      .join('\n');
+
+    const context = `FOUNDER APPLICATION CONTEXT:\n${contextLines}\n\nConduct the interview now. Open by acknowledging something specific from their application, then ask your first question.`;
 
     try {
       const aiMessage = await callGemini([{ role: 'user', content: context }]);
@@ -193,7 +256,11 @@ Start the interview now. Acknowledge their application briefly and ask your firs
         const reportMatch = aiResponse.match(/REPORT_START\s*([\s\S]*?)\s*REPORT_END/);
         if (reportMatch) {
           try {
-            const parsedReport = JSON.parse(reportMatch[1].trim());
+            const raw = reportMatch[1].trim()
+              .replace(/^```json\s*/i, '')
+              .replace(/^```\s*/i, '')
+              .replace(/```\s*$/i, '');
+            const parsedReport = JSON.parse(raw);
             const closingMessage = aiResponse
               .split('REPORT_START')[0]
               .replace('INTERVIEW_COMPLETE:', '')
@@ -207,7 +274,7 @@ Start the interview now. Acknowledge their application briefly and ask your firs
         }
       } else {
         setMessages(prev => [...prev, { role: 'ai', content: aiResponse, ts: Date.now() }]);
-        setQuestionCount(prev => prev + 1);
+        setQuestionCount(prev => Math.min(prev + 1, TOTAL_QUESTIONS));
       }
     } catch (err) {
       setError(getErrorMessage(err));
@@ -226,6 +293,7 @@ Start the interview now. Acknowledge their application briefly and ask your firs
           founder_name: founder.name,
           startup_name: founder.startup,
           sector: founder.sector,
+          passes_bar: parsedReport.passes_bar,
           report: parsedReport
         }),
         mode: 'no-cors'
@@ -287,23 +355,23 @@ Start the interview now. Acknowledge their application briefly and ask your firs
       <div className="iv-badge">NOCAP VC &middot; AI INTERVIEW</div>
       <h1 className="iv-h1">Hey {founder?.name?.split(' ')[0]}.</h1>
       <p className="iv-intro-sub">Your application for <strong>{founder?.startup}</strong> passed our screening.</p>
-      <p className="iv-intro-sub">This is your AI interview — a real conversation about your startup. NoCap AI will ask you 12-20 adaptive questions, just like a first VC meeting.</p>
+      <p className="iv-intro-sub">This is your AI interview — a real conversation about your startup. NoCap AI will ask you 8 specific questions, just like a first VC meeting.</p>
 
       <div className="iv-info-grid">
         <div className="iv-info-card">
           <div className="iv-info-icon">&#9201;</div>
           <div className="iv-info-label">Duration</div>
-          <div className="iv-info-val">15-25 min</div>
+          <div className="iv-info-val">~15 min</div>
         </div>
         <div className="iv-info-card">
           <div className="iv-info-icon">&#127919;</div>
           <div className="iv-info-label">Questions</div>
-          <div className="iv-info-val">12-20 adaptive</div>
+          <div className="iv-info-val">8 tailored</div>
         </div>
         <div className="iv-info-card">
           <div className="iv-info-icon">&#128203;</div>
           <div className="iv-info-label">Output</div>
-          <div className="iv-info-val">Partner report</div>
+          <div className="iv-info-val">Investor memo</div>
         </div>
       </div>
 
@@ -317,7 +385,7 @@ Start the interview now. Acknowledge their application briefly and ask your firs
 
       {startError && (
         <div className="iv-start-error">
-          <span className="iv-start-error-icon">⚠</span>
+          <span className="iv-start-error-icon">&#9888;</span>
           {startError}
         </div>
       )}
@@ -332,47 +400,150 @@ Start the interview now. Acknowledge their application briefly and ask your firs
   if (phase === 'generating') return (
     <div className="iv-screen iv-center">
       <div className="iv-spinner" />
-      <h2 className="iv-h2">Generating your report...</h2>
-      <p className="iv-muted">NoCap AI is analysing your interview and writing a detailed report for our partners. This takes about 30 seconds.</p>
+      <h2 className="iv-h2">Writing your investor memo...</h2>
+      <p className="iv-muted">NoCap AI is synthesising your interview and writing a full memo for our partners. This takes about 20 seconds.</p>
     </div>
   );
 
-  if (phase === 'done') return (
-    <div className="iv-screen iv-center">
-      <div className="iv-badge">NOCAP VC</div>
-      <div className="iv-check">&#10003;</div>
-      <h1 className="iv-h1">Interview complete.</h1>
-      <p className="iv-intro-sub">Your report has been sent to our partners at NoCap VC.</p>
+  if (phase === 'done') {
+    /* ── Branch A: did not pass the bar ── */
+    if (report && !report.passes_bar) return (
+      <div className="iv-screen iv-center">
+        <div className="iv-badge">NOCAP VC</div>
+        <div className="iv-check iv-check-neutral">&#10003;</div>
+        <h1 className="iv-h1">Interview complete.</h1>
+        <p className="iv-intro-sub">
+          Thank you for your time, {founder?.name?.split(' ')[0]}. We reviewed every answer carefully.
+        </p>
+        <p className="iv-intro-sub" style={{ marginTop: 8 }}>
+          At this stage we are not able to move forward, but we encourage you to keep building — the best founders come back stronger.
+        </p>
+        {report.reason && (
+          <div className="iv-next-steps" style={{ marginTop: 28 }}>
+            <div className="iv-next-title">A note from NoCap AI</div>
+            <p style={{ fontFamily: 'var(--sans)', fontSize: 14, color: 'var(--muted)', lineHeight: 1.7, padding: '4px 0' }}>
+              {report.reason}
+            </p>
+          </div>
+        )}
+        <a href="https://instagram.com/nocapvc" target="_blank" rel="noreferrer" className="iv-btn-outline">
+          Follow @nocapvc
+        </a>
+      </div>
+    );
 
-      {report && (
-        <div className="iv-score-card">
-          <div className="iv-score-label">Overall Score</div>
-          <div className="iv-score-num">{report.overall_score}<span>/10</span></div>
-          <div className="iv-score-rec">{report.recommendation}</div>
-        </div>
-      )}
+    /* ── Branch B: passed the bar — full investor memo ── */
+    const memo = report?.memo || {};
+    const scores = report?.scores || {};
+    const verdictWord = memo.verdict?.split(/[\s—–]/)[0]?.toUpperCase() || 'REVIEWED';
+    const verdictColor =
+      verdictWord === 'INVEST' ? '#4cd980' :
+      verdictWord === 'WATCH'  ? '#FFE034' : '#ff6b6b';
 
-      <div className="iv-next-steps">
-        <div className="iv-next-title">What happens next</div>
-        <div className="iv-next-item">
-          <span className="iv-next-num">01</span>
-          <span>Our partners review your report within 5 business days</span>
-        </div>
-        <div className="iv-next-item">
-          <span className="iv-next-num">02</span>
-          <span>If there is a fit, you will receive a meeting invite directly</span>
-        </div>
-        <div className="iv-next-item">
-          <span className="iv-next-num">03</span>
-          <span>Either way, you will get structured feedback — no ghosting</span>
+    return (
+      <div className="iv-memo-screen">
+        <div className="iv-memo-container">
+
+          {/* Header */}
+          <div className="iv-memo-header">
+            <div className="iv-badge">NOCAP VC &middot; INVESTOR MEMO</div>
+            <h1 className="iv-h1" style={{ marginTop: 16 }}>{report.startup_name}</h1>
+            <p className="iv-memo-founder-line">{report.founder_name}</p>
+            <div className="iv-memo-verdict-pill" style={{ color: verdictColor, borderColor: verdictColor + '55' }}>
+              {verdictWord}
+            </div>
+          </div>
+
+          {/* TL;DR */}
+          {memo.tldr && (
+            <div className="iv-memo-section">
+              <div className="iv-memo-section-label">TL;DR</div>
+              <p className="iv-memo-body">{memo.tldr}</p>
+            </div>
+          )}
+
+          {/* Score strip */}
+          {Object.keys(scores).length > 0 && (
+            <div className="iv-score-strip">
+              {Object.entries(scores).map(([key, val]) => (
+                <div className="iv-score-chip" key={key}>
+                  <div className="iv-score-chip-label">{key.replace(/_/g, ' ')}</div>
+                  <div className="iv-score-chip-val">{val}<span>/10</span></div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Overall score */}
+          <div className="iv-memo-overall">
+            <span className="iv-memo-overall-label">Overall</span>
+            <span className="iv-memo-overall-score">{report.overall_score}</span>
+            <span className="iv-memo-overall-denom">/10</span>
+            <span className="iv-memo-overall-rec">{report.recommendation}</span>
+          </div>
+
+          {/* Narrative sections */}
+          {[
+            { key: 'the_founder',  label: 'The Founder' },
+            { key: 'the_problem',  label: 'The Problem' },
+            { key: 'the_market',   label: 'The Market' },
+            { key: 'the_solution', label: 'The Solution' },
+            { key: 'traction',     label: 'Traction' },
+            { key: 'why_now',      label: 'Why Now' },
+          ].map(({ key, label }) => memo[key] && (
+            <div className="iv-memo-section" key={key}>
+              <div className="iv-memo-section-label">{label}</div>
+              <p className="iv-memo-body">{memo[key]}</p>
+            </div>
+          ))}
+
+          {/* Key risks */}
+          {memo.key_risks?.length > 0 && (
+            <div className="iv-memo-section">
+              <div className="iv-memo-section-label">Key Risks</div>
+              <ul className="iv-memo-risks">
+                {memo.key_risks.map((r, i) => (
+                  <li key={i} className="iv-memo-risk-item">{r}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Verdict */}
+          {memo.verdict && (
+            <div className="iv-memo-section iv-memo-verdict-block" style={{ borderColor: verdictColor + '33' }}>
+              <div className="iv-memo-section-label" style={{ color: verdictColor }}>Verdict</div>
+              <p className="iv-memo-body">{memo.verdict}</p>
+            </div>
+          )}
+
+          {/* Footer */}
+          <div className="iv-memo-footer">
+            <div className="iv-next-steps">
+              <div className="iv-next-title">What happens next</div>
+              <div className="iv-next-item">
+                <span className="iv-next-num">01</span>
+                <span>Our partners review your memo within 5 business days</span>
+              </div>
+              <div className="iv-next-item">
+                <span className="iv-next-num">02</span>
+                <span>If there is a fit, you will receive a meeting invite directly</span>
+              </div>
+              <div className="iv-next-item">
+                <span className="iv-next-num">03</span>
+                <span>Either way, you will get structured feedback — no ghosting</span>
+              </div>
+            </div>
+            <p className="iv-muted-sm" style={{ marginTop: 20 }}>This memo was generated by NoCap AI and will be reviewed by our partners.</p>
+            <a href="https://instagram.com/nocapvc" target="_blank" rel="noreferrer" className="iv-btn-outline">
+              Follow @nocapvc while you wait
+            </a>
+          </div>
+
         </div>
       </div>
-
-      <a href="https://instagram.com/nocapvc" target="_blank" rel="noreferrer" className="iv-btn-outline">
-        Follow @nocapvc while you wait
-      </a>
-    </div>
-  );
+    );
+  }
 
   /* ── INTERVIEW CHAT ── */
   return (
@@ -389,7 +560,7 @@ Start the interview now. Acknowledge their application briefly and ask your firs
           </div>
         </div>
         <div className="iv-chat-progress">
-          Q{questionCount}
+          Q{questionCount}<span className="iv-progress-total">/{TOTAL_QUESTIONS}</span>
         </div>
       </div>
 
@@ -417,7 +588,7 @@ Start the interview now. Acknowledge their application briefly and ask your firs
         {error && (
           <div className="iv-error">
             <span>{error}</span>
-            <button className="iv-retry-btn" onClick={() => setError('')}>Dismiss & retry</button>
+            <button className="iv-retry-btn" onClick={() => setError('')}>Dismiss &amp; retry</button>
           </div>
         )}
         <div ref={bottomRef} />

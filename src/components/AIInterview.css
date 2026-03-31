@@ -580,3 +580,218 @@
   .iv-msg-ai { max-width: 92%; }
   .iv-msg-user { max-width: 88%; }
 }
+
+/* ── PROGRESS TOTAL ── */
+.iv-progress-total {
+  color: var(--muted);
+}
+
+/* ── NEUTRAL CHECK (pass=false screen) ── */
+.iv-check-neutral {
+  background: rgba(255,255,255,0.04);
+  border-color: var(--border);
+  color: var(--muted);
+}
+
+/* ── MEMO SCREEN ── */
+.iv-memo-screen {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--sans);
+  padding: 48px 24px 80px;
+  overflow-y: auto;
+}
+
+.iv-memo-container {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* Memo header */
+.iv-memo-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.iv-memo-founder-line {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 4px;
+  margin-bottom: 20px;
+}
+
+.iv-memo-verdict-pill {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 6px 20px;
+  border: 1px solid;
+  border-radius: 20px;
+}
+
+/* Memo sections */
+.iv-memo-section {
+  margin-bottom: 32px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.iv-memo-section-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--y);
+  margin-bottom: 12px;
+}
+
+.iv-memo-body {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+/* Score strip */
+.iv-score-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.iv-score-chip {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 10px;
+  text-align: center;
+}
+
+.iv-score-chip-label {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.iv-score-chip-val {
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--y);
+  line-height: 1;
+}
+
+.iv-score-chip-val span {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* Overall score row */
+.iv-memo-overall {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg2);
+  border: 1px solid var(--y-border);
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+
+.iv-memo-overall-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.iv-memo-overall-score {
+  font-family: var(--sans);
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--y);
+  line-height: 1;
+}
+
+.iv-memo-overall-denom {
+  font-family: var(--sans);
+  font-size: 16px;
+  color: var(--muted);
+  margin-right: 6px;
+}
+
+.iv-memo-overall-rec {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Risks list */
+.iv-memo-risks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.iv-memo-risk-item {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  padding-left: 20px;
+  position: relative;
+}
+
+.iv-memo-risk-item::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: #ff6b6b;
+  font-family: var(--mono);
+}
+
+/* Verdict block */
+.iv-memo-verdict-block {
+  background: var(--bg2);
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 22px 24px;
+}
+
+/* Memo footer */
+.iv-memo-footer {
+  text-align: center;
+  padding-top: 8px;
+}
+
+/* ── RESPONSIVE — memo ── */
+@media (max-width: 480px) {
+  .iv-memo-screen { padding: 24px 16px 60px; }
+  .iv-score-strip { grid-template-columns: repeat(2, 1fr); }
+  .iv-memo-overall { gap: 6px; }
+  .iv-memo-overall-score { font-size: 28px; }
+  .iv-memo-body { font-size: 14px; }
+}
