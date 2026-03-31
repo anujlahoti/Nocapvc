@@ -4,6 +4,7 @@ import { posts, CATEGORIES, getFeaturedPost } from '../blog/BlogData';
 import './Blog.css';
 
 const TICKER_TEXT = '76K+ FOUNDERS IN COMMUNITY · 2 PARTNER INCUBATORS · 5 ANGEL INVESTORS & VCs · 100% RESPONSE GUARANTEED · INDIA\'S FOUNDER-FIRST FUNDING LAYER · AI-POWERED SCREENING · 14-DAY FEEDBACK GUARANTEE · ';
+const GOOGLE_SCRIPT_URL = process.env.REACT_APP_GOOGLE_SCRIPT_URL;
 
 function CategoryTag({ categoryId, label, style }) {
   const cat = CATEGORIES.find(c => c.id === categoryId);
@@ -41,6 +42,25 @@ export default function Blog() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email) return;
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          _type: 'blog_subscribe',
+          email: email.trim(),
+          subscribed_at: new Date().toISOString(),
+          source: 'blog_home'
+        }),
+        mode: 'no-cors'
+      });
+    } catch {}
+    setSubscribed(true);
+  };
   const featured = getFeaturedPost();
 
   const filtered = activeCategory === 'all'
@@ -155,7 +175,7 @@ export default function Blog() {
           {subscribed ? (
             <p className="bl-subscribe-done">You're in. Watch your inbox.</p>
           ) : (
-            <form className="bl-subscribe-form" onSubmit={e => { e.preventDefault(); if (email) setSubscribed(true); }}>
+            <form className="bl-subscribe-form" onSubmit={handleSubscribe}>
               <input
                 type="email"
                 placeholder="your@email.com"

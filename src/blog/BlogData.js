@@ -1,3 +1,47 @@
+// ══════════════════════════════════════════════════════════════
+//  HOW TO ADD A NEW BLOG POST
+// ══════════════════════════════════════════════════════════════
+//
+//  1. Copy the template below into the `posts` array
+//  2. Fill in all fields
+//  3. Save the file → push to GitHub → Vercel auto-deploys (~30s)
+//
+//  TEMPLATE:
+//  {
+//    id: '004',                          // increment from last post
+//    slug: 'your-post-url-slug',         // lowercase-hyphenated, no spaces
+//    title: 'Your Full Post Title Here',
+//    excerpt: 'One sentence shown on blog listing page.',
+//    category: 'founder-playbooks',      // see CATEGORIES below for valid IDs
+//    categoryLabel: 'Founder Playbooks',
+//    date: 'April 5, 2026',
+//    readTime: '5 min read',
+//    featured: false,                    // set true to replace hero post
+//    content: `
+//      <p class="bp-lead">Opening paragraph (displays larger)</p>
+//      <p>Normal paragraph text</p>
+//      <h2>Section Heading</h2>
+//      <div class="bp-pullquote">A memorable quote goes here.</div>
+//      <div class="bp-data-callout">
+//        <div class="bp-data-label">THE DATA</div>
+//        <div class="bp-data-stat">
+//          <span class="bp-data-num">73%</span>
+//          <span class="bp-data-desc">short description of the stat</span>
+//        </div>
+//      </div>
+//      <div class="bp-takeaway">
+//        <div class="bp-takeaway-label">TAKEAWAY</div>
+//        Your key takeaway text here.
+//      </div>
+//    `
+//  }
+//
+//  CATEGORY IDs (use exactly as shown):
+//  funding-intelligence | founder-playbooks | investor-lens
+//  nocap-insights | india-startup-index
+//
+// ══════════════════════════════════════════════════════════════
+
 export const CATEGORIES = [
   { id: 'all', label: 'All' },
   { id: 'funding-intelligence', label: 'Funding Intelligence', color: '#FFE034' },
