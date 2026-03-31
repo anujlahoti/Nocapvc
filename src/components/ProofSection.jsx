@@ -3,7 +3,7 @@ import './ProofSection.css';
 const ticker = [
   'No Ghosting. Ever.', '76,000 Founders Strong', 'Built in India · For India',
   'Free for Founders · Always', 'Structured Feedback on Every Application',
-  'One Form · Multiple Investors',
+  'One Form, Opens Many Funding Doors',
 ];
 
 export default function ProofSection() {

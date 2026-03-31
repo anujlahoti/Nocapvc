@@ -13,8 +13,8 @@ export default function Hero() {
       <div className="hero-inner">
         <div className="eyebrow">India's Founder-First Funding Layer</div>
         <h1 className="h1">
-          One Form.
-          <em>Many Doors.</em>
+          One Form,
+          <em>Opens Many Funding Doors.</em>
         </h1>
         <div className="h1-sub">Zero Ghosting.</div>
         <p className="hero-desc">
@@ -22,7 +22,7 @@ export default function Hero() {
           <strong>NoCap VC routes your startup to curated incubators and angels</strong> — and every founder gets structured feedback within 14 days. Guaranteed.
         </p>
         <div className="hero-actions">
-          <button className="btn" onClick={() => scrollTo('apply')}>
+          <button className="btn" onClick={() => scrollTo('apply-form')}>
             <span>Apply for Free</span>
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
