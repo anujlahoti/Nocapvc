@@ -1017,6 +1017,227 @@ DPIIT-recognised startups are eligible to receive funding from VC/AIF funds unde
 </div>
     `
   }
+  ,
+
+  {
+    id: '014',
+    slug: '47-active-angel-investors-india-2026',
+    title: '47 Active Angel Investors in India 2026 — Sectors, Cheque Size, How to Approach',
+    excerpt: 'The definitive list of India\'s most active angel investors and networks in 2026 — individual angels, organised networks, and exactly how to get in front of each one.',
+    category: 'funding-intelligence',
+    categoryLabel: 'Funding Intelligence',
+    date: 'March 31, 2026',
+    readTime: '12 min read',
+    featured: false,
+    faqs: [
+      { q: 'Who are the most active angel investors in India in 2026?', a: 'The most active individual angels include Kunal Shah (CRED, 150+ investments), Anupam Mittal (Shaadi.com, 50+ investments), Nithin Kamath (Zerodha, Rainmatter Capital), and Girish Mathrubootham (Freshworks, 35+ investments). The most active networks by deal count are Inflection Point Ventures (43 deals in 2025), Indian Angel Network, AngelList India (120 deals in 2024), and LVX.' },
+      { q: 'What is the typical angel investment cheque size in India?', a: 'Individual angels typically write ₹25 lakh to ₹75 lakh per deal at pre-seed stage. Organised networks invest ₹1 crore to ₹3 crore per deal (IAN, IPV, Yatra Angel Network). Platforms like 100X.VC invest ₹25 lakh for 1.5% equity. The Hyderabad Angel Fund writes ₹2 crore to ₹4 crore.' },
+      { q: 'What sectors do Indian angel investors prefer in 2026?', a: 'In 2025, fintech led by deal count, followed by ecommerce and enterprise tech. AI and GenAI attracted 56% of early-stage investors. Cleantech (43%), healthtech (30%), and agritech are growing rapidly. B2B SaaS remains consistently funded across all angel networks.' },
+      { q: 'How do I approach angel investors in India without a warm introduction?', a: 'Apply through structured platforms: LVX (14,000+ investors), AngelList India, Indian Angel Network, Inflection Point Ventures, or NoCap VC. These evaluate applications on merit without requiring introductions. Individual angels are best approached after establishing visibility through public writing, community participation, or platform applications.' },
+      { q: 'How much equity do angel investors in India take?', a: 'Typical dilution at angel/pre-seed stage in India is 5–15% for ₹25 lakh to ₹2 crore. 100X.VC takes 1.5% for ₹25 lakh — the most founder-friendly structure. Most organised networks negotiate 7–12% for ₹1–3 crore investments via SAFE notes or equity.' },
+    ],
+    content: `
+<p class="bp-lead">India has 47 meaningfully active angel investors and networks deploying capital into early-stage startups in 2026. This is the complete list — individual founders-turned-angels with sector focus and known portfolios, organised networks with cheque sizes and application links, and the exact approach that works for each. Read it once. Bookmark it. Use it systematically.</p>
+
+<p>A note on methodology: "active" means deployed capital in at least one pre-seed or seed round in the last 18 months, with a verifiable portfolio. Investors who have not made a public investment since 2023 are not on this list regardless of their reputation. The ecosystem moves fast — you should be targeting people who are writing cheques today.</p>
+
+<div class="bp-data-callout">
+  <div class="bp-data-label">THE 2025–2026 LANDSCAPE</div>
+  <div class="bp-data-stat"><span class="bp-data-num">2,072</span><span class="bp-data-desc">unique investors active in the Indian startup ecosystem in 2025 — 8% more than the prior year</span></div>
+  <div class="bp-data-stat"><span class="bp-data-num">20%+</span><span class="bp-data-desc">of all Indian startup deals in 2025 involved angel investors</span></div>
+  <div class="bp-data-stat"><span class="bp-data-num">₹25L–₹4Cr</span><span class="bp-data-desc">range of angel cheque sizes at pre-seed to seed stage</span></div>
+</div>
+
+<h2>Part 1 — Individual Angels: Founders Who Back Founders</h2>
+
+<p>These are operating founders and entrepreneurs who invest their own capital. They bring domain credibility, operational networks, and the kind of advice that only comes from having built something. The best angel for your startup is not the most famous one — it is the one who has solved a version of your problem before.</p>
+
+<p><strong>1. Kunal Shah — Founder, CRED</strong><br/>
+<em>Sectors:</em> Fintech, consumer internet, B2B SaaS · <em>Cheque:</em> ₹25–75L · <em>Portfolio:</em> 150+ investments including Jupiter, Slice, Open, BharatX<br/>
+India's most prolific active angel by deal count. Shah has backed over 150 startups — more than most seed funds. He is particularly drawn to startups tackling financial trust, consumer behaviour change, and India-specific B2B infrastructure. His Delta 4 framework for evaluating consumer products is publicly documented. Read it before you pitch to him. <em>Approach:</em> LinkedIn is active; his content engagement is genuine. Build visibility in his orbit by commenting thoughtfully on his posts. Direct messages work at very low rates — a platform application or mutual introduction is more reliable.</p>
+
+<p><strong>2. Anupam Mittal — Founder, People Group (Shaadi.com)</strong><br/>
+<em>Sectors:</em> Consumer internet, fintech, D2C, SaaS · <em>Cheque:</em> ₹25–75L · <em>Portfolio:</em> 50+ including Ola, Druva, Whatfix, Animall, Agnikul, GoKwik, FarEye<br/>
+Known nationally from Shark Tank India, Mittal is one of India's original angel investors and has been backing startups since the early 2000s. His portfolio spans enterprise SaaS, consumer apps, and deep tech. He has exited 12 companies from his portfolio. <em>Approach:</em> High inbound volume means cold outreach rarely lands. Apply through structured platforms and build a track record before targeting him directly.</p>
+
+<p><strong>3. Nithin Kamath — Co-founder, Zerodha; Founder, Rainmatter Capital</strong><br/>
+<em>Sectors:</em> Fintech, personal finance, health, climate, capital markets infrastructure · <em>Cheque:</em> ₹25L–₹2Cr (via Rainmatter) · <em>Portfolio:</em> Licious, Even, Climes, Stoa School, The Whole Truth, GalaxEye, AssetPlus, Kalvi<br/>
+Kamath invests both personally and through Rainmatter Capital, which has a specific mandate around health, climate, and financial wellbeing. He is unusually transparent about his investment thinking on public platforms. <em>Approach:</em> Kamath is genuinely accessible on Twitter/X. Thoughtful engagement with his public content, combined with a strong application on LVX or a direct email to Rainmatter, is more effective than a cold LinkedIn pitch.</p>
+
+<p><strong>4. Girish Mathrubootham — Founder, Freshworks (NASDAQ: FRSH)</strong><br/>
+<em>Sectors:</em> B2B SaaS, enterprise software, AI/ML tools · <em>Cheque:</em> ₹50L–₹2Cr · <em>Portfolio:</em> 35+ including Newton School, OSlash, GTM Buddy, Chargebee (early), multiple Chennai SaaS companies<br/>
+Mathrubootham's primary value is not just capital — it is the Freshworks enterprise distribution network and the credibility of the Chennai B2B SaaS ecosystem he helped build. If you are building enterprise software, his portfolio gives you customer introductions that take years to build otherwise. <em>Approach:</em> Active in the Chennai and Bengaluru SaaS communities. Founder community involvement (SaaSBOOMi, iSPIRT) is the most reliable path into his orbit.</p>
+
+<p><strong>5. Vijay Shekhar Sharma — Founder, Paytm</strong><br/>
+<em>Sectors:</em> Fintech, payments, financial inclusion, Bharat-market consumer · <em>Cheque:</em> ₹25–50L · <em>Portfolio:</em> Multiple fintech and payments infrastructure startups<br/>
+Sharma's investments skew toward digital payments infrastructure and financial services for underserved Indian markets. His network within the NPCI/RBI regulatory environment is a distinctive advantage for fintech founders navigating India Stack compliance. <em>Approach:</em> Limited public availability. Best approached through the fintech founder community or warm introduction from a shared portfolio founder.</p>
+
+<p><strong>6. Deepinder Goyal — Co-founder, Zomato (now Eternal)</strong><br/>
+<em>Sectors:</em> Foodtech, consumer, quick commerce, D2C · <em>Cheque:</em> ₹25–75L personal; larger via Zomato's strategic fund · <em>Portfolio:</em> Shiprocket (early), multiple food and consumer startups<br/>
+Goyal invests both personally and through strategic initiatives tied to Zomato's ecosystem. Startups building in food, restaurant technology, or quick commerce have the additional potential of a commercial relationship with Zomato's network. <em>Approach:</em> Not publicly accessible for cold outreach. Warm introduction from Zomato's extended network is standard.</p>
+
+<p><strong>7. Phanindra Sama — Co-founder, redBus; Founder, Aspiring Minds</strong><br/>
+<em>Sectors:</em> Mobility, SaaS, consumer marketplaces, assessment and hiring tech · <em>Cheque:</em> ₹25–75L · <em>Portfolio:</em> Multiple mobility and SaaS startups<br/>
+Sama's redBus exit produced one of India's most celebrated founder-angel stories. He has specific credibility in marketplace businesses and travel technology, and understands the operational reality of building a consumer platform in India from zero to scale. <em>Approach:</em> Accessible at startup community events and iSPIRT forums.</p>
+
+<p><strong>8. Sachin Bansal — Co-founder, Flipkart; Founder, Navi</strong><br/>
+<em>Sectors:</em> Fintech, insurance, lending, ecommerce infrastructure · <em>Cheque:</em> ₹50L–₹5Cr · <em>Portfolio:</em> Primarily fintech through Navi's ecosystem<br/>
+Post-Flipkart, Bansal's primary focus is building Navi (fintech) rather than angel investing at high volume. His investments are selective and tend to be strategic. <em>Approach:</em> Not a high-volume angel — focus on investors with faster deployment cycles unless you are specifically in fintech and can demonstrate a clear Navi ecosystem fit.</p>
+
+<p><strong>9. Kris Gopalakrishnan — Co-founder, Infosys; Founder, Axilor Ventures</strong><br/>
+<em>Sectors:</em> Deep tech, AI/ML, enterprise software, hardware, biotech · <em>Cheque:</em> ₹20L seed + structured accelerator via Axilor · <em>Portfolio:</em> Axilor portfolio of 100+ companies<br/>
+Gopalakrishnan's investment vehicle is primarily Axilor Ventures — a structured 100-day accelerator with seed funding and a clear path to the Infosys enterprise customer network. If you are building B2B or deep tech, Axilor's enterprise distribution is a genuine competitive advantage. <em>Approach:</em> Apply directly at axilor.com — it is a formal process with cohort intake twice a year.</p>
+
+<p><strong>10. Nandan Nilekani — Co-founder, Infosys; Architect of Aadhaar and UPI</strong><br/>
+<em>Sectors:</em> Fintech, govtech, India Stack infrastructure, digital public goods · <em>Cheque:</em> Strategic, through EkStep Foundation and select direct investments · <em>Portfolio:</em> Companies building on UPI, AA framework, ONDC<br/>
+Nilekani's value is less about capital and more about regulatory relationships, government access, and the credibility that comes from being the architect of Aadhaar and UPI. If you are building on India Stack, a Nilekani association signals legitimacy to regulators and institutional investors. <em>Approach:</em> Not accessible for cold outreach. EkStep Foundation has a formal grant process for relevant social impact projects.</p>
+
+<p><strong>11. Mohandas Pai — Former CFO, Infosys; Partner, Manipal Group</strong><br/>
+<em>Sectors:</em> Edtech, healthtech, infrastructure, social impact · <em>Cheque:</em> ₹50L–₹2Cr · <em>Portfolio:</em> 100+ investments across edtech, health, and climate<br/>
+One of India's most prolific individual angels by portfolio size. Pai's Manipal network provides strong distribution for edtech and healthtech startups targeting institutional customers (colleges, hospitals). <em>Approach:</em> Active at Bengaluru startup events. Known for being accessible for founders with serious traction.</p>
+
+<p><strong>12. Sanjeev Bikhchandani — Founder, Info Edge (Naukri, Jeevansathi, 99acres)</strong><br/>
+<em>Sectors:</em> Consumer internet, SaaS, marketplaces, edtech · <em>Cheque:</em> ₹50L–₹5Cr (via Info Edge Ventures) · <em>Portfolio:</em> Zomato (early investor), Policybazaar, CollegeDekho, Univariety, Apna<br/>
+Bikhchandani's Info Edge was the first listed internet company in India and his portfolio has produced two unicorns (Zomato, Policybazaar). His investment lens is specifically on Indian internet businesses with sustainable unit economics. <em>Approach:</em> Info Edge Ventures has a formal deal intake process. Bikhchandani himself is accessible at industry conferences.</p>
+
+<p><strong>13. Rajan Anandan — Managing Director, Peak XV Partners (formerly Sequoia India)</strong><br/>
+<em>Sectors:</em> Consumer internet, SaaS, fintech, edtech · <em>Cheque:</em> Personal ₹25–75L; institutional via Peak XV · <em>Portfolio:</em> 90+ personal angel investments pre-Peak XV<br/>
+Anandan made 90+ angel investments before joining Sequoia/Peak XV, making him one of the most prolific early-stage investors in India. His public writing on Indian internet market dynamics is worth reading as preparation for any pitch. <em>Approach:</em> Primarily institutional now via Peak XV. For personal angel deals, conference introductions and community involvement are the entry points.</p>
+
+<p><strong>14. Mekin Maheshwari — Co-founder, Udaan; Former CPO, Flipkart</strong><br/>
+<em>Sectors:</em> B2B commerce, supply chain, HR tech, D2C · <em>Cheque:</em> ₹25–75L · <em>Portfolio:</em> Multiple B2B and commerce startups<br/>
+Maheshwari's experience building Udaan — India's largest B2B ecommerce platform — makes him specifically valuable for founders tackling B2B supply chain, trade, or commerce problems. He understands distributor networks and the informal trade economy at a depth most angels do not. <em>Approach:</em> Accessible at B2B startup communities and iSPIRT events.</p>
+
+<p><strong>15. Rajesh Sawhney — Founder, GSF Accelerator; iSPIRT co-founder</strong><br/>
+<em>Sectors:</em> SaaS, AI, consumer internet, product startups · <em>Cheque:</em> ₹10–50L · <em>Portfolio:</em> 100+ startups through GSF<br/>
+Sawhney runs GSF (Global Super Founders) Accelerator, one of India's oldest SaaS-focused programmes. He is also a founding member of iSPIRT — the industry think-tank that shaped India Stack policy. His network within the product startup community is among the deepest in India. <em>Approach:</em> Apply to GSF directly. Sawhney is accessible at iSPIRT community events.</p>
+
+<p><strong>16. Aprameya Radhakrishna — Co-founder, TaxiForSure; Co-founder, Vokal</strong><br/>
+<em>Sectors:</em> Mobility, vernacular internet, consumer apps for Bharat · <em>Cheque:</em> ₹25–50L · <em>Portfolio:</em> Multiple consumer and mobility startups<br/>
+Radhakrishna has specific expertise in India's vernacular internet market and the challenges of building consumer products for non-English-speaking users — a segment representing 70%+ of India's smartphone users. <em>Approach:</em> Accessible on Twitter/X and at Bengaluru startup events.</p>
+
+<p><strong>17. Sanjay Mehta — Founder, 100X.VC</strong><br/>
+<em>Sectors:</em> Broad early-stage; 30–40 companies per cohort · <em>Cheque:</em> ₹25L for 1.5% via iSAFE · <em>Portfolio:</em> 400+ companies across cohorts<br/>
+Mehta built 100X.VC around one insight: Indian founders need more angels writing smaller cheques faster, not fewer angels writing larger cheques slowly. The iSAFE instrument (India-specific SAFE note) and the volume model are specifically designed for pre-product founders. <em>Approach:</em> Apply at 100x.vc. Two cohorts per year. The process is transparent and merit-based.</p>
+
+<h2>Part 2 — Angel Networks: Organised Capital at Scale</h2>
+
+<p>Angel networks syndicate investments across their member base, meaning a single application can result in 5–20 angels co-investing in your round. The downside is a slower decision-making process. The upside is access to a broader investor base and, often, larger aggregate cheque sizes than any individual angel would write alone.</p>
+
+<p><strong>18. Indian Angel Network (IAN)</strong><br/>
+<em>Founded:</em> 2006 · <em>Members:</em> 500+ across 11 countries · <em>Cheque:</em> ₹1–3 Cr (network syndicate); ₹6–40 Cr via IAN Alpha Fund · <em>Portfolio:</em> 198 investments, 14 exits · <em>Sectors:</em> Cleantech, healthtech, agritech, edtech, fintech, industry 4.0, spacetech<br/>
+IAN is India's original organised angel network and remains one of the most active. The Alpha Fund specifically targets growth-stage cheques of $1–5 million for companies graduating from angel to institutional. Unusually, IAN provides written feedback to rejected applicants — a rare practice. <em>Apply:</em> indianangelnetwork.com</p>
+
+<p><strong>19. Inflection Point Ventures (IPV)</strong><br/>
+<em>Founded:</em> 2018 · <em>Cheque:</em> ₹1–3 Cr (India); $100K–$1M (IPV International, $110M fund) · <em>2025 Activity:</em> 43 deals — India's busiest VC/angel firm by deal count in 2025 · <em>Exits:</em> 14 exits in both 2023 and 2024 at 61% IRR · <em>Sectors:</em> Fintech, SaaS, consumer, healthtech, climate<br/>
+IPV is the most active deal-making entity in India's early stage as of 2025. Their international fund adds cross-border capital access. The 61% IRR on exits signals genuine portfolio quality, not just volume. <em>Apply:</em> inflectionpoint.vc</p>
+
+<p><strong>20. LVX (formerly LetsVenture)</strong><br/>
+<em>Rebranded:</em> 2025 · <em>Investors on platform:</em> 14,000+ · <em>Deals in 2025:</em> 50 · <em>Cheque:</em> ₹50L–₹2Cr (syndicated across multiple angels) · <em>Sectors:</em> All sectors; particularly strong in SaaS, consumer, fintech<br/>
+LVX restructured in 2025 into three verticals: Start (angel-stage), Grow (Series A+), and School (founder education). For early-stage founders, the Start platform gives you direct access to 14,000 registered investors with a single profile. Partnership with 100X.VC means their portfolio has access to LVX's full investor network. <em>Apply:</em> lvx.vc</p>
+
+<p><strong>21. AngelList India</strong><br/>
+<em>Active since:</em> 2018 · <em>Portfolio:</em> 500+ Indian startups · <em>Deals in 2024:</em> 120 — highest globally on the platform · <em>Cheque:</em> $25K–$500K (rolling fund model) · <em>Sectors:</em> Tech-enabled; particularly SaaS, fintech, deep tech<br/>
+AngelList's India segment has quietly become one of the most active early-stage platforms in the country. The rolling fund model means investment decisions happen continuously rather than in cohort batches — important if you need capital faster than a quarterly review cycle. <em>Apply:</em> angellist.com/india</p>
+
+<p><strong>22. Venture Catalysts (VCats)</strong><br/>
+<em>Founded:</em> 2016 · <em>Members:</em> 8,000+ · <em>Portfolio:</em> 176 companies, combined value $3B+ · <em>Cheque:</em> ₹50L–₹1Cr · <em>Sectors:</em> Broad; consumer, fintech, SaaS, D2C · <em>Fund raised (2025):</em> ₹150 Cr<br/>
+VCats combines a large investor network with an accelerator and fund management platform. The 8,000-member base means broad syndication is possible — good for founders who want many angels rather than one concentrated investor. <em>Apply:</em> venturecatalysts.in</p>
+
+<p><strong>23. 100X.VC</strong><br/>
+<em>Founded:</em> 2019 · <em>Portfolio:</em> 400+ companies across cohorts · <em>Cheque:</em> ₹25L for 1.5% equity via iSAFE · <em>Sectors:</em> All sectors; no geographic restriction within India · <em>Cohorts:</em> 2 per year (30–40 companies each)<br/>
+The most founder-friendly instrument in Indian early-stage: ₹25 lakh for 1.5% is the lowest dilution per rupee of any structured programme. The volume model means less individual mentorship but direct co-invest access to LVX's 14,000-investor network through the partnership. <em>Apply:</em> 100x.vc</p>
+
+<p><strong>24. Mumbai Angels Network</strong><br/>
+<em>Active since:</em> 2006 · <em>Members:</em> 450+ · <em>Cheque:</em> ₹50L–₹3Cr · <em>Sectors:</em> Consumer, fintech, healthcare, real estate tech · <em>Focus:</em> Maharashtra and western India-based startups (not exclusive)<br/>
+One of India's oldest and most established regional networks. Strong in consumer brands, retail technology, and manufacturing-adjacent sectors given Mumbai's commercial ecosystem. <em>Apply:</em> mumbaiangels.net</p>
+
+<p><strong>25. The Chennai Angels</strong><br/>
+<em>Members:</em> 120+ · <em>Cheque:</em> ₹50L–₹2Cr · <em>Sectors:</em> SaaS, healthtech, manufacturing tech, B2B · <em>Focus:</em> Tamil Nadu ecosystem; strong SaaS community<br/>
+Chennai has produced more B2B SaaS unicorns per capita than any other Indian city. The Chennai Angels network reflects that — deep SaaS expertise and enterprise distribution networks that matter for B2B founders targeting Indian and global enterprise customers. <em>Apply:</em> thechennaiangels.com</p>
+
+<p><strong>26. The Bengaluru Angels</strong><br/>
+<em>Members:</em> 150+ · <em>Cheque:</em> ₹25L–₹1Cr · <em>Sectors:</em> Deep tech, SaaS, consumer, mobility · <em>Focus:</em> Karnataka ecosystem; India's deepest tech talent pool<br/>
+The Bengaluru Angels reflects the city's diversity — deep tech, SaaS, consumer, and mobility are all well-represented. Strong connections to the NASSCOM ecosystem and Bengaluru's corporate tech employer base. <em>Apply:</em> thebengaluruangels.com</p>
+
+<p><strong>27. Hyderabad Angels</strong><br/>
+<em>Founded:</em> 2012 · <em>Members:</em> 120+ · <em>Portfolio:</em> 50+ investments, 10 exits · <em>Cheque:</em> ₹50L–₹2Cr · <em>Sectors:</em> Life sciences, pharma tech, SaaS, defence tech<br/>
+Hyderabad's angel network reflects the city's dual strengths — pharma and life sciences on one side, enterprise SaaS and defence tech on the other. The T-Hub ecosystem gives portfolio companies additional resource access. <em>Apply:</em> hydangels.com</p>
+
+<p><strong>28. Hyderabad Angel Fund</strong><br/>
+<em>Fund size:</em> ₹100 Cr · <em>Cheque:</em> ₹2–4 Cr · <em>Sectors:</em> Tech-enabled startups across sectors · <em>Stage:</em> Pre-seed to seed<br/>
+A newer, more structured vehicle out of Hyderabad's ecosystem — the ₹100 crore fund size and ₹2–4 crore cheque size puts it in a different bracket from most angel groups. Appropriate for founders who have passed the idea stage and need a single institutional-quality cheque. <em>Apply:</em> Through Hyderabad Angels network</p>
+
+<p><strong>29. ah! Ventures</strong><br/>
+<em>Founded:</em> 2009 · <em>Cheque:</em> $100K–$1M (First Gear and Angel Platform); up to $10M (High Tables) · <em>Sectors:</em> Consumer, SaaS, fintech, healthcare · <em>Unique:</em> Multi-tier platform from angel to growth stage<br/>
+ah! Ventures is one of the few platforms that offers continuity from angel to growth — meaning a company that raises $200K at seed can access $5M at Series A through the same platform. Reduces the need to rebuild investor relationships at each stage. <em>Apply:</em> ahventures.in</p>
+
+<p><strong>30. Lead Angels</strong><br/>
+<em>Members:</em> 600+ · <em>Cheque:</em> ₹25L–₹1.5Cr · <em>Sectors:</em> Broad; AI, fintech, SaaS, consumer · <em>Model:</em> Online-first platform<br/>
+Lead Angels operates a fully online syndication model — pitch, due diligence, and term sheets all happen digitally. Faster cycle than in-person networks for founders who can write a compelling application. <em>Apply:</em> leadangels.in</p>
+
+<p><strong>31. Yatra Angel Network</strong><br/>
+<em>Fund:</em> ₹90 Cr SEBI-approved fund · <em>Cheque:</em> ₹1.5–3.5 Cr · <em>Sectors:</em> Fintech, BFSI, insurance tech · <em>Focus:</em> Financial services vertical specialists<br/>
+Yatra is unique in its fintech-only focus. For founders building in insurance, lending, wealth management, or payments — Yatra's sector expertise translates to faster due diligence, better valuation benchmarking, and portfolio network effects within the BFSI value chain. <em>Apply:</em> yatraangel.com</p>
+
+<p><strong>32. CIO Angel Network</strong><br/>
+<em>Members:</em> 200+ CIOs and technology leaders · <em>Cheque:</em> ₹25L–₹1Cr · <em>Sectors:</em> Enterprise tech, cybersecurity, AI tools, SaaS · <em>Unique:</em> Investors are enterprise buyers and technology decision-makers<br/>
+CIO Angel Network's differentiator is its membership — the people writing the cheques are also the enterprise technology buyers your startup wants to sell to. A ₹50 lakh investment from a CIO often comes with a pilot agreement. For B2B founders, this is more valuable than the capital alone. <em>Apply:</em> cioangels.com</p>
+
+<p><strong>33. Chandigarh Angels Network (CAN)</strong><br/>
+<em>Founded:</em> 2015 · <em>Members:</em> 70+ · <em>Cheque:</em> ₹25L–₹75L · <em>Sectors:</em> Consumer, healthcare, agritech, manufacturing · <em>Portfolio:</em> 1,500+ jobs created across portfolio<br/>
+CAN is the primary angel network for North India outside Delhi. Strong in consumer brands, agritech (given Punjab/Haryana's agricultural economy), and manufacturing. Useful for founders building for Tier 2 North Indian markets. <em>Apply:</em> chandigarhangels.com</p>
+
+<p><strong>34. iSPIRT Angel Network</strong><br/>
+<em>Focus:</em> Product startups, India Stack builders, SaaS · <em>Cheque:</em> ₹10–50L · <em>Model:</em> Community-driven; no formal fund<br/>
+iSPIRT is less a traditional angel network and more an intellectual community of product-focused founders and investors. The angel activity within iSPIRT is informal but high-quality — the people investing are deeply involved in building India's digital infrastructure. <em>Approach:</em> Attend iSPIRT PlayBook Rounds and community events; the investment relationships form organically.</p>
+
+<p><strong>35. BITS Spark Angels</strong><br/>
+<em>Focus:</em> BITS Pilani alumni network · <em>Cheque:</em> ₹10–50L · <em>Sectors:</em> Deep tech, SaaS, consumer · <em>Unique:</em> Alumni network of 30,000+ in tech leadership roles globally<br/>
+BITS Pilani has produced a disproportionate number of Indian startup founders and tech executives (Flipkart's Sachin Bansal and Binny Bansal are both BITS alumni). The alumni network is an unusually strong asset for technical founders seeking both capital and engineering talent. <em>Approach:</em> BITS Spark alumni events and the BITS entrepreneurship community.</p>
+
+<h2>Part 3 — Emerging and Specialist Networks</h2>
+
+<p><strong>36. Rainmatter Capital (Nithin Kamath, Zerodha)</strong> — Health, climate, fintech. ₹50L–₹3Cr. Formal fund with sector mandate. Apply at rainmatter.com</p>
+
+<p><strong>37. Axilor Ventures</strong> — Deep tech, B2B, AI. ₹20L seed + 100-day programme. Formal accelerator twice yearly. Apply at axilor.com</p>
+
+<p><strong>38. CIIE.CO (IIM Ahmedabad)</strong> — Cleantech, agritech, social impact. ₹25–50L seed. Formal application. Apply at ciie.co</p>
+
+<p><strong>39. IAN Alpha Fund</strong> — Growth-stage from IAN's larger portfolio companies. ₹6–40 Cr. For companies that have graduated beyond angel stage. Apply via IAN.</p>
+
+<p><strong>40. IPV International Fund</strong> — Cross-border investments, $100K–$1M. For Indian startups with international expansion ambitions. Apply via IPV.</p>
+
+<p><strong>41. SucSEED Indovation Fund</strong> — Early stage, sector-agnostic. ₹25L–₹1Cr. Online-first. sucseedd.com</p>
+
+<p><strong>42. Gujarat Venture Finance Limited (GVFL)</strong> — India's first venture capital company, government-backed. Focuses on Gujarat-based startups. ₹50L–₹5Cr. gvfl.com</p>
+
+<p><strong>43. IIT Bombay SINE</strong> — Technology startups from or affiliated with IIT Bombay. ₹25–30L seed + infrastructure. Formal application. sine.iitb.ac.in</p>
+
+<p><strong>44. NSRCEL (IIM Bangalore)</strong> — Very early stage, any sector. Mentorship + investor access. Explicitly accepts pre-revenue founders. nsrcel.org</p>
+
+<p><strong>45. T-Angel (T-Hub, Hyderabad)</strong> — Pre-seed focused. Telangana government-backed. Investor access + workspace. t-hub.co</p>
+
+<p><strong>46. Startup India Seed Fund Scheme (DPIIT)</strong> — Government grant/debt for DPIIT-recognised startups. ₹20L–₹50L. No equity taken. seedfund.startupindia.gov.in</p>
+
+<p><strong>47. NoCap VC</strong> — One application reaches 5 angel investors and VCs + 2 partner incubators. Structured feedback guaranteed within 14 days. Free for founders. <em>Apply:</em> nocapvc.in</p>
+
+<h2>How to approach: the three rules that actually work</h2>
+
+<div class="bp-pullquote">The founders who raise from this list are not the ones with the most connections. They are the ones with the clearest application and the most specific evidence of demand.</div>
+
+<p><strong>Rule 1 — Match stage to investor.</strong> Individual angels (Kunal Shah, Anupam Mittal) are best approached when you have early traction — paying customers or strong user data. Networks like NSRCEL, 100X.VC, and NoCap VC are specifically designed for pre-traction founders. Applying to the wrong stage investor wastes everyone's time.</p>
+
+<p><strong>Rule 2 — Lead with evidence, not vision.</strong> Every investor on this list hears hundreds of visions per year. What they stop for is a specific, credible fact: a retention number, a paying customer, an insight about your market that demonstrates real research. Your first sentence in any application should be a fact, not a tagline.</p>
+
+<p><strong>Rule 3 — Use platforms before cold outreach.</strong> An application on LVX, AngelList India, or NoCap VC gets read because the investor is in a deal-evaluation context. A LinkedIn message to Anupam Mittal arrives alongside hundreds of others. The platform gives you a structured format that forces clarity — and forces you to build the application you should have built before you made any outreach.</p>
+
+<div class="bp-takeaway">
+  <div class="bp-takeaway-label">WHERE TO START</div>
+  Apply to NoCap VC first. One form — 12 minutes — reaches 5 angel investors and VCs plus 2 partner incubators simultaneously. You get structured feedback within 14 days regardless of the outcome. It is the fastest way to get your pitch in front of multiple investors at once, with guaranteed feedback. Apply free at nocapvc.in
+</div>
+    `
+  }
 ];
 
 export function getPostBySlug(slug) {
