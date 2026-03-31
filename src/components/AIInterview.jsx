@@ -166,17 +166,13 @@ export default function AIInterview() {
       parts: [{ text: msg.content }]
     }));
 
-    const systemTurn = [
-      { role: 'user', parts: [{ text: 'You are NoCap AI. Instructions:\n\n' + SYSTEM_PROMPT }] },
-      { role: 'model', parts: [{ text: 'Understood. I am NoCap AI, ready to conduct the founder interview.' }] }
-    ];
-
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents: [...systemTurn, ...contents],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 3000 }
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents,
+        generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
       })
     });
 
