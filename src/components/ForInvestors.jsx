@@ -27,7 +27,7 @@ export default function ForInvestors({ onPartnerClick }) {
           </div>
           <div className="inv-cta-box rev d2">
             <h3>Partner with<br /><span style={{ color: 'var(--yellow)' }}>NoCap VC</span></h3>
-            <p>We're onboarding a small number of investor and incubator partners. Currently active with 2 incubators and 1 angel — next cohort opening soon.</p>
+            <p>We're onboarding a small number of investor and incubator partners. Currently active with 2 incubators and 5 angel investors & VCs — next cohort opening soon.</p>
 
             {/* ← Changed from <a href="mailto:..."> to a button that opens the modal */}
             <button className="btn-outline" onClick={onPartnerClick}>
@@ -37,7 +37,7 @@ export default function ForInvestors({ onPartnerClick }) {
             <div className="inv-meta">
               <div className="inv-meta-lbl">Currently onboarded</div>
               <div className="inv-row"><span>Partner Incubators</span><span>2 active</span></div>
-              <div className="inv-row"><span>Angel Investors</span><span>1 active</span></div>
+              <div className="inv-row"><span>Angel Investors & VCs</span><span>5 active</span></div>
               <div className="inv-row green"><span>Next partner slots</span><span>Open Q2 2025</span></div>
             </div>
           </div>

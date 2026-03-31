@@ -39,7 +39,7 @@ export default function Hero() {
         <div className="stats-bar">
           <div className="stat"><span className="stat-n">76K+</span><span className="stat-l">Founders in community</span></div>
           <div className="stat"><span className="stat-n">2</span><span className="stat-l">Partner incubators</span></div>
-          <div className="stat"><span className="stat-n">1</span><span className="stat-l">Angel investor</span></div>
+          <div className="stat"><span className="stat-n">5</span><span className="stat-l">Angel investors & VCs</span></div>
           <div className="stat"><span className="stat-n">100%</span><span className="stat-l">Response guaranteed</span></div>
         </div>
       </div>
