@@ -108,7 +108,7 @@ export default function Blog() {
           </Link>
         </div>
         <div className="bl-hero-right">
-          <div className="bl-hero-num">001</div>
+          <div className="bl-hero-num">{featured.id}</div>
         </div>
       </section>
 

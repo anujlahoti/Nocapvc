@@ -61,7 +61,7 @@ export const posts = [
     categoryLabel: 'Funding Intelligence',
     date: 'March 28, 2026',
     readTime: '6 min read',
-    featured: true,
+    featured: false,
     content: `
 <p class="bp-lead">Most founders spend weeks building their startup and 90 minutes on their application. Investors spend 60 seconds on it. That gap is why so many applications fail before a human even reads them.</p>
 
@@ -1245,7 +1245,18 @@ export function getPostBySlug(slug) {
 }
 
 export function getFeaturedPost() {
-  return posts.find(p => p.featured) || posts[0];
+  const now = Date.now();
+  const EIGHT_HOURS = 8 * 60 * 60 * 1000;
+
+  // Rule 1: Newest post published in last 8 hours gets hero slot automatically
+  const recent = posts
+    .filter(p => { const d = new Date(p.date); return !isNaN(d) && (now - d.getTime()) < EIGHT_HOURS; })
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+  if (recent.length > 0) return recent[0];
+
+  // Rule 2: Rotate every 8 hours through all posts — changes 3× per day
+  const slotIndex = Math.floor(now / EIGHT_HOURS);
+  return posts[slotIndex % posts.length];
 }
 
 export function getPostsByCategory(categoryId) {
