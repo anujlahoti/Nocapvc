@@ -29,11 +29,13 @@ export default function Navbar() {
         <li><button onClick={function(){ scrollTo('investors'); }}>For Investors</button></li>
         <li><button onClick={function(){ scrollTo('apply-form'); }}>Apply</button></li>
         <li><a href="/blog" className="nav-blog-link">Blog</a></li>
+        {/* Founder Signal — hidden until ready
         <li>
           <a href="/school" className="nav-product-link school-link">
-            Founder School <span className="nav-spark">✦</span>
+            Founder Signal <span className="nav-spark">✦</span>
           </a>
         </li>
+        */}
         <li>
           <a href="/pe" className="nav-product-link pe-link">
             NoCap PE <span className="nav-pe-tag">MICRO PE</span>
