@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { posts, CATEGORIES, getFeaturedPost } from '../blog/BlogData';
 import './Blog.css';
@@ -61,6 +61,11 @@ export default function Blog() {
     } catch {}
     setSubscribed(true);
   };
+  useEffect(() => {
+    document.title = 'Founder School | NoCap VC';
+    return () => { document.title = 'NoCap VC | One Form, Opens Many Funding Doors'; };
+  }, []);
+
   const featured = getFeaturedPost();
 
   const filtered = activeCategory === 'all'
@@ -94,7 +99,7 @@ export default function Blog() {
       {/* ── HERO / FEATURED ── */}
       <section className="bl-hero">
         <div className="bl-hero-left">
-          <CategoryTag categoryId={featured.category} label="NOCAP INTELLIGENCE" />
+          <CategoryTag categoryId={featured.category} label="FOUNDER SCHOOL" />
           <h1 className="bl-hero-title">{featured.title}</h1>
           <p className="bl-hero-excerpt">{featured.excerpt}</p>
           <div className="bl-hero-meta">By NoCap VC Research · {featured.readTime}</div>
@@ -110,7 +115,7 @@ export default function Blog() {
       {/* ── DIVIDER ── */}
       <div className="bl-divider">
         <div className="bl-divider-line" />
-        <span className="bl-divider-label">LATEST INTELLIGENCE</span>
+        <span className="bl-divider-label">FOUNDER SCHOOL</span>
         <div className="bl-divider-line" />
       </div>
 
@@ -169,9 +174,9 @@ export default function Blog() {
       {/* ── EMAIL CAPTURE ── */}
       <section className="bl-subscribe">
         <div className="bl-subscribe-inner">
-          <div className="bl-subscribe-label">NOCAP INTELLIGENCE</div>
-          <h2 className="bl-subscribe-title">Intelligence for founders who are serious.</h2>
-          <p className="bl-subscribe-sub">Weekly insights from India's largest startup application database.</p>
+          <div className="bl-subscribe-label">FOUNDER SCHOOL</div>
+          <h2 className="bl-subscribe-title">Every founder problem. One place.</h2>
+          <p className="bl-subscribe-sub">Funding playbooks, investor lists, and real founder stories — straight to your inbox.</p>
           {subscribed ? (
             <p className="bl-subscribe-done">You're in. Watch your inbox.</p>
           ) : (

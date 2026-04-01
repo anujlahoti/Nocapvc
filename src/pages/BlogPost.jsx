@@ -30,7 +30,7 @@ export default function BlogPost() {
     window.scrollTo(0, 0);
 
     // Dynamic page title + meta description for SEO
-    document.title = `${post.title} | NoCap VC`;
+    document.title = `${post.title} | Founder School`;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', post.excerpt);
 
@@ -92,7 +92,7 @@ export default function BlogPost() {
           nocapvc
         </Link>
         <div className="bp-nav-right">
-          <Link to="/blog" className="bp-nav-link">← All articles</Link>
+          <Link to="/blog" className="bp-nav-link">← Founder School</Link>
           <a href="/#apply-form" className="bp-nav-cta">Apply Now →</a>
         </div>
       </nav>
@@ -160,7 +160,7 @@ export default function BlogPost() {
       {related.length > 0 && (
         <section className="bp-related">
           <div className="bp-related-inner">
-            <div className="bp-related-label">KEEP READING</div>
+            <div className="bp-related-label">MORE FROM FOUNDER SCHOOL</div>
             <div className="bp-related-grid">
               {related.map(r => {
                 const rCat = CATEGORIES.find(c => c.id === r.category);
