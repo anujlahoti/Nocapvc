@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { getPostBySlug, posts, CATEGORIES } from '../blog/BlogData';
+import ByajReviewWidget from '../components/ByajReviewWidget';
 import './BlogPost.css';
 
 function FaqItem({ q, a }) {
@@ -112,7 +113,21 @@ export default function BlogPost() {
           <h1 className="bp-header-title">{post.title}</h1>
           <p className="bp-header-excerpt">{post.excerpt}</p>
           <div className="bp-header-meta">
-            <span>By NoCap VC Research</span>
+            <span>By {post.author || 'NoCap VC Research'}</span>
+            {post.linkedinUrl && (
+              <a
+                href={post.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bp-linkedin-btn"
+                aria-label="Connect on LinkedIn"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+                LinkedIn
+              </a>
+            )}
             <span className="bp-meta-sep">·</span>
             <span>{post.date}</span>
             <span className="bp-meta-sep">·</span>
@@ -144,17 +159,47 @@ export default function BlogPost() {
       )}
 
       {/* ── ARTICLE CTA ── */}
-      <section className="bp-cta">
-        <div className="bp-cta-inner">
-          <div className="bp-cta-label">NOCAP VC</div>
-          <h2 className="bp-cta-title">Ready to apply for funding?</h2>
-          <p className="bp-cta-sub">
-            Your application takes 12 minutes. AI screens it in 48 hours.<br />
-            Structured feedback guaranteed. No ghosting.
-          </p>
-          <a href="/#apply-form" className="bp-cta-btn">Apply Now → nocapvc.in</a>
-        </div>
-      </section>
+      {!post.hideCta && (
+        <section className="bp-cta">
+          <div className="bp-cta-inner">
+            <div className="bp-cta-label">NOCAP VC</div>
+            <h2 className="bp-cta-title">Ready to apply for funding?</h2>
+            <p className="bp-cta-sub">
+              Your application takes 12 minutes. AI screens it in 48 hours.<br />
+              Structured feedback guaranteed. No ghosting.
+            </p>
+            <a href="/#apply-form" className="bp-cta-btn">Apply Now → nocapvc.in</a>
+          </div>
+        </section>
+      )}
+
+      {/* ── SURVEY BUTTON ── */}
+      {post.surveyUrl && (
+        <section className="bp-survey">
+          <div className="bp-survey-inner">
+            <div className="bp-survey-label">QUICK SURVEY</div>
+            <p className="bp-survey-text">If you liked the idea, please fill the survey — it takes 2 mins.</p>
+            <a
+              href={post.surveyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bp-survey-btn"
+            >
+              Fill the Survey Form →
+            </a>
+          </div>
+        </section>
+      )}
+
+      {/* ── REVIEW WIDGET ── */}
+      {post.reviewWidget === 'byaj' && (
+        <section className="bp-review-wrap">
+          <div className="bp-review-inner">
+            <div className="bp-review-label">COMMUNITY REVIEW</div>
+            <ByajReviewWidget />
+          </div>
+        </section>
+      )}
 
       {/* ── RELATED ARTICLES ── */}
       {related.length > 0 && (
