@@ -1545,7 +1545,7 @@ BITS Pilani has produced a disproportionate number of Indian startup founders an
     title: 'BYAJ: The ₹4.25 Lakh Crore Opportunity Nobody Is Talking About',
     excerpt: 'A fintech concept to democratize stock lending for India\'s 8.5 crore retail investors — the ₹4.25 lakh crore sitting idle in demat accounts that institutions have been quietly monetizing for years.',
     category: 'investor-lens',
-    categoryLabel: 'Investor Lens',
+    categoryLabel: 'Startup Idea',
     date: 'April 5, 2026',
     readTime: '12 min read',
     author: 'Anuj Lahoti',
