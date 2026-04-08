@@ -179,7 +179,7 @@ export default function FounderSpaceLanding() {
           </p>
 
           {/* Feature chips */}
-          {['Post your idea in 5 mins', 'Get rated by the community', 'Find your co-founder'].map(f => (
+          {['Post your idea in 5 mins', 'Get rated by the community', 'Attract co-founders, advisors & your first 5 hires'].map(f => (
             <div key={f} style={{
               display: 'flex',
               alignItems: 'center',
