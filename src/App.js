@@ -18,6 +18,10 @@ import AIInterview from './components/AIInterview';
 import NoCaPE from './components/NoCap_PE';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import FounderSpaceLanding from './pages/founder-space/FounderSpaceLanding';
+import Onboarding from './pages/founder-space/Onboarding';
+import Feed from './pages/founder-space/Feed';
+import { AuthProvider } from './lib/auth';
 import useScrollReveal from './hooks/useScrollReveal';
 
 function MainSite() {
@@ -52,14 +56,19 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MainSite />} />
-        <Route path="/school/*" element={<School />} />
-        <Route path="/interview" element={<AIInterview />} />
-        <Route path="/pe" element={<NoCaPE />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/blog/:slug" element={<BlogPost />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<MainSite />} />
+          <Route path="/school/*" element={<School />} />
+          <Route path="/interview" element={<AIInterview />} />
+          <Route path="/pe" element={<NoCaPE />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/founder-space" element={<FounderSpaceLanding />} />
+          <Route path="/founder-space/onboarding" element={<Onboarding />} />
+          <Route path="/founder-space/feed" element={<Feed />} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

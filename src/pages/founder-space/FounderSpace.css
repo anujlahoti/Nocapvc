@@ -1,0 +1,294 @@
+/* ═══════════════════════════════════════════════
+   Founder Space — Shared Design Tokens + Utilities
+   Polaroid / warm parchment aesthetic
+   ═══════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Syne:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+/* ── CSS Variables ────────────────────────────── */
+:root {
+  --fs-bg:          #fdf6e8;
+  --fs-bg-warm:     #f5e9d0;
+  --fs-card:        #ffffff;
+  --fs-text:        #2c1f0e;
+  --fs-muted:       #7a5c3a;
+  --fs-border:      rgba(44, 31, 14, 0.1);
+  --fs-border-soft: rgba(44, 31, 14, 0.06);
+  --fs-accent:      #c4963a;
+  --fs-accent-dark: #92610a;
+  --fs-shadow:      0 4px 28px rgba(44, 31, 14, 0.12), 0 1px 4px rgba(44, 31, 14, 0.07);
+  --fs-shadow-lg:   0 12px 48px rgba(44, 31, 14, 0.16), 0 2px 8px rgba(44, 31, 14, 0.08);
+}
+
+/* ── Page shell ───────────────────────────────── */
+.fs-page {
+  min-height: 100vh;
+  background: var(--fs-bg);
+  color: var(--fs-text);
+  font-family: 'Syne', sans-serif;
+}
+
+/* ── Navbar ───────────────────────────────────── */
+.fs-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 48px;
+  border-bottom: 1px solid var(--fs-border);
+  background: var(--fs-bg);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.fs-nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--fs-text);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fs-nav-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--fs-accent);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ── Cards ────────────────────────────────────── */
+.fs-card {
+  background: var(--fs-card);
+  border-radius: 4px;
+  box-shadow: var(--fs-shadow);
+  border: 1px solid var(--fs-border-soft);
+}
+
+.fs-card-polaroid {
+  background: var(--fs-card);
+  border-radius: 4px;
+  padding: 20px 20px 40px;
+  box-shadow: var(--fs-shadow);
+  border: 1px solid var(--fs-border-soft);
+}
+
+/* ── Buttons ──────────────────────────────────── */
+.fs-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--fs-text);
+  color: var(--fs-bg);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 14px 28px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.fs-btn-primary:hover { opacity: 0.88; }
+.fs-btn-primary:active { transform: scale(0.98); }
+.fs-btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.fs-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--fs-text);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: 1.5px solid var(--fs-border);
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+.fs-btn-outline:hover {
+  border-color: var(--fs-text);
+  background: rgba(44,31,14,0.04);
+}
+
+.fs-btn-ghost {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--fs-muted);
+  letter-spacing: 0.06em;
+  padding: 8px 0;
+  transition: color 0.15s;
+}
+.fs-btn-ghost:hover { color: var(--fs-text); }
+
+/* ── Form elements ────────────────────────────── */
+.fs-input,
+.fs-textarea,
+.fs-select {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--fs-bg);
+  border: 1.5px solid var(--fs-border);
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  color: var(--fs-text);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
+}
+.fs-input::placeholder,
+.fs-textarea::placeholder { color: rgba(44,31,14,0.35); }
+.fs-input:focus,
+.fs-textarea:focus,
+.fs-select:focus {
+  border-color: var(--fs-accent);
+  box-shadow: 0 0 0 3px rgba(196,150,58,0.12);
+}
+.fs-textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.6;
+}
+.fs-input-error {
+  border-color: #c0392b !important;
+  box-shadow: 0 0 0 3px rgba(192,57,43,0.1) !important;
+}
+
+.fs-label {
+  display: block;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fs-muted);
+  margin-bottom: 6px;
+}
+
+.fs-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--fs-muted);
+  margin-top: 4px;
+  opacity: 0.7;
+}
+
+.fs-error-msg {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: #c0392b;
+  margin-top: 4px;
+}
+
+.fs-field { margin-bottom: 22px; }
+
+/* ── Role pills ───────────────────────────────── */
+.fs-role-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.fs-role-pill {
+  padding: 9px 18px;
+  border-radius: 100px;
+  border: 1.5px solid var(--fs-border);
+  background: transparent;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fs-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.04em;
+}
+.fs-role-pill:hover {
+  border-color: var(--fs-text);
+  color: var(--fs-text);
+}
+.fs-role-pill.active {
+  background: var(--fs-text);
+  border-color: var(--fs-text);
+  color: var(--fs-bg);
+}
+
+/* ── Step indicator ───────────────────────────── */
+.fs-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 40px;
+}
+.fs-step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--fs-border);
+  transition: background 0.2s, transform 0.2s;
+}
+.fs-step-dot.active {
+  background: var(--fs-accent);
+  transform: scale(1.3);
+}
+.fs-step-dot.done {
+  background: var(--fs-text);
+}
+.fs-step-line {
+  flex: 1;
+  height: 1.5px;
+  background: var(--fs-border);
+  max-width: 40px;
+  transition: background 0.3s;
+}
+.fs-step-line.done { background: var(--fs-text); }
+
+/* ── Divider ──────────────────────────────────── */
+.fs-divider {
+  height: 1px;
+  background: var(--fs-border);
+  margin: 28px 0;
+}
+
+/* ── Section label (mono uppercase) ──────────── */
+.fs-section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--fs-muted);
+  margin-bottom: 6px;
+}
+
+/* ── Spinner ──────────────────────────────────── */
+.fs-spinner {
+  width: 32px; height: 32px;
+  border: 2.5px solid var(--fs-border);
+  border-top-color: var(--fs-accent);
+  border-radius: 50%;
+  animation: fs-spin 0.7s linear infinite;
+}
+@keyframes fs-spin { to { transform: rotate(360deg); } }
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 640px) {
+  .fs-nav { padding: 14px 20px; }
+}
