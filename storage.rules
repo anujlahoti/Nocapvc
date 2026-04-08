@@ -1,0 +1,61 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ──────────────────────────────────────────────
+    //  HELPERS
+    // ──────────────────────────────────────────────
+
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuth() && request.auth.uid == userId;
+    }
+
+    // 5 MB limit · jpeg / png / webp only
+    function isValidImage() {
+      return request.resource.contentType.matches('image/(jpeg|png|webp)')
+          && request.resource.size <= 5 * 1024 * 1024;
+    }
+
+    // Check idea authorship via Firestore (requires Blaze plan)
+    function isIdeaAuthor(ideaId) {
+      return isAuth()
+          && firestore.get(
+               /databases/(default)/documents/ideas/$(ideaId)
+             ).data.authorUid == request.auth.uid;
+    }
+
+    // ──────────────────────────────────────────────
+    //  /users/{userId}/avatar
+    //  User profile photos
+    // ──────────────────────────────────────────────
+    match /users/{userId}/avatar {
+      allow read:  if true;
+      allow write: if isOwner(userId) && isValidImage();
+      allow delete: if isOwner(userId);
+    }
+
+    // ──────────────────────────────────────────────
+    //  /ideas/{ideaId}/nodes/{nodeId}
+    //  Main pitch-deck node photos (problem / reveal / solution / market / ask)
+    // ──────────────────────────────────────────────
+    match /ideas/{ideaId}/nodes/{nodeId} {
+      allow read:  if true;
+      allow write: if isIdeaAuthor(ideaId) && isValidImage();
+      allow delete: if isIdeaAuthor(ideaId);
+    }
+
+    // ──────────────────────────────────────────────
+    //  /ideas/{ideaId}/branches/{branchId}
+    //  Branch expansion card photos
+    // ──────────────────────────────────────────────
+    match /ideas/{ideaId}/branches/{branchId} {
+      allow read:  if true;
+      allow write: if isIdeaAuthor(ideaId) && isValidImage();
+      allow delete: if isIdeaAuthor(ideaId);
+    }
+  }
+}
