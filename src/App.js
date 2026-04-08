@@ -21,6 +21,7 @@ import BlogPost from './pages/BlogPost';
 import FounderSpaceLanding from './pages/founder-space/FounderSpaceLanding';
 import Onboarding from './pages/founder-space/Onboarding';
 import Feed from './pages/founder-space/Feed';
+import Profile from './pages/founder-space/Profile';
 import { AuthProvider } from './lib/auth';
 import useScrollReveal from './hooks/useScrollReveal';
 
@@ -67,6 +68,7 @@ export default function App() {
           <Route path="/founder-space" element={<FounderSpaceLanding />} />
           <Route path="/founder-space/onboarding" element={<Onboarding />} />
           <Route path="/founder-space/feed" element={<Feed />} />
+          <Route path="/founder-space/profile/:uid" element={<Profile />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
