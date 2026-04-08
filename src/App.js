@@ -22,6 +22,7 @@ import FounderSpaceLanding from './pages/founder-space/FounderSpaceLanding';
 import Onboarding from './pages/founder-space/Onboarding';
 import Feed from './pages/founder-space/Feed';
 import Profile from './pages/founder-space/Profile';
+import Submit from './pages/founder-space/Submit';
 import { AuthProvider } from './lib/auth';
 import useScrollReveal from './hooks/useScrollReveal';
 
@@ -69,6 +70,7 @@ export default function App() {
           <Route path="/founder-space/onboarding" element={<Onboarding />} />
           <Route path="/founder-space/feed" element={<Feed />} />
           <Route path="/founder-space/profile/:uid" element={<Profile />} />
+          <Route path="/founder-space/submit" element={<Submit />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
