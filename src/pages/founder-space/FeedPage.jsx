@@ -350,7 +350,11 @@ export default function FeedPage() {
   const navigate = useNavigate();
 
   async function handleSignIn() {
-    try { await signIn(); } catch (err) { console.error('Sign-in error:', err); }
+    try {
+      const result = await signIn();
+      if (!result) return;
+      if (!result.hasProfile) navigate('/founder-space/onboarding');
+    } catch (err) { console.error('Sign-in error:', err); }
   }
 
   // ── Filters ───────────────────────────────
@@ -453,7 +457,7 @@ export default function FeedPage() {
             {user ? (
               <>
                 <Link
-                  to={`/founder-space/profile/${user.uid}`}
+                  to={userProfile ? `/founder-space/profile/${user.uid}` : '/founder-space/onboarding'}
                   style={{
                     fontFamily: "'DM Mono', monospace",
                     fontSize: 10, color: '#7a5c3a',
@@ -462,7 +466,7 @@ export default function FeedPage() {
                   onMouseEnter={e => e.currentTarget.style.color = '#2c1f0e'}
                   onMouseLeave={e => e.currentTarget.style.color = '#7a5c3a'}
                 >
-                  {userProfile?.name || 'My profile'}
+                  {userProfile?.name || 'Complete profile'}
                 </Link>
                 <Link
                   to="/founder-space/submit"
@@ -535,7 +539,7 @@ export default function FeedPage() {
                 Pin your first idea →
               </Link>
               <Link
-                to={`/founder-space/profile/${user.uid}`}
+                to={userProfile ? `/founder-space/profile/${user.uid}` : '/founder-space/onboarding'}
                 style={{
                   padding: '12px 24px', borderRadius: 10,
                   border: '1.5px solid rgba(44,31,14,0.15)',
@@ -545,7 +549,7 @@ export default function FeedPage() {
                   textDecoration: 'none',
                 }}
               >
-                My profile
+                {userProfile ? 'My profile' : 'Complete profile →'}
               </Link>
             </div>
           ) : (
