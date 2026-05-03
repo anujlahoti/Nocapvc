@@ -20,10 +20,13 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import FounderSpaceLanding from './pages/founder-space/FounderSpaceLanding';
 import Onboarding from './pages/founder-space/Onboarding';
-import Feed from './pages/founder-space/Feed';
 import Profile from './pages/founder-space/Profile';
 import Submit from './pages/founder-space/Submit';
+import IdeaPage from './pages/founder-space/IdeaPage';
+import FeedPage from './pages/founder-space/FeedPage';
+import AdminPage from './pages/founder-space/AdminPage';
 import { AuthProvider } from './lib/auth';
+import { ToastProvider } from './components/Toast';
 import useScrollReveal from './hooks/useScrollReveal';
 
 function MainSite() {
@@ -59,19 +62,23 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route path="/" element={<MainSite />} />
-          <Route path="/school/*" element={<School />} />
-          <Route path="/interview" element={<AIInterview />} />
-          <Route path="/pe" element={<NoCaPE />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/founder-space" element={<FounderSpaceLanding />} />
-          <Route path="/founder-space/onboarding" element={<Onboarding />} />
-          <Route path="/founder-space/feed" element={<Feed />} />
-          <Route path="/founder-space/profile/:uid" element={<Profile />} />
-          <Route path="/founder-space/submit" element={<Submit />} />
-        </Routes>
+        <ToastProvider>
+          <Routes>
+            <Route path="/" element={<MainSite />} />
+            <Route path="/school/*" element={<School />} />
+            <Route path="/interview" element={<AIInterview />} />
+            <Route path="/pe" element={<NoCaPE />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/founder-space" element={<FounderSpaceLanding />} />
+            <Route path="/founder-space/onboarding" element={<Onboarding />} />
+            <Route path="/founder-space/feed" element={<FeedPage />} />
+            <Route path="/founder-space/profile/:uid" element={<Profile />} />
+            <Route path="/founder-space/submit" element={<Submit />} />
+            <Route path="/founder-space/ideas/:ideaId" element={<IdeaPage />} />
+            <Route path="/founder-space/admin" element={<AdminPage />} />
+          </Routes>
+        </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
   );

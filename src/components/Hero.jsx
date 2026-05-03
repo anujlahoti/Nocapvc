@@ -42,6 +42,33 @@ export default function Hero() {
           <div className="stat"><span className="stat-n">5</span><span className="stat-l">Angel investors & VCs</span></div>
           <div className="stat"><span className="stat-n">100%</span><span className="stat-l">Response guaranteed</span></div>
         </div>
+
+        {/* Products strip */}
+        <div className="hero-products">
+          <a href="/founder-space" className="hero-product-card hero-product-fs">
+            <div className="hero-product-eyebrow">New ✦</div>
+            <div className="hero-product-name">Founder Space</div>
+            <div className="hero-product-desc">The place where your startup idea stops being a secret</div>
+            <div className="hero-product-cta">Explore →</div>
+            <div className="hero-product-deco">
+              {['problem','reveal','solution','market','ask'].map((k, i) => (
+                <div key={k} className="hero-product-polaroid" style={{ '--r': `${(i % 2 === 0 ? -1 : 1) * (i + 1) * 1.5}deg`, '--d': `${i * 60}ms` }} />
+              ))}
+            </div>
+          </a>
+          <a href="/blog" className="hero-product-card hero-product-school">
+            <div className="hero-product-eyebrow">Read ✦</div>
+            <div className="hero-product-name">Founder School</div>
+            <div className="hero-product-desc">Playbooks, teardowns, and frameworks for Indian founders</div>
+            <div className="hero-product-cta">Read →</div>
+          </a>
+          <a href="/pe" className="hero-product-card hero-product-pe">
+            <div className="hero-product-eyebrow">Micro PE ✦</div>
+            <div className="hero-product-name">NoCap PE</div>
+            <div className="hero-product-desc">Acquire profitable micro businesses. No VC, no dilution.</div>
+            <div className="hero-product-cta">Learn more →</div>
+          </a>
+        </div>
       </div>
     </section>
   );

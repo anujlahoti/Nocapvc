@@ -1,0 +1,222 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ──────────────────────────────────────────────
+    //  HELPERS
+    // ──────────────────────────────────────────────
+
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isAuth() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isAuth() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+
+    function isPublished(ideaId) {
+      return get(/databases/$(database)/documents/ideas/$(ideaId)).data.status == 'published';
+    }
+
+    // ──────────────────────────────────────────────
+    //  users
+    // ──────────────────────────────────────────────
+    match /users/{uid} {
+
+      allow read: if true;
+
+      // User creates their own profile for the first time
+      allow create: if isOwner(uid)
+        && request.resource.data.uid == uid
+        && request.resource.data.isAdmin == false
+        && request.resource.data.keys().hasAll(['uid', 'name', 'role', 'createdAt', 'updatedAt']);
+
+      // User updates their own profile — cannot change isAdmin
+      // Use get() with default false on both sides to handle docs that may lack the isAdmin field
+      allow update: if isOwner(uid)
+        && request.resource.data.get('isAdmin', false) == resource.data.get('isAdmin', false)
+        && request.resource.data.uid == uid;
+
+      // Admins can update any user (e.g. grant/revoke admin)
+      allow update: if isAdmin();
+
+      allow delete: if false;
+    }
+
+    // ──────────────────────────────────────────────
+    //  ideas
+    // ──────────────────────────────────────────────
+    match /ideas/{ideaId} {
+
+      allow read: if resource.data.status == 'published';
+      allow read: if isAuth() && resource.data.authorUid == request.auth.uid;
+      allow read: if isAdmin();
+
+      // Any authenticated user can create (starts as draft)
+      allow create: if isAuth()
+        && request.resource.data.authorUid == request.auth.uid
+        && request.resource.data.status in ['draft', 'pending_review']
+        && request.resource.data.keys().hasAll([
+            'authorUid', 'status', 'ideaTitle', 'tagline',
+            'category', 'stage', 'createdAt', 'updatedAt'
+           ]);
+
+      // Author can update content fields — cannot touch status or aggregation counters
+      allow update: if isAuth()
+        && resource.data.authorUid == request.auth.uid
+        && request.resource.data.status == resource.data.status
+        && request.resource.data.authorUid == resource.data.authorUid
+        && !request.resource.data.diff(resource.data).affectedKeys()
+            .hasAny(['ratingCount', 'avgOverall', 'avgProblemClarity',
+                     'avgMarketPotential', 'avgFounderCredibility',
+                     'avgExecutionReadiness', 'avgOverallInvestability',
+                     'wantToWorkCount', 'publishedAt']);
+
+      // Author can submit (draft → pending_review) or resubmit (published → pending_review)
+      allow update: if isAuth()
+        && resource.data.authorUid == request.auth.uid
+        && resource.data.status in ['draft', 'published']
+        && request.resource.data.status == 'pending_review'
+        && request.resource.data.authorUid == resource.data.authorUid;
+
+      // Admin can do anything
+      allow update: if isAdmin();
+
+      // Any authenticated user can increment viewCount or shareCount only
+      allow update: if isAuth()
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['viewCount', 'shareCount', 'updatedAt'])
+        && request.resource.data.viewCount >= resource.data.viewCount
+        && request.resource.data.shareCount >= resource.data.shareCount;
+
+      // Any authenticated user can increment wantToWorkCount (from WantToWork card)
+      allow update: if isAuth()
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['wantToWorkCount'])
+        && request.resource.data.wantToWorkCount == resource.data.wantToWorkCount + 1;
+
+      // Any authenticated user can update rating aggregation fields only (via transaction)
+      allow update: if isAuth()
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['ratingCount', 'avgOverall', 'avgProblemClarity',
+                      'avgMarketPotential', 'avgFounderCredibility',
+                      'avgExecutionReadiness', 'avgOverallInvestability']);
+
+      allow delete: if isAdmin()
+        || (isAuth()
+            && resource.data.authorUid == request.auth.uid
+            && resource.data.status == 'draft');
+
+      // ── updates subcollection ──────────────────
+      match /updates/{updateId} {
+
+        allow read: if isPublished(ideaId) || isAdmin();
+
+        // Only the idea's author can post updates
+        allow create: if isAuth()
+          && request.resource.data.authorUid == request.auth.uid
+          && get(/databases/$(database)/documents/ideas/$(ideaId)).data.authorUid == request.auth.uid
+          && request.resource.data.body.size() <= 300
+          && request.resource.data.keys().hasAll(['ideaId', 'authorUid', 'tag', 'body', 'createdAt']);
+
+        allow update, delete: if isOwner(resource.data.authorUid) || isAdmin();
+      }
+    }
+
+    // ──────────────────────────────────────────────
+    //  ratings
+    //  Field name: authorUid (was incorrectly 'userId' in old rules)
+    // ──────────────────────────────────────────────
+    match /ratings/{ratingId} {
+
+      // Admin can read all; user can read their own rating
+      allow read: if isAdmin()
+        || (isAuth() && resource.data.authorUid == request.auth.uid);
+
+      // Create: authenticated user
+      allow create: if isAuth()
+        && request.resource.data.authorUid == request.auth.uid
+        && request.resource.data.keys().hasAll([
+            'ideaId', 'authorUid', 'problemClarity', 'marketPotential',
+            'founderCredibility', 'executionReadiness', 'overallInvestability', 'createdAt'
+           ])
+        && request.resource.data.problemClarity >= 1
+        && request.resource.data.problemClarity <= 5
+        && request.resource.data.marketPotential >= 1
+        && request.resource.data.marketPotential <= 5
+        && request.resource.data.founderCredibility >= 1
+        && request.resource.data.founderCredibility <= 5
+        && request.resource.data.executionReadiness >= 1
+        && request.resource.data.executionReadiness <= 5
+        && request.resource.data.overallInvestability >= 1
+        && request.resource.data.overallInvestability <= 5;
+
+      // User can update their own rating
+      allow update: if isOwner(resource.data.authorUid)
+        && request.resource.data.authorUid == resource.data.authorUid
+        && request.resource.data.ideaId == resource.data.ideaId;
+
+      allow delete: if isAdmin();
+    }
+
+    // ──────────────────────────────────────────────
+    //  comments
+    // ──────────────────────────────────────────────
+    match /comments/{commentId} {
+
+      allow read: if resource.data.status == 'approved';
+      allow read: if isAuth() && resource.data.authorUid == request.auth.uid;
+      allow read: if isAdmin();
+
+      // Create: authenticated user, body required, always starts as pending
+      allow create: if isAuth()
+        && request.resource.data.authorUid == request.auth.uid
+        && (request.resource.data.status == 'pending' || request.resource.data.status == 'approved')
+        && request.resource.data.body.size() >= 1
+        && request.resource.data.body.size() <= 500
+        && request.resource.data.keys().hasAll(['ideaId', 'authorUid', 'body', 'status', 'createdAt']);
+
+      allow update: if isOwner(resource.data.authorUid)
+        && request.resource.data.status == 'pending'
+        && request.resource.data.authorUid == resource.data.authorUid
+        && request.resource.data.ideaId == resource.data.ideaId
+        && request.resource.data.body.size() <= 500;
+
+      allow update: if isAdmin();
+
+      allow delete: if isOwner(resource.data.authorUid) || isAdmin();
+    }
+
+    // ──────────────────────────────────────────────
+    //  wantToWork
+    //  Field name: authorUid (was incorrectly 'userId' in old rules)
+    // ──────────────────────────────────────────────
+    match /wantToWork/{wantToWorkId} {
+
+      // Idea author and admins can see who wants to work; user can read their own
+      allow read: if isAdmin()
+        || (isAuth() && resource.data.authorUid == request.auth.uid)
+        || (isAuth() &&
+            get(/databases/$(database)/documents/ideas/$(resource.data.ideaId)).data.authorUid
+            == request.auth.uid);
+
+      // Create: authenticated user, optional note max 200 chars
+      allow create: if isAuth()
+        && request.resource.data.authorUid == request.auth.uid
+        && request.resource.data.keys().hasAll(['ideaId', 'authorUid', 'createdAt'])
+        && (!request.resource.data.keys().hasAny(['note'])
+            || request.resource.data.note == null
+            || request.resource.data.note.size() <= 200);
+
+      allow update: if false;
+
+      allow delete: if isOwner(resource.data.authorUid) || isAdmin();
+    }
+
+  }
+}

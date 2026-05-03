@@ -115,6 +115,22 @@ nav.scr { padding: 12px 48px; }
 .pe-link { color: #00E87A; }
 .pe-link:hover { opacity: 0.7; }
 
+.founder-space-link { color: #c4a882; }
+.founder-space-link:hover { color: #f5c842; }
+
+.nav-badge-new {
+  font-family: 'DM Mono', monospace;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: rgba(196,150,58,0.25);
+  color: #c4963a;
+  border: 1px solid rgba(196,150,58,0.4);
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
 .nav-spark {
   font-size: 9px;
   color: #FFE034;

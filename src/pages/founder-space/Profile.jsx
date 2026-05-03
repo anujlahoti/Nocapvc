@@ -19,6 +19,16 @@ import './FounderSpace.css';
 
 // ── Helpers ───────────────────────────────────
 
+function setMetaOG(property, content) {
+  let el = document.querySelector(`meta[property="${property}"]`);
+  if (!el) {
+    el = document.createElement('meta');
+    el.setAttribute('property', property);
+    document.head.appendChild(el);
+  }
+  el.setAttribute('content', content);
+}
+
 function formatDateShort(ts) {
   if (!ts) return '';
   const d = ts.toDate ? ts.toDate() : new Date(ts);
@@ -147,7 +157,7 @@ function IdeaCard({ idea, index }) {
 
   return (
     <div
-      onClick={() => navigate(`/founder-space/idea/${idea.id}`)}
+      onClick={() => navigate(`/founder-space/ideas/${idea.id}`)}
       style={{
         background: '#fff',
         borderRadius: 4,
@@ -421,25 +431,15 @@ export default function Profile() {
           );
         }
 
-        // og:title
-        let ogTitle = document.querySelector('meta[property="og:title"]');
-        if (!ogTitle) {
-          ogTitle = document.createElement('meta');
-          ogTitle.setAttribute('property', 'og:title');
-          document.head.appendChild(ogTitle);
-        }
-        ogTitle.setAttribute('content', `${profileData.name} on Founder Space | NoCap VC`);
-
-        // og:description
-        let ogDesc = document.querySelector('meta[property="og:description"]');
-        if (!ogDesc) {
-          ogDesc = document.createElement('meta');
-          ogDesc.setAttribute('property', 'og:description');
-          document.head.appendChild(ogDesc);
-        }
-        ogDesc.setAttribute('content',
+        // OG meta tags
+        setMetaOG('og:title', `${profileData.name} on Founder Space | NoCap VC`);
+        setMetaOG('og:description',
           `${profileData.whatImBuilding || profileData.title || ''}`.slice(0, 200)
         );
+        setMetaOG('og:image',        `/api/og/profile/${uid}`);
+        setMetaOG('og:image:width',  '1200');
+        setMetaOG('og:image:height', '630');
+        setMetaOG('og:url', window.location.href);
 
       } catch (err) {
         console.error('Profile load error:', err);

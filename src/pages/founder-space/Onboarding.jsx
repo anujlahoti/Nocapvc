@@ -9,7 +9,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, updateDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../../lib/auth';
 import { withAuth } from '../../components/withAuth';
@@ -448,7 +448,10 @@ function Onboarding() {
     setSaving(true);
     setSubmitError(null);
     try {
-      await setDoc(doc(db, 'users', user.uid), {
+      const userDocRef = doc(db, 'users', user.uid);
+      const existingSnap = await getDoc(userDocRef);
+
+      const profileFields = {
         uid:            user.uid,
         name:           data.name.trim(),
         title:          data.title.trim(),
@@ -458,14 +461,26 @@ function Onboarding() {
         linkedin:       data.linkedin.trim(),
         twitter:        data.twitter.trim(),
         photoURL:       data.photoURL || user.photoURL || '',
-        isAdmin:        false,
-        createdAt:      serverTimestamp(),
         updatedAt:      serverTimestamp(),
-      });
+      };
+
+      if (existingSnap.exists()) {
+        // Update without touching isAdmin — avoids rule denial when isAdmin is missing
+        await updateDoc(userDocRef, profileFields);
+      } else {
+        // First-time create — must include isAdmin: false per security rule
+        await setDoc(userDocRef, {
+          ...profileFields,
+          isAdmin:   false,
+          createdAt: serverTimestamp(),
+        });
+      }
+
       await refreshProfile();
       navigate('/founder-space/feed', { replace: true });
     } catch (err) {
-      setSubmitError('Something went wrong. Please try again.');
+      console.error('Onboarding launch error:', err?.code, err?.message, err);
+      setSubmitError(`Something went wrong: ${err?.code || err?.message || 'unknown error'}`);
       setSaving(false);
     }
   }

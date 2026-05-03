@@ -29,6 +29,11 @@ export default function Navbar() {
         <li><button onClick={function(){ scrollTo('investors'); }}>For Investors</button></li>
         <li><button onClick={function(){ scrollTo('apply-form'); }}>Apply</button></li>
         <li>
+          <a href="/founder-space" className="nav-product-link founder-space-link">
+            Founder Space <span className="nav-badge-new">NEW</span>
+          </a>
+        </li>
+        <li>
           <a href="/blog" className="nav-product-link school-link">
             Founder School <span className="nav-spark">✦</span>
           </a>
