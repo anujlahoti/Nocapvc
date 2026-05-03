@@ -28,6 +28,28 @@
   font-family: 'Syne', sans-serif;
 }
 
+/* ── Global input reset — beats ApplicationForm.css dark theme ── */
+.fs-page input:not([type="file"]),
+.fs-page input:not([type="file"]):focus,
+.fs-page input:not([type="file"]):active,
+.fs-page textarea,
+.fs-page textarea:focus,
+.fs-page textarea:active,
+.fs-page select,
+.fs-page select:focus {
+  background: var(--fs-bg) !important;
+  background-color: var(--fs-bg) !important;
+  color: var(--fs-text) !important;
+  -webkit-text-fill-color: var(--fs-text) !important;
+  caret-color: var(--fs-text) !important;
+}
+.fs-page input:not([type="file"])::placeholder,
+.fs-page textarea::placeholder {
+  color: rgba(44, 31, 14, 0.35) !important;
+  -webkit-text-fill-color: rgba(44, 31, 14, 0.35) !important;
+  opacity: 1 !important;
+}
+
 /* ── Navbar ───────────────────────────────────── */
 .fs-nav {
   display: flex;

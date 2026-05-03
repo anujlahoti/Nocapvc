@@ -541,7 +541,7 @@ function AddBranchForm({ ideaId, initial, onSave, onCancel }) {
           placeholder='Risk layer, USP, Team edge…'
           maxLength={30}
           style={{
-            width: '100%', background: '#fff !important',
+            width: '100%', background: '#fff',
             border: '1.5px solid #e8dcc8', borderRadius: 8, outline: 'none',
             padding: '8px 10px', boxSizing: 'border-box',
             fontFamily: "'DM Mono', monospace",
@@ -570,7 +570,7 @@ function AddBranchForm({ ideaId, initial, onSave, onCancel }) {
           placeholder='One sharp line…'
           maxLength={60}
           style={{
-            width: '100%', background: '#fff !important',
+            width: '100%', background: '#fff',
             border: '1.5px solid #e8dcc8', borderRadius: 8, outline: 'none',
             padding: '8px 10px', boxSizing: 'border-box',
             fontFamily: "'Playfair Display', serif",
@@ -598,7 +598,7 @@ function AddBranchForm({ ideaId, initial, onSave, onCancel }) {
           maxLength={150}
           rows={3}
           style={{
-            width: '100%', background: '#fff !important',
+            width: '100%', background: '#fff',
             border: '1.5px solid #e8dcc8', borderRadius: 8, outline: 'none',
             padding: '8px 10px', boxSizing: 'border-box',
             fontFamily: "'Syne', sans-serif",
@@ -1071,7 +1071,7 @@ function Step2({ formData, onChange, ideaId }) {
             placeholder="BYAJ"
             maxLength={60}
             style={{
-              width: '100%', background: '#fdf6e8 !important',
+              width: '100%', background: '#fdf6e8',
               border: `1.5px solid ${formData.ideaTitle ? 'rgba(44,31,14,0.2)' : '#e8dcc8'}`,
               borderRadius: 10, outline: 'none',
               padding: '10px 12px', boxSizing: 'border-box',
@@ -1100,7 +1100,7 @@ function Step2({ formData, onChange, ideaId }) {
             maxLength={100}
             rows={2}
             style={{
-              width: '100%', background: '#fdf6e8 !important',
+              width: '100%', background: '#fdf6e8',
               border: `1.5px solid ${formData.tagline ? 'rgba(44,31,14,0.2)' : '#e8dcc8'}`,
               borderRadius: 10, outline: 'none',
               padding: '10px 12px', boxSizing: 'border-box',
@@ -1201,7 +1201,7 @@ function Step2({ formData, onChange, ideaId }) {
             placeholder="Indore, India"
             maxLength={50}
             style={{
-              width: '100%', background: '#fdf6e8 !important',
+              width: '100%', background: '#fdf6e8',
               border: `1.5px solid ${formData.location ? 'rgba(44,31,14,0.2)' : '#e8dcc8'}`,
               borderRadius: 10, outline: 'none',
               padding: '10px 12px', boxSizing: 'border-box',
