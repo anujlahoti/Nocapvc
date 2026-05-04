@@ -33,11 +33,13 @@ export default function Navbar() {
             Founder Space <span className="nav-badge-new">NEW</span>
           </a>
         </li>
+        {/* Founder School — hidden until ready
         <li>
           <a href="/blog" className="nav-product-link school-link">
             Founder School <span className="nav-spark">✦</span>
           </a>
         </li>
+        */}
         {/* Founder Signal — hidden until ready
         <li>
           <a href="/school" className="nav-product-link school-link">
@@ -45,11 +47,13 @@ export default function Navbar() {
           </a>
         </li>
         */}
+        {/* NoCap PE — hidden until ready
         <li>
           <a href="/pe" className="nav-product-link pe-link">
             NoCap PE <span className="nav-pe-tag">MICRO PE</span>
           </a>
         </li>
+        */}
       </ul>
       <button className="nav-cta" onClick={function(){ scrollTo('apply-form'); }}>Apply Now →</button>
       <button

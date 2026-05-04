@@ -7,7 +7,7 @@
  *   onClick {fn}      — navigation handler
  */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 
 // ── Node config (same tack colors as the submission form) ────────────────────
 const NODE_CONFIG = [
@@ -145,9 +145,24 @@ function MiniPolaroidStrip({ idea }) {
   );
 }
 
+// ── Share helper ──────────────────────────────────────────────────────────────
+
+function useShare() {
+  return useCallback(async (url, title, e) => {
+    e.stopPropagation();
+    if (navigator.share) {
+      try { await navigator.share({ title, url }); return; } catch {}
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {}
+  }, []);
+}
+
 // ── FeedIdeaCard ─────────────────────────────────────────────────────────────
 
 export default function FeedIdeaCard({ idea, author, onClick }) {
+  const share = useShare();
   const avg     = idea.avgOverall     || 0;
   const ratings = idea.ratingCount    || 0;
   const views   = idea.viewCount      || 0;
@@ -265,9 +280,9 @@ export default function FeedIdeaCard({ idea, author, onClick }) {
           </div>
         </div>
 
-        {/* Stats */}
+        {/* Stats + share */}
         <div style={{
-          display: 'flex', gap: 12, alignItems: 'center',
+          display: 'flex', gap: 10, alignItems: 'center',
         }}>
           {ratings > 0 && (
             <div style={{
@@ -298,6 +313,26 @@ export default function FeedIdeaCard({ idea, author, onClick }) {
               <span>{wants}</span>
             </div>
           )}
+          <button
+            onClick={e => share(
+              `${window.location.origin}/founder-space/ideas/${idea.id}`,
+              idea.ideaTitle || 'Startup idea',
+              e
+            )}
+            title="Copy link"
+            style={{
+              background: 'transparent', border: 'none', cursor: 'pointer',
+              padding: '2px 4px', borderRadius: 4,
+              fontFamily: "'DM Mono', monospace",
+              fontSize: 10, color: '#c4a882',
+              transition: 'color 0.15s',
+              lineHeight: 1,
+            }}
+            onMouseEnter={e => e.currentTarget.style.color = '#2c1f0e'}
+            onMouseLeave={e => e.currentTarget.style.color = '#c4a882'}
+          >
+            ↗
+          </button>
         </div>
       </div>
     </div>

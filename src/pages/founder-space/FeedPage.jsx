@@ -454,6 +454,20 @@ export default function FeedPage() {
         </Link>
         {!authLoading && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <Link
+              to="/founder-space/journey/feed"
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: 10, color: '#7a5c3a',
+                textDecoration: 'none', letterSpacing: '0.06em',
+                display: 'flex', alignItems: 'center', gap: 5,
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = '#7c3aed'}
+              onMouseLeave={e => e.currentTarget.style.color = '#7a5c3a'}
+            >
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#7c3aed', display: 'inline-block' }} />
+              Professional Journey
+            </Link>
             {user ? (
               <>
                 <Link
@@ -749,6 +763,52 @@ export default function FeedPage() {
           <SidebarCard label="Most active builders">
             <TopFounders />
           </SidebarCard>
+
+          {/* Professional Journey CTA */}
+          <div style={{
+            background: 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
+            borderRadius: 16, padding: '20px 16px',
+            marginBottom: 16,
+          }}>
+            <div style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: 8, fontWeight: 700,
+              letterSpacing: '0.22em', textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.6)', marginBottom: 8,
+            }}>
+              Also in Founder Space
+            </div>
+            <div style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: 15, fontWeight: 900, color: '#fff',
+              marginBottom: 4,
+            }}>
+              Professional Journey
+            </div>
+            <div style={{
+              fontFamily: "'Syne', sans-serif",
+              fontSize: 11, color: 'rgba(255,255,255,0.75)',
+              marginBottom: 12, lineHeight: 1.4,
+            }}>
+              Not a founder? Tell your career story on a polaroid board.
+            </div>
+            <Link
+              to="/founder-space/journey/feed"
+              style={{
+                display: 'block', padding: '9px 0',
+                borderRadius: 8, background: 'rgba(255,255,255,0.15)',
+                border: '1px solid rgba(255,255,255,0.25)',
+                color: '#fff', fontFamily: "'DM Mono', monospace",
+                fontSize: 10, fontWeight: 700, letterSpacing: '0.06em',
+                textDecoration: 'none', textAlign: 'center',
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.25)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+            >
+              Explore journeys →
+            </Link>
+          </div>
 
           {/* Feature quick-links + Submit CTA for signed-in users */}
           {user && (

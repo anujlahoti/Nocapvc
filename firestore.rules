@@ -193,6 +193,41 @@ service cloud.firestore {
     }
 
     // ──────────────────────────────────────────────
+    //  journeys  (Professional Journey feature)
+    // ──────────────────────────────────────────────
+    match /journeys/{journeyId} {
+
+      allow read: if resource.data.status == 'published';
+      allow read: if isAuth() && resource.data.authorUid == request.auth.uid;
+      allow read: if isAdmin();
+
+      // Any authenticated user can publish their journey
+      allow create: if isAuth()
+        && request.resource.data.authorUid == request.auth.uid
+        && request.resource.data.status == 'published'
+        && request.resource.data.keys().hasAll([
+            'authorUid', 'status', 'headline', 'industry', 'experience',
+            'originTitle', 'originBody', 'createdAt', 'publishedAt'
+           ]);
+
+      // Author can update their journey content
+      allow update: if isAuth()
+        && resource.data.authorUid == request.auth.uid
+        && request.resource.data.authorUid == resource.data.authorUid;
+
+      // Anyone can increment viewCount
+      allow update: if isAuth()
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['viewCount'])
+        && request.resource.data.viewCount >= resource.data.viewCount;
+
+      allow update: if isAdmin();
+
+      allow delete: if isAdmin()
+        || (isAuth() && resource.data.authorUid == request.auth.uid);
+    }
+
+    // ──────────────────────────────────────────────
     //  wantToWork
     //  Field name: authorUid (was incorrectly 'userId' in old rules)
     // ──────────────────────────────────────────────
