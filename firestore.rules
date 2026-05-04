@@ -296,12 +296,8 @@ service cloud.firestore {
     // ──────────────────────────────────────────────
     match /eventAttendees/{attendeeId} {
 
-      // Creator and admin can see attendee list; attendee can read own record
-      allow read: if isAdmin()
-        || (isAuth() && resource.data.userId == request.auth.uid)
-        || (isAuth() &&
-            get(/databases/$(database)/documents/events/$(resource.data.eventId)).data.creatorUid
-            == request.auth.uid);
+      // Attendee lists are public community info — any authenticated user can read
+      allow read: if isAuth();
 
       // Any authenticated user can join (create their own attendee record)
       allow create: if isAuth()

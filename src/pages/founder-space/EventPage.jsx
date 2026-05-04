@@ -7,7 +7,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc,
-  collection, query, where, orderBy, limit,
+  collection, query, where, limit,
   increment, serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../../firebase';
@@ -166,46 +166,47 @@ export default function EventPage() {
   const [joining,   setJoining]   = useState(false);
   const [notFound,  setNotFound]  = useState(false);
 
-  // Load event + host + attendees
+  // Load event + host (critical path — sets notFound on failure)
   useEffect(() => {
     async function load() {
       try {
         const snap = await getDoc(doc(db, 'events', eventId));
-        if (!snap.exists()) { setNotFound(true); return; }
+        if (!snap.exists()) { setNotFound(true); setLoading(false); return; }
         const data = { id: snap.id, ...snap.data() };
         setEvent(data);
 
-        // View count
         updateDoc(doc(db, 'events', eventId), { viewCount: increment(1) }).catch(() => {});
 
-        // Host
         if (data.creatorUid) {
-          const hSnap = await getDoc(doc(db, 'users', data.creatorUid));
-          if (hSnap.exists()) setHost({ uid: hSnap.id, ...hSnap.data() });
-        }
-
-        // Attendees (up to 20)
-        const attSnap = await getDocs(
-          query(collection(db, 'eventAttendees'), where('eventId', '==', eventId), orderBy('joinedAt', 'asc'), limit(20))
-        );
-        const attDocs = attSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-        // Fetch profiles
-        const profiles = {};
-        await Promise.all(attDocs.map(async a => {
           try {
-            const p = await getDoc(doc(db, 'users', a.userId));
-            if (p.exists()) profiles[a.userId] = { uid: p.id, ...p.data() };
+            const hSnap = await getDoc(doc(db, 'users', data.creatorUid));
+            if (hSnap.exists()) setHost({ uid: hSnap.id, ...hSnap.data() });
           } catch {}
-        }));
-
-        setAttendees(attDocs.map(a => ({ ...a, profile: profiles[a.userId] })));
+        }
       } catch (err) {
         console.error('Load event error:', err);
         setNotFound(true);
       } finally {
         setLoading(false);
       }
+
+      // Load attendees separately — failure here should NOT cause "not found"
+      try {
+        const attSnap = await getDocs(
+          query(collection(db, 'eventAttendees'), where('eventId', '==', eventId), limit(20))
+        );
+        const attDocs = attSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        const profileMap = {};
+        await Promise.all(attDocs.map(async a => {
+          try {
+            const p = await getDoc(doc(db, 'users', a.userId));
+            if (p.exists()) profileMap[a.userId] = { uid: p.id, ...p.data() };
+          } catch {}
+        }));
+
+        setAttendees(attDocs.map(a => ({ ...a, profile: profileMap[a.userId] })));
+      } catch {}
     }
     load();
   }, [eventId]);
