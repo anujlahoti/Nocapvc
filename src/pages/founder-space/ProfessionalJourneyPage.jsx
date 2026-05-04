@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
   doc, getDoc, updateDoc, increment,
 } from 'firebase/firestore';
@@ -220,9 +220,7 @@ function LoadingSkeleton() {
 
 export default function ProfessionalJourneyPage() {
   const { journeyId }         = useParams();
-  const { user, userProfile } = useAuth();
-  const navigate              = useNavigate();
-  const { showToast }         = useToast();
+  const { user } = useAuth();
 
   const [journey, setJourney] = useState(null);
   const [author,  setAuthor]  = useState(null);

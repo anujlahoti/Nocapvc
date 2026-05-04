@@ -330,7 +330,7 @@ function FilterPill({ label, active, onClick }) {
 // ─────────────────────────────────────────────
 
 export default function ProfessionalJourneyFeed() {
-  const { user, userProfile, signIn, loading: authLoading } = useAuth();
+  const { user, signIn, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   async function handleSignIn() {
