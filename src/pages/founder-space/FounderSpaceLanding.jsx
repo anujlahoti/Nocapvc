@@ -184,7 +184,7 @@ function Dot({ color = '#e8391e', pulse = false }) {
 // ── Main component ─────────────────────────────────────────────────────────────
 
 export default function FounderSpaceLanding() {
-  const { user, userProfile, loading, signIn } = useAuth();
+  const { user, userProfile, loading } = useAuth();
   const navigate = useNavigate();
   const formRef = useRef(null);
 
