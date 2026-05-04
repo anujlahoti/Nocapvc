@@ -28,6 +28,9 @@ import AdminPage from './pages/founder-space/AdminPage';
 import ProfessionalJourneySubmit from './pages/founder-space/ProfessionalJourneySubmit';
 import ProfessionalJourneyFeed from './pages/founder-space/ProfessionalJourneyFeed';
 import ProfessionalJourneyPage from './pages/founder-space/ProfessionalJourneyPage';
+import EventsFeed from './pages/founder-space/EventsFeed';
+import CreateEvent from './pages/founder-space/CreateEvent';
+import EventPage from './pages/founder-space/EventPage';
 import { AuthProvider } from './lib/auth';
 import { ToastProvider } from './components/Toast';
 import useScrollReveal from './hooks/useScrollReveal';
@@ -83,6 +86,9 @@ export default function App() {
             <Route path="/founder-space/journey/submit" element={<ProfessionalJourneySubmit />} />
             <Route path="/founder-space/journey/feed" element={<ProfessionalJourneyFeed />} />
             <Route path="/founder-space/journey/:journeyId" element={<ProfessionalJourneyPage />} />
+            <Route path="/founder-space/events" element={<EventsFeed />} />
+            <Route path="/founder-space/events/create" element={<CreateEvent />} />
+            <Route path="/founder-space/events/:eventId" element={<EventPage />} />
           </Routes>
         </ToastProvider>
       </AuthProvider>

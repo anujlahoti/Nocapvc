@@ -228,6 +228,103 @@ service cloud.firestore {
     }
 
     // ──────────────────────────────────────────────
+    //  waitlist  (Founder School invite applications)
+    // ──────────────────────────────────────────────
+    match /waitlist/{applicationId} {
+
+      // Admin can read all; applicant can read their own
+      allow read: if isAdmin()
+        || (isAuth() && resource.data.uid == request.auth.uid);
+
+      // Any authenticated user can submit one application
+      allow create: if isAuth()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.keys().hasAll([
+            'uid', 'name', 'currentWork', 'crazyThing',
+            'linkedin', 'status', 'createdAt'
+           ])
+        && request.resource.data.name.size() >= 1
+        && request.resource.data.currentWork.size() >= 1;
+
+      allow update: if isAdmin();
+
+      allow delete: if isAdmin();
+    }
+
+    // ──────────────────────────────────────────────
+    //  events  (Build Together / collaboration events)
+    // ──────────────────────────────────────────────
+    match /events/{eventId} {
+
+      // Public read for upcoming/live events
+      allow read: if resource.data.status in ['upcoming', 'live', 'completed'];
+      allow read: if isAuth() && resource.data.creatorUid == request.auth.uid;
+      allow read: if isAdmin();
+
+      // Any authenticated user can create an event
+      allow create: if isAuth()
+        && request.resource.data.creatorUid == request.auth.uid
+        && request.resource.data.status == 'upcoming'
+        && request.resource.data.keys().hasAll([
+            'creatorUid', 'title', 'type', 'format',
+            'startDateTime', 'status', 'createdAt'
+           ]);
+
+      // Creator can update their own event content (not attendeeCount)
+      allow update: if isAuth()
+        && resource.data.creatorUid == request.auth.uid
+        && request.resource.data.creatorUid == resource.data.creatorUid
+        && !request.resource.data.diff(resource.data).affectedKeys()
+            .hasAny(['attendeeCount', 'status']);
+
+      // Admin can do anything
+      allow update: if isAdmin();
+
+      // Anyone authenticated can increment/decrement attendeeCount and viewCount
+      allow update: if isAuth()
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['attendeeCount', 'viewCount'])
+        && request.resource.data.attendeeCount >= 0;
+
+      allow delete: if isAdmin()
+        || (isAuth() && resource.data.creatorUid == request.auth.uid);
+    }
+
+    // ──────────────────────────────────────────────
+    //  eventAttendees
+    // ──────────────────────────────────────────────
+    match /eventAttendees/{attendeeId} {
+
+      // Creator and admin can see attendee list; attendee can read own record
+      allow read: if isAdmin()
+        || (isAuth() && resource.data.userId == request.auth.uid)
+        || (isAuth() &&
+            get(/databases/$(database)/documents/events/$(resource.data.eventId)).data.creatorUid
+            == request.auth.uid);
+
+      // Any authenticated user can join (create their own attendee record)
+      allow create: if isAuth()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status in ['confirmed', 'waitlist']
+        && request.resource.data.keys().hasAll([
+            'eventId', 'userId', 'status', 'joinedAt'
+           ]);
+
+      // Attendee can update their own status
+      allow update: if isAuth()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.eventId == resource.data.eventId;
+
+      allow update: if isAdmin();
+
+      // Attendee can leave (delete own record)
+      allow delete: if isAuth() && resource.data.userId == request.auth.uid;
+      allow delete: if isAdmin();
+    }
+
+    // ──────────────────────────────────────────────
     //  wantToWork
     //  Field name: authorUid (was incorrectly 'userId' in old rules)
     // ──────────────────────────────────────────────

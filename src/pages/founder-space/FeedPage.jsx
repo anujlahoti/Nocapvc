@@ -316,6 +316,124 @@ function TopFounders() {
 }
 
 // ─────────────────────────────────────────────
+//  Upcoming events (sidebar)
+// ─────────────────────────────────────────────
+
+const EVENT_TACK = {
+  book_club:      '#f5c842',
+  project_sprint: '#2c8a4e',
+  meetup:         '#e8391e',
+  open_collab:    '#1a6bb5',
+};
+
+const EVENT_ICON = {
+  book_club:      '📚',
+  project_sprint: '⚡',
+  meetup:         '☕',
+  open_collab:    '◈',
+};
+
+function fmtEventDate(ts) {
+  if (!ts) return '';
+  const d = ts.toDate ? ts.toDate() : ts.seconds ? new Date(ts.seconds * 1000) : new Date(ts);
+  const now = new Date();
+  const diffMs = d - now;
+  const diffDays = Math.floor(diffMs / 86400000);
+  const time = d.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true }).replace(' ', ' ').toUpperCase().replace(':00', '');
+  if (diffDays === 0) return `Today, ${time} IST`;
+  if (diffDays === 1) return `Tomorrow, ${time} IST`;
+  return d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) + `, ${time} IST`;
+}
+
+function UpcomingEvents() {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const q = query(
+      collection(db, 'events'),
+      where('status', '==', 'upcoming'),
+      orderBy('startDateTime', 'asc'),
+      limit(3)
+    );
+
+    const unsub = onSnapshot(q, snap => {
+      setEvents(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    }, () => {});
+
+    return () => unsub();
+  }, []);
+
+  if (events.length === 0) {
+    return (
+      <div style={{
+        fontFamily: "'DM Mono', monospace",
+        fontSize: 10, color: '#c4a882', textAlign: 'center', padding: '12px 0',
+      }}>
+        No upcoming events yet.
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {events.map(ev => (
+        <Link
+          key={ev.id}
+          to={`/founder-space/events/${ev.id}`}
+          style={{
+            display: 'flex', gap: 10, alignItems: 'flex-start',
+            padding: '8px 0', borderBottom: '1px solid rgba(44,31,14,0.06)',
+            textDecoration: 'none',
+          }}
+        >
+          <div style={{
+            width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+            background: `${EVENT_TACK[ev.type] || '#c4963a'}22`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 15,
+          }}>
+            {EVENT_ICON[ev.type] || '◈'}
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: 11, fontWeight: 700, color: '#2c1f0e',
+              overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+              marginBottom: 2,
+            }}>
+              {ev.title}
+            </div>
+            <div style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: 9, color: '#7a5c3a',
+            }}>
+              {fmtEventDate(ev.startDateTime)}
+            </div>
+            <div style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: 9, color: '#c4963a', marginTop: 2,
+            }}>
+              {ev.attendeeCount || 0} going{ev.capacity ? ` · ${ev.capacity - (ev.attendeeCount || 0)} spots left` : ''}
+            </div>
+          </div>
+        </Link>
+      ))}
+      <Link
+        to="/founder-space/events"
+        style={{
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 9, fontWeight: 700, color: '#2c8a4e',
+          textDecoration: 'none', letterSpacing: '0.08em',
+          textAlign: 'center', paddingTop: 4,
+        }}
+      >
+        All events →
+      </Link>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────
 //  SidebarCard
 // ─────────────────────────────────────────────
 
@@ -467,6 +585,20 @@ export default function FeedPage() {
             >
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#7c3aed', display: 'inline-block' }} />
               Professional Journey
+            </Link>
+            <Link
+              to="/founder-space/events"
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: 10, color: '#7a5c3a',
+                textDecoration: 'none', letterSpacing: '0.06em',
+                display: 'flex', alignItems: 'center', gap: 5,
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = '#2c8a4e'}
+              onMouseLeave={e => e.currentTarget.style.color = '#7a5c3a'}
+            >
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#2c8a4e', display: 'inline-block' }} />
+              Events
             </Link>
             {user ? (
               <>
@@ -762,6 +894,11 @@ export default function FeedPage() {
 
           <SidebarCard label="Most active builders">
             <TopFounders />
+          </SidebarCard>
+
+          {/* Upcoming Events */}
+          <SidebarCard label="Build together">
+            <UpcomingEvents />
           </SidebarCard>
 
           {/* Professional Journey CTA */}

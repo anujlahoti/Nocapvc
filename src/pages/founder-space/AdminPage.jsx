@@ -60,6 +60,7 @@ function Avatar({ profile, size = 32 }) {
 // ─────────────────────────────────────────────
 
 const NAV_ITEMS = [
+  { id: 'waitlist',  icon: '🎟',  label: 'Waitlist'   },
   { id: 'pending',   icon: '⏳', label: 'Pending'   },
   { id: 'published', icon: '✅', label: 'Published'  },
   { id: 'rejected',  icon: '✗',  label: 'Rejected'   },
@@ -454,6 +455,162 @@ function IdeaTableRow({ idea, author, onAction, actionLabel, actionColor }) {
         </button>
       </td>
     </tr>
+  );
+}
+
+// ─────────────────────────────────────────────
+//  Waitlist Tab
+// ─────────────────────────────────────────────
+
+function WaitlistTab({ showToast }) {
+  const [apps,    setApps]    = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter,  setFilter]  = useState('pending');
+
+  useEffect(() => {
+    async function load() {
+      setLoading(true);
+      try {
+        const q = query(
+          collection(db, 'waitlist'),
+          where('status', '==', filter),
+          orderBy('createdAt', 'asc'),
+          limit(50)
+        );
+        const snap = await getDocs(q);
+        setApps(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (err) {
+        console.error('Waitlist load error:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, [filter]);
+
+  async function updateStatus(appId, status) {
+    try {
+      await updateDoc(doc(db, 'waitlist', appId), {
+        status,
+        reviewedAt: serverTimestamp(),
+      });
+      setApps(prev => prev.filter(a => a.id !== appId));
+      showToast(`Application ${status === 'approved' ? 'approved ✓' : 'rejected'}.`, status === 'approved' ? 'success' : 'error');
+    } catch (err) {
+      showToast('Action failed.', 'error');
+    }
+  }
+
+  const STATUS_OPTS = ['pending', 'approved', 'rejected'];
+
+  return (
+    <div>
+      {/* Filter pills */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+        {STATUS_OPTS.map(s => (
+          <button key={s} onClick={() => setFilter(s)} style={{
+            padding: '6px 16px', borderRadius: 20,
+            border: `1.5px solid ${filter === s ? '#2c1f0e' : 'rgba(44,31,14,0.15)'}`,
+            background: filter === s ? '#2c1f0e' : '#fff',
+            color: filter === s ? '#f5c842' : '#7a5c3a',
+            fontFamily: "'DM Mono', monospace",
+            fontSize: 10, fontWeight: 600, cursor: 'pointer',
+            textTransform: 'capitalize',
+          }}>
+            {s}
+          </button>
+        ))}
+      </div>
+
+      {loading && (
+        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: '#c4a882' }}>
+          Loading…
+        </div>
+      )}
+      {!loading && apps.length === 0 && (
+        <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 14, color: '#7a5c3a', padding: '32px 0' }}>
+          No {filter} applications.
+        </div>
+      )}
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {apps.map(app => (
+          <div key={app.id} style={{
+            background: '#fff', borderRadius: 16,
+            border: '1px solid rgba(44,31,14,0.08)',
+            padding: '24px',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+              <div>
+                <div style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: 20, fontWeight: 700, color: '#2c1f0e',
+                  marginBottom: 4,
+                }}>
+                  {app.name}
+                </div>
+                <div style={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: 9, color: '#c4a882', letterSpacing: '0.1em',
+                }}>
+                  {app.email || 'No email'} · {tsToStr(app.createdAt)}
+                </div>
+              </div>
+              {filter === 'pending' && (
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button onClick={() => updateStatus(app.id, 'approved')} style={{
+                    padding: '8px 18px', borderRadius: 8, border: 'none',
+                    background: '#2c8a4e', color: '#fff',
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: 10, fontWeight: 700, cursor: 'pointer',
+                  }}>
+                    Approve
+                  </button>
+                  <button onClick={() => updateStatus(app.id, 'rejected')} style={{
+                    padding: '8px 18px', borderRadius: 8, border: 'none',
+                    background: '#c0392b', color: '#fff',
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: 10, fontWeight: 700, cursor: 'pointer',
+                  }}>
+                    Reject
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Application answers */}
+            {[
+              { label: 'Working on', value: app.currentWork },
+              { label: 'Most unconventional thing', value: app.crazyThing },
+              { label: 'LinkedIn', value: app.linkedin },
+              { label: 'Instagram', value: app.instagram },
+              { label: 'Extra', value: app.extra },
+            ].filter(f => f.value).map(field => (
+              <div key={field.label} style={{ marginBottom: 12 }}>
+                <div style={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: 8, fontWeight: 700,
+                  letterSpacing: '0.16em', textTransform: 'uppercase',
+                  color: '#c4a882', marginBottom: 4,
+                }}>
+                  {field.label}
+                </div>
+                <div style={{
+                  fontFamily: "'Syne', sans-serif",
+                  fontSize: 13, color: '#2c1f0e', lineHeight: 1.6,
+                }}>
+                  {field.label === 'LinkedIn' || field.label === 'Instagram' ? (
+                    <a href={field.value} target="_blank" rel="noreferrer" style={{ color: '#c4963a' }}>
+                      {field.value}
+                    </a>
+                  ) : field.value}
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -1063,7 +1220,7 @@ export default function AdminPage() {
 
   const [activeTab, setActiveTab] = useState('pending');
   const [counts, setCounts]       = useState({
-    pending: 0, published: 0, rejected: 0, comments: 0, users: 0,
+    waitlist: 0, pending: 0, published: 0, rejected: 0, comments: 0, users: 0,
   });
 
   // Auth guard
@@ -1078,7 +1235,8 @@ export default function AdminPage() {
   useEffect(() => {
     if (!userProfile?.isAdmin) return;
     async function loadCounts() {
-      const [pending, published, rejected, comments, users] = await Promise.all([
+      const [waitlist, pending, published, rejected, comments, users] = await Promise.all([
+        getDocs(query(collection(db, 'waitlist'), where('status', '==', 'pending'))),
         getDocs(query(collection(db, 'ideas'), where('status', '==', 'pending_review'))),
         getDocs(query(collection(db, 'ideas'), where('status', '==', 'published'))),
         getDocs(query(collection(db, 'ideas'), where('status', '==', 'rejected'))),
@@ -1086,6 +1244,7 @@ export default function AdminPage() {
         getDocs(collection(db, 'users')),
       ]);
       setCounts({
+        waitlist:  waitlist.size,
         pending:   pending.size,
         published: published.size,
         rejected:  rejected.size,
@@ -1107,6 +1266,7 @@ export default function AdminPage() {
   if (!user || !userProfile?.isAdmin) return null;
 
   const TAB_LABELS = {
+    waitlist:  'Waitlist Applications',
     pending:   'Pending Review',
     published: 'Published Ideas',
     rejected:  'Rejected Ideas',
@@ -1142,6 +1302,7 @@ export default function AdminPage() {
         </h2>
 
         {/* Tab content */}
+        {activeTab === 'waitlist'  && <WaitlistTab  showToast={showToast} />}
         {activeTab === 'pending'   && <PendingTab   showToast={showToast} />}
         {activeTab === 'published' && <PublishedTab  showToast={showToast} />}
         {activeTab === 'rejected'  && <RejectedTab   showToast={showToast} />}
