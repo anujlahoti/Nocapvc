@@ -64,7 +64,7 @@ const QUESTIONS = [
   {
     id: 'currentWork',
     label: 'What are you working on right now?',
-    subtitle: 'Founder, operator, investor, professional — what's your current chapter?',
+    subtitle: "Founder, operator, investor, professional — what's your current chapter?",
     type: 'textarea',
     placeholder: 'Building a B2B SaaS for CA firms — early stage, 3 paying customers…',
     required: true,
@@ -162,7 +162,7 @@ const TESTIMONIALS = [
     bg: '#2c8a4e',
   },
   {
-    text: 'The community is small, real, and high-signal. That's the rarest thing on the internet.',
+    text: "The community is small, real, and high-signal. That's the rarest thing on the internet.",
     role: 'Operator → Founder',
     initials: 'KP',
     bg: '#1a6bb5',

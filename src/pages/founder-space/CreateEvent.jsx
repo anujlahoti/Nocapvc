@@ -229,7 +229,7 @@ function CreateEvent() {
             <textarea
               value={form.description}
               onChange={e => set('description', e.target.value)}
-              placeholder='Be specific. "We read Ch. 1–3 and discuss distribution." beats "Let's talk startup stuff."'
+              placeholder={`Be specific. "We read Ch. 1–3 and discuss distribution." beats "Let's talk startup stuff."`}
               maxLength={200}
               rows={3}
               style={{ ...FIELD, resize: 'vertical' }}
