@@ -31,11 +31,11 @@ const PILLARS = [
     title: 'Idea Board',
     accent: C.amber,
     alphaAccent: 'rgba(245,200,66,0.08)',
-    desc: 'Pin your startup thesis. Get five-axis ratings — problem clarity, market potential, execution readiness — from founders and operators who have actually shipped.',
-    stat: 'structured rating axes',
+    desc: "A thesis in orbit travels farther than one kept in your head. Pin it. Let the community's gravity test whether it has escape velocity — five structured axes, zero empty applause.",
+    stat: 'axes of honest signal',
     statN: '5',
     link: '/founder-space/feed',
-    cta: 'Explore ideas',
+    cta: 'Enter the board',
   },
   {
     icon: '🛤️',
@@ -43,23 +43,23 @@ const PILLARS = [
     title: 'Journey Board',
     accent: C.purple,
     alphaAccent: 'rgba(139,92,246,0.08)',
-    desc: "Publish your professional origin story. Where you started, what broke you, what you built anyway. The journey is the signal most pitch decks miss.",
-    stat: 'story chapters per journey',
+    desc: 'Every orbit has an origin point. Share yours — where you launched from, what failed mid-flight, what you rebuilt. Your trajectory is the signal other builders navigate by.',
+    stat: 'chapters in every trajectory',
     statN: '5',
     link: '/founder-space/journey/feed',
-    cta: 'Read journeys',
+    cta: 'Read trajectories',
   },
   {
     icon: '⚡',
     num: '03',
-    title: 'Build Events',
+    title: 'Launch Windows',
     accent: C.orange,
     alphaAccent: 'rgba(255,107,53,0.08)',
-    desc: 'Project sprints, book clubs, open collabs. Every event is community-created. Real momentum, not networking theatre disguised as a mixer.',
-    stat: 'event formats available',
+    desc: "In orbital mechanics, a launch window is a precise moment when conditions align for maximum velocity. Sprints, book clubs, open collabs — catch the window or drift.",
+    stat: 'event formats. pick your window.',
     statN: '4',
     link: '/founder-space/events',
-    cta: 'Browse events',
+    cta: 'See open windows',
   },
   {
     icon: '📡',
@@ -67,71 +67,71 @@ const PILLARS = [
     title: 'Signal Ratings',
     accent: C.green,
     alphaAccent: 'rgba(74,222,128,0.08)',
-    desc: "Rate other founders' ideas. Earn credibility for giving honest, structured feedback. The community's collective signal is the product.",
+    desc: "In space, everything emits signal — even dead stars. Rate other builders' ideas. Give honest, structured light. The community's collective signal is the product.",
     stat: 'minutes to give a full rating',
     statN: '<3',
     link: '/founder-space/feed',
-    cta: 'Rate ideas',
+    cta: 'Give signal',
   },
 ];
 
 const STEPS = [
   {
     n: '01',
-    title: 'Enter the orbit',
+    title: 'Choose your trajectory',
     accent: C.amber,
-    body: "Request access. We review every application manually — not because we're gatekeeping, but because quality is the whole point.",
+    body: "Apply for a position in the orbit. We review every application — not to gatekeep, but because orbital stability depends on who's in the field.",
   },
   {
     n: '02',
-    title: 'Pin your signal',
+    title: 'Emit your signal',
     accent: C.orange,
-    body: 'Post an idea, a journey entry, or host a Build Event. Every piece of content gets structured feedback. No vanity metrics.',
+    body: 'Share an idea, publish a journey chapter, or open a launch window. Everything you put into the orbit becomes signal — discoverable, rateable, real.',
   },
   {
     n: '03',
-    title: 'Build with gravity',
+    title: 'Create gravitational mass',
     accent: C.purple,
-    body: 'Rate ideas. Join sprints. React to journeys. ORB1T compounds — the more signal you give, the more gravity you create.',
+    body: 'Rate ideas. Join sprints. React to trajectories. The more signal you emit and the more honestly you engage, the more gravity you accumulate in the orbit.',
   },
 ];
 
 const ROLES = [
   {
-    tag: 'Founder',
+    tag: 'Building something',
     icon: '🚀',
     accent: C.amber,
-    headline: 'Validate before you spend.',
-    desc: 'Post your thesis. Get honest five-axis feedback from operators and investors before you write a line of code or spend a rupee.',
+    headline: 'Test your thesis before it costs you.',
+    desc: "Product, project, startup, side thing — doesn't matter. Post it. Let the community's gravity tell you if it has escape velocity before you commit trajectory.",
   },
   {
-    tag: 'Builder',
+    tag: 'Looking to collaborate',
     icon: '🔧',
     accent: C.orange,
-    headline: "Find people who ship.",
-    desc: 'Connect through Build Events and open collabs. No cold DMs. No "pick my brain" requests. Just people with complementary skills and shared momentum.',
+    headline: 'Find builders in complementary orbits.',
+    desc: "You have skills. You need the right problem or the right co-builder. ORB1T's launch windows and open collabs are how orbits intersect without cold DMs.",
   },
   {
-    tag: 'Operator',
-    icon: '⚙️',
+    tag: 'Here to learn',
+    icon: '📡',
     accent: C.purple,
-    headline: 'Spot the next problem early.',
-    desc: "Read founder journeys. See the problems being built around before they make it to TechCrunch. Operator insight is the rarest input in early-stage feedback.",
+    headline: 'Grow by staying close to real work.',
+    desc: "Read trajectories. Rate ideas. Join book clubs. You don't need to be shipping something to belong — you need to be close to people who are. Proximity accelerates.",
   },
   {
-    tag: 'Investor',
-    icon: '📊',
+    tag: 'Looking to push and be pushed',
+    icon: '⚡',
     accent: C.green,
-    headline: 'Deal flow before the deck.',
-    desc: 'See ideas as they form — not when they arrive polished for fundraising. Rating and engaging early builds genuine relationship before the cap table conversation.',
+    headline: 'Find people who refuse to coast.',
+    desc: "The best accountability isn't an app or a habit tracker. It's a community of builders in similar orbits who notice when you drift — and say something.",
   },
 ];
 
 const MANIFESTO_LINES = [
-  'The best ideas don\'t die from competition.',
-  'They die from silence.',
-  'From rooms where nobody dares to say: the market is too small, the timing is wrong, the founder isn\'t ready.',
-  'ORB1T is built to end the silence.',
+  'In physics, an orbit is not falling.',
+  "It's controlled movement — always pulled, always moving forward.",
+  "The moment you stop moving, you don't hover. You fall back.",
+  'ORB1T is built for builders who refuse to fall back.',
 ];
 
 /* ─────────────────────────────────────────────────────────────
@@ -398,10 +398,10 @@ function JoinModal({ onClose }) {
                 Request access
               </div>
               <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 26, color: C.text, lineHeight: 1.2, marginBottom: 8 }}>
-                Enter the <span className="orb1t-gradient-text">orbit</span>
+                Choose your <span className="orb1t-gradient-text">trajectory</span>
               </div>
               <div style={{ color: C.muted, fontSize: 14, lineHeight: 1.6 }}>
-                Invite-only. Growing intentionally. Every application reviewed by the team.
+                Invite-only. Reviewed manually. An orbit is only as strong as the mass inside it.
               </div>
             </div>
 
@@ -547,11 +547,11 @@ export default function ORB1T() {
   const closeModal = useCallback(() => setShowModal(false), []);
 
   const TICKER_ITEMS = [
-    `${stats.ideas || 47} ideas pinned on the board`,
-    `${stats.journeys || 23} founder journeys published`,
-    `${stats.events || 12} build events created`,
-    'Five-axis ratings · Real signal',
-    'Invite-only · No noise',
+    `${stats.ideas || 47} ideas in orbit — each five-axis rated`,
+    `${stats.journeys || 23} trajectories published`,
+    `${stats.events || 12} launch windows opened`,
+    'Signal, not applause · Five structured axes',
+    'Invite-only · Builders push builders',
   ];
 
   useEffect(() => {
@@ -724,8 +724,8 @@ export default function ORB1T() {
                   lineHeight: 1.02, letterSpacing: '-0.04em',
                   color: C.text, margin: 0,
                 }}>
-                  Serious founders.<br />
-                  <span className="orb1t-gradient-text">Structured signal.</span>
+                  Create your<br />
+                  <span className="orb1t-gradient-text">orbit.</span>
                 </h1>
               </div>
 
@@ -736,7 +736,7 @@ export default function ORB1T() {
                 lineHeight: 1.7, marginTop: 24, marginBottom: 0,
                 fontWeight: 400,
               }}>
-                ORB1T is where startup ideas get five-axis ratings, founder journeys get shared, and the community builds — together. No applause. No noise. Just signal.
+                Every signal you emit creates gravity. Share your idea, map your trajectory, open a launch window. ORB1T is where serious builders attract each other — and move faster together.
               </p>
 
               {/* Ticker */}
@@ -803,7 +803,7 @@ export default function ORB1T() {
                 </div>
                 <span>
                   <span style={{ color: C.text, fontWeight: 700 }}>{stats.ideas + stats.journeys || 70}+ </span>
-                  builders already in orbit
+                  builders already in this orbit
                 </span>
               </div>
             </div>
@@ -840,10 +840,10 @@ export default function ORB1T() {
             gap: 24,
           }}>
             {[
-              { n: stats.ideas,    label: 'Ideas on the board',    sub: 'All five-axis rated' },
-              { n: stats.journeys, label: 'Journeys published',    sub: 'Origin stories' },
-              { n: stats.events,   label: 'Community events',      sub: 'Sprints & collabs' },
-              { n: stats.ideas + stats.journeys + stats.events || 82, label: 'Total signals posted', sub: 'Growing daily' },
+              { n: stats.ideas,    label: 'Ideas in orbit',          sub: 'Five-axis rated' },
+              { n: stats.journeys, label: 'Trajectories shared',     sub: 'Real origin stories' },
+              { n: stats.events,   label: 'Launch windows opened',   sub: 'Sprints & collabs' },
+              { n: stats.ideas + stats.journeys + stats.events || 82, label: 'Total signals emitted', sub: 'Growing every day' },
             ].map((s, i) => (
               <div key={i} style={{
                 textAlign: 'center',
@@ -875,15 +875,18 @@ export default function ORB1T() {
           <Label>The problem</Label>
           <div style={{ maxWidth: 780 }}>
             <H2>
-              Most startup feedback is<br />
-              <span style={{ color: C.amber }}>socially engineered noise.</span>
+              Most feedback is<br />
+              <span style={{ color: C.amber }}>atmospheric drag.</span>
             </H2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginTop: 40 }}>
+            <p style={{ color: C.muted, fontSize: 16, marginTop: 12, lineHeight: 1.6, marginBottom: 40 }}>
+              Drag slows you down without telling you why you're falling. Most builder communities are full of it.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               {[
-                { icon: '❌', text: "LinkedIn posts where everyone claps because they're scared to be honest." },
-                { icon: '❌', text: 'Accelerator applications that filter for pitch polish, not actual founder quality.' },
-                { icon: '❌', text: 'Generic "love the idea!" comments from people who never built anything.' },
-                { icon: '✓', accent: true, text: 'ORB1T is structured feedback from people who have skin in the same game as you.' },
+                { icon: '❌', text: "LinkedIn applause — solar wind. Looks impressive, carries zero navigational information." },
+                { icon: '❌', text: 'Accelerator filters that select for pitch polish, not trajectory. They reward presentation, not orbit.' },
+                { icon: '❌', text: 'Generic encouragement from people who have never left the launchpad themselves.' },
+                { icon: '✓', accent: true, text: 'ORB1T gives you structured signal from builders who know what orbital mechanics feel like — because they\'re still in it.' },
               ].map((item, i) => (
                 <div key={i} style={{
                   display: 'flex', alignItems: 'flex-start', gap: 14,
@@ -914,9 +917,9 @@ export default function ORB1T() {
         <div style={wrap}>
           <Label>Inside ORB1T</Label>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 56, flexWrap: 'wrap', gap: 16 }}>
-            <H2>Four ways to build<br />in the open</H2>
+            <H2>Four instruments<br />of the orbit</H2>
             <p style={{ color: C.muted, fontSize: 15, maxWidth: 360, lineHeight: 1.65, margin: 0 }}>
-              ORB1T isn't a social network. It's a structured workspace for founders who ship — and want honest signal before they scale.
+              ORB1T isn't a social network. It's a structured field where builders emit signal, attract gravity, and accelerate — together.
             </p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
@@ -992,7 +995,7 @@ export default function ORB1T() {
         }}>3</div>
         <div style={wrap}>
           <Label>The orbit</Label>
-          <H2 style={{ marginBottom: 64 }}>Three moves.<br />Real momentum.</H2>
+          <H2 style={{ marginBottom: 64 }}>Orbital mechanics<br />in three moves.</H2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 0 }}>
             {STEPS.map((s, i) => (
               <div key={s.n} style={{ display: 'flex', gap: 0, position: 'relative' }}>
@@ -1048,9 +1051,9 @@ export default function ORB1T() {
         <div style={wrap}>
           <Label>Who belongs here</Label>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 56, flexWrap: 'wrap', gap: 16 }}>
-            <H2>Built for people<br />who build.</H2>
+            <H2>Different orbits.<br />Same gravity.</H2>
             <p style={{ color: C.muted, fontSize: 15, maxWidth: 360, lineHeight: 1.65, margin: 0 }}>
-              ORB1T isn't for everyone. That's the point. If you're here for the aesthetics of being a founder — keep scrolling. If you're building — keep reading.
+              ORB1T isn't just for startup founders. It's for anyone building something that matters — products, projects, skills, communities. If you're moving, you belong here.
             </p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
@@ -1118,7 +1121,7 @@ export default function ORB1T() {
             ))}
           </div>
           <div style={{ marginTop: 32, color: C.muted, fontSize: 13, letterSpacing: '0.04em' }}>
-            — NoCap VC · built to end the silence
+            — NoCap VC · built for builders who stay in motion
           </div>
         </div>
       </section>
@@ -1198,11 +1201,11 @@ export default function ORB1T() {
         <div style={{ maxWidth: 620, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <Label>Join now</Label>
           <H2 style={{ marginBottom: 16 }}>
-            The orbit is pulling.<br />
-            <span className="orb1t-gradient-text">Are you in?</span>
+            Gravity doesn't wait.<br />
+            <span className="orb1t-gradient-text">Enter the orbit.</span>
           </H2>
           <p style={{ color: C.muted, fontSize: 16, lineHeight: 1.7, marginBottom: 40 }}>
-            ORB1T is invite-only and growing intentionally. We review every application. No pitch decks, no portfolios — just who you are and what you're building.
+            ORB1T is invite-only and growing intentionally. We review every application — not to gatekeep, but because an orbit is only as strong as the mass inside it. No pitch decks. Just who you are and what you're building.
           </p>
           <button
             onClick={openModal}

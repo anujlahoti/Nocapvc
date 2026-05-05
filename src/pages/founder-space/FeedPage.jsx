@@ -517,8 +517,8 @@ export default function FeedPage() {
 
       {/* ── Nav ──────────────────────────── */}
       <nav className="fs-nav">
-        <Link to="/founder-space" className="fs-nav-logo">
-          <span className="fs-nav-dot" />Founder Space
+        <Link to="/orb1t" className="fs-nav-logo" style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, letterSpacing: '-0.02em', fontSize: 17 }}>
+          <span className="fs-nav-dot" />ORB<span style={{ color: '#f5c842' }}>1</span>T
         </Link>
         {!authLoading && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -544,7 +544,7 @@ export default function FeedPage() {
                 onClick={handleSignIn}
                 style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: '#2c1f0e', color: '#f5c842', fontFamily: "'DM Mono', monospace", fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', cursor: 'pointer' }}
               >
-                Join Founder Space
+                Join the orbit →
               </button>
             )}
           </div>
@@ -553,20 +553,22 @@ export default function FeedPage() {
 
       {/* ── Page header ──────────────────── */}
       <div style={{ textAlign: 'center', padding: '40px 24px 24px' }}>
-        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, letterSpacing: '0.24em', textTransform: 'uppercase', color: '#c4a882', marginBottom: 10 }}>
-          Founder Space
+        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, letterSpacing: '0.24em', textTransform: 'uppercase', color: '#c4a882', marginBottom: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          <span style={{ width: 20, height: 1, background: '#c4963a', display: 'inline-block', opacity: 0.4 }} />
+          ORB1T · Create your orbit
+          <span style={{ width: 20, height: 1, background: '#c4963a', display: 'inline-block', opacity: 0.4 }} />
         </div>
         <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 900, color: '#2c1f0e', letterSpacing: '-0.02em', margin: '0 0 8px', lineHeight: 1.1 }}>
-          {typeTab === 'All'      && 'Everything happening.'}
-          {typeTab === 'Ideas'    && 'The investigation board.'}
-          {typeTab === 'Journeys' && 'Career stories.'}
-          {typeTab === 'Events'   && 'What\'s coming up.'}
+          {typeTab === 'All'      && 'Everything in orbit.'}
+          {typeTab === 'Ideas'    && 'Ideas with escape velocity.'}
+          {typeTab === 'Journeys' && 'Trajectories, not resumes.'}
+          {typeTab === 'Events'   && 'Launch windows.'}
         </h1>
         <p style={{ fontFamily: "'Syne', sans-serif", fontSize: 15, fontStyle: 'italic', color: '#b09878', margin: 0 }}>
-          {typeTab === 'All'      && 'Ideas, journeys, and events — all in one place.'}
-          {typeTab === 'Ideas'    && 'Where startup ideas stop being secrets.'}
-          {typeTab === 'Journeys' && 'Real careers, told without the LinkedIn polish.'}
-          {typeTab === 'Events'   && 'Founder-led events, sprints, and book clubs.'}
+          {typeTab === 'All'      && 'Signal from every corner of the orbit — ideas, journeys, and live events.'}
+          {typeTab === 'Ideas'    && 'A thesis in orbit travels farther than one kept private. Rate it. Push it. Break it open.'}
+          {typeTab === 'Journeys' && 'Where you came from determines your trajectory. Share yours.'}
+          {typeTab === 'Events'   && 'Gravity doesn\'t wait. Launch windows open — catch them or drift.'}
         </p>
       </div>
 
@@ -676,10 +678,10 @@ export default function FeedPage() {
           {!loading && !error && items.length === 0 && (
             <div style={{ textAlign: 'center', padding: '64px 0' }}>
               <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 900, color: '#2c1f0e', marginBottom: 10 }}>
-                Nothing here yet.
+                No signals here yet.
               </div>
               <p style={{ fontFamily: "'Syne', sans-serif", fontSize: 14, color: '#7a5c3a', marginBottom: 24 }}>
-                Be the first to {typeTab === 'Events' ? 'start something' : typeTab === 'Journeys' ? 'share your journey' : 'pin an idea'}.
+                Be the first to {typeTab === 'Events' ? 'open a launch window' : typeTab === 'Journeys' ? 'share your trajectory' : 'emit a signal'}.
               </p>
               {user && (
                 <Link to={cfg.createTo} style={{ padding: '12px 24px', borderRadius: 10, background: cfg.color, color: typeTab === 'Ideas' || typeTab === 'All' ? '#f5c842' : '#fff', fontFamily: "'DM Mono', monospace", fontSize: 11, fontWeight: 700, textDecoration: 'none' }}>
@@ -709,15 +711,15 @@ export default function FeedPage() {
         {/* ── SIDEBAR ──────────────────── */}
         <div className="feed-sidebar" style={{ width: 272, flexShrink: 0 }}>
 
-          <SidebarCard label="Latest moves" dotColor="#e8391e">
+          <SidebarCard label="Signals just emitted" dotColor="#e8391e">
             <UpdatesTicker />
           </SidebarCard>
 
-          <SidebarCard label="Most active builders" dotColor="#c4963a">
+          <SidebarCard label="Active in orbit" dotColor="#c4963a">
             <TopFounders />
           </SidebarCard>
 
-          <SidebarCard label="Build together" dotColor="#2c8a4e">
+          <SidebarCard label="Launch windows" dotColor="#2c8a4e">
             <UpcomingEvents />
           </SidebarCard>
 
@@ -725,10 +727,10 @@ export default function FeedPage() {
           {user && (
             <div style={{ background: '#2c1f0e', borderRadius: 16, padding: '20px 16px' }}>
               <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, fontWeight: 900, color: '#fdf6e8', marginBottom: 6 }}>
-                {typeTab === 'Events' ? 'Start something.' : typeTab === 'Journeys' ? 'Tell your story.' : 'Got an idea?'}
+                {typeTab === 'Events' ? 'Open a launch window.' : typeTab === 'Journeys' ? 'Share your trajectory.' : 'Emit your signal.'}
               </div>
               <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 12, color: 'rgba(253,246,232,0.7)', marginBottom: 14 }}>
-                {typeTab === 'Events' ? 'Start a sprint, book club, or meetup.' : typeTab === 'Journeys' ? 'Pin your career on a polaroid board.' : 'Pin it in 5 minutes.'}
+                {typeTab === 'Events' ? 'Sprint, book club, open collab — create the window.' : typeTab === 'Journeys' ? "Your path is signal. Other builders will find you through it." : 'An idea in orbit travels farther. Pin it in 5 minutes.'}
               </div>
               <Link
                 to={cfg.createTo}
