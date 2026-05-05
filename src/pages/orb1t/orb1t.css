@@ -1,0 +1,148 @@
+/* ORB1T — animations & ring system */
+
+@keyframes orb-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes orb-counter {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+@keyframes orb-core-pulse {
+  0%, 100% { box-shadow: 0 0 32px 8px rgba(245,200,66,0.18), 0 0 80px 20px rgba(245,200,66,0.06); }
+  50%       { box-shadow: 0 0 48px 16px rgba(245,200,66,0.3), 0 0 120px 40px rgba(245,200,66,0.10); }
+}
+
+@keyframes orb-nav-dot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245,200,66,0.6); }
+  50%       { box-shadow: 0 0 0 5px rgba(245,200,66,0); }
+}
+
+@keyframes orb-fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes orb-ticker {
+  0%   { opacity: 0; transform: translateY(8px); }
+  10%  { opacity: 1; transform: translateY(0); }
+  85%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-8px); }
+}
+
+/* ── Ring system ─────────────────────────────── */
+
+.orb1t-scene {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+
+.orb1t-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 64px;
+  height: 64px;
+  background: radial-gradient(circle, #f5c842 0%, rgba(245,200,66,0.4) 50%, transparent 100%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: orb-core-pulse 3s ease-in-out infinite;
+  z-index: 2;
+}
+
+.orb1t-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 1px dashed rgba(245,200,66,0.20);
+}
+
+.orb1t-ring-1 {
+  width: 140px;
+  height: 140px;
+  animation: orb-spin 18s linear infinite;
+}
+
+.orb1t-ring-2 {
+  width: 220px;
+  height: 220px;
+  border-color: rgba(255,107,53,0.18);
+  animation: orb-counter 30s linear infinite;
+}
+
+.orb1t-ring-3 {
+  width: 320px;
+  height: 320px;
+  border-color: rgba(139,92,246,0.15);
+  animation: orb-spin 48s linear infinite;
+}
+
+.orb1t-dot {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.orb1t-dot-amber  { background: #f5c842; box-shadow: 0 0 10px 3px rgba(245,200,66,0.7); }
+.orb1t-dot-orange { background: #ff6b35; box-shadow: 0 0 10px 3px rgba(255,107,53,0.7); }
+.orb1t-dot-purple { background: #8b5cf6; box-shadow: 0 0 10px 3px rgba(139,92,246,0.7); }
+
+/* ── Nav dot ──────────────────────────────────── */
+.orb1t-nav-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f5c842;
+  margin-left: 5px;
+  vertical-align: middle;
+  animation: orb-nav-dot 1.8s ease-in-out infinite;
+}
+
+/* ── Hero text reveal ──────────────────────────── */
+.orb1t-hero-text {
+  animation: orb-fade-up 0.8s ease both;
+}
+.orb1t-hero-text-delay {
+  animation: orb-fade-up 0.8s 0.2s ease both;
+}
+.orb1t-hero-text-delay2 {
+  animation: orb-fade-up 0.8s 0.4s ease both;
+}
+
+/* ── Input focus glow ──────────────────────────── */
+.orb1t-input:focus {
+  outline: none;
+  border-color: #f5c842 !important;
+  box-shadow: 0 0 0 3px rgba(245,200,66,0.12);
+}
+
+/* ── Pillar card hover ────────────────────────── */
+.orb1t-pillar-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.orb1t-pillar-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5) !important;
+}
+
+/* ── Step connector line ────────────────────────── */
+.orb1t-step-line::after {
+  content: '';
+  position: absolute;
+  top: 28px;
+  right: -50%;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(245,200,66,0.3), transparent);
+}

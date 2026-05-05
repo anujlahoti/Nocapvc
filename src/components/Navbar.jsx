@@ -29,8 +29,9 @@ export default function Navbar() {
         <li><button onClick={function(){ scrollTo('investors'); }}>For Investors</button></li>
         <li><button onClick={function(){ scrollTo('apply-form'); }}>Apply</button></li>
         <li>
-          <a href="/founder-space" className="nav-product-link founder-space-link">
-            Founder Space <span className="nav-badge-new">NEW</span>
+          <a href="/orb1t" className="nav-product-link founder-space-link">
+            ORB<span style={{ color: '#f5c842' }}>1</span>T
+            <span className="orb1t-nav-dot" />
           </a>
         </li>
         {/* Founder School — hidden until ready

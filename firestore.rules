@@ -228,6 +228,17 @@ service cloud.firestore {
     }
 
     // ──────────────────────────────────────────────
+    //  orb1t_interest  (ORB1T landing page signups — public write)
+    // ──────────────────────────────────────────────
+    match /orb1t_interest/{docId} {
+      allow read: if isAdmin();
+      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'source', 'createdAt'])
+        && request.resource.data.email.size() > 3
+        && request.resource.data.name.size() > 0;
+      allow update, delete: if isAdmin();
+    }
+
+    // ──────────────────────────────────────────────
     //  waitlist  (Founder School invite applications)
     // ──────────────────────────────────────────────
     match /waitlist/{applicationId} {

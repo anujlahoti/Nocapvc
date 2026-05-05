@@ -31,6 +31,7 @@ import ProfessionalJourneyPage from './pages/founder-space/ProfessionalJourneyPa
 import EventsFeed from './pages/founder-space/EventsFeed';
 import CreateEvent from './pages/founder-space/CreateEvent';
 import EventPage from './pages/founder-space/EventPage';
+import ORB1T from './pages/orb1t/ORB1T';
 import { AuthProvider } from './lib/auth';
 import { ToastProvider } from './components/Toast';
 import useScrollReveal from './hooks/useScrollReveal';
@@ -89,6 +90,7 @@ export default function App() {
             <Route path="/founder-space/events" element={<EventsFeed />} />
             <Route path="/founder-space/events/create" element={<CreateEvent />} />
             <Route path="/founder-space/events/:eventId" element={<EventPage />} />
+            <Route path="/orb1t" element={<ORB1T />} />
           </Routes>
         </ToastProvider>
       </AuthProvider>
