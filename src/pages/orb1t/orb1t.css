@@ -1,148 +1,395 @@
-/* ORB1T — animations & ring system */
+/* ═══════════════════════════════════════════════
+   ORB1T — Design system & animations
+   Picasso-bold · McKinsey-structured · Space-deep
+   ═══════════════════════════════════════════════ */
 
+/* ── Core ring animation ────────────────────── */
 @keyframes orb-spin {
   from { transform: translate(-50%, -50%) rotate(0deg); }
   to   { transform: translate(-50%, -50%) rotate(360deg); }
 }
-
 @keyframes orb-counter {
   from { transform: translate(-50%, -50%) rotate(0deg); }
   to   { transform: translate(-50%, -50%) rotate(-360deg); }
 }
-
 @keyframes orb-core-pulse {
-  0%, 100% { box-shadow: 0 0 32px 8px rgba(245,200,66,0.18), 0 0 80px 20px rgba(245,200,66,0.06); }
-  50%       { box-shadow: 0 0 48px 16px rgba(245,200,66,0.3), 0 0 120px 40px rgba(245,200,66,0.10); }
+  0%, 100% {
+    box-shadow:
+      0 0 0 0    rgba(245,200,66,0),
+      0 0 40px 8px rgba(245,200,66,0.22),
+      0 0 100px 30px rgba(245,200,66,0.07);
+  }
+  50% {
+    box-shadow:
+      0 0 0 12px rgba(245,200,66,0.05),
+      0 0 60px 16px rgba(245,200,66,0.38),
+      0 0 140px 50px rgba(245,200,66,0.12);
+  }
+}
+@keyframes orb-dot-trail {
+  0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  50%       { opacity: 0.7; transform: translate(-50%, -50%) scale(1.25); }
 }
 
+/* ── Floating geometric particles ────────────── */
+@keyframes fp-a {
+  0%, 100% { transform: translateY(0px)   rotate(0deg)   scale(1); opacity: 0.35; }
+  40%       { transform: translateY(-28px) rotate(120deg) scale(1.1); opacity: 0.6; }
+  70%       { transform: translateY(-10px) rotate(240deg) scale(0.95); opacity: 0.25; }
+}
+@keyframes fp-b {
+  0%, 100% { transform: translate(0, 0)      rotate(45deg);  opacity: 0.28; }
+  30%       { transform: translate(16px, -22px) rotate(135deg); opacity: 0.5; }
+  60%       { transform: translate(-12px, -18px) rotate(225deg); opacity: 0.18; }
+}
+@keyframes fp-c {
+  0%, 100% { transform: translateY(0)   scale(1)    rotate(0deg); opacity: 0.22; }
+  50%       { transform: translateY(-18px) scale(1.15) rotate(180deg); opacity: 0.45; }
+}
+@keyframes fp-d {
+  0%        { transform: translate(0, 0) rotate(0deg);    opacity: 0.4; }
+  25%        { transform: translate(-14px, -20px) rotate(90deg);  opacity: 0.2; }
+  75%        { transform: translate(10px, -30px) rotate(270deg); opacity: 0.5; }
+  100%       { transform: translate(0, 0) rotate(360deg);   opacity: 0.4; }
+}
+@keyframes fp-e {
+  0%, 100% { transform: rotate(0deg)   scale(1);    opacity: 0.18; }
+  50%       { transform: rotate(180deg) scale(1.2);  opacity: 0.38; }
+}
+
+/* ── Text entrance ───────────────────────────── */
+@keyframes orb-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes orb-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Gradient shimmer (animated border on cards) */
+@keyframes orb-border-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Modal entrance ──────────────────────────── */
+@keyframes orb-modal-backdrop {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes orb-modal-in {
+  from { opacity: 0; transform: scale(0.94) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── Nav dot pulse ───────────────────────────── */
 @keyframes orb-nav-dot {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(245,200,66,0.6); }
-  50%       { box-shadow: 0 0 0 5px rgba(245,200,66,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245,200,66,0.7); }
+  50%       { box-shadow: 0 0 0 6px rgba(245,200,66,0); }
 }
 
-@keyframes orb-fade-up {
-  from { opacity: 0; transform: translateY(24px); }
+/* ── Gradient text shimmer ───────────────────── */
+@keyframes orb-text-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* ── Section reveal ──────────────────────────── */
+@keyframes orb-reveal {
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes orb-ticker {
-  0%   { opacity: 0; transform: translateY(8px); }
-  10%  { opacity: 1; transform: translateY(0); }
-  85%  { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-8px); }
-}
-
-/* ── Ring system ─────────────────────────────── */
+/* ═══════════════════════════════════════════════
+   RING SYSTEM
+   ═══════════════════════════════════════════════ */
 
 .orb1t-scene {
   position: relative;
-  width: 340px;
-  height: 340px;
-  margin: 0 auto;
   flex-shrink: 0;
 }
 
 .orb1t-core {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 64px;
-  height: 64px;
-  background: radial-gradient(circle, #f5c842 0%, rgba(245,200,66,0.4) 50%, transparent 100%);
+  top: 50%; left: 50%;
+  width: 72px; height: 72px;
+  background: radial-gradient(circle, #fff9e0 0%, #f5c842 35%, rgba(245,200,66,0.3) 65%, transparent 100%);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  animation: orb-core-pulse 3s ease-in-out infinite;
-  z-index: 2;
+  animation: orb-core-pulse 3.5s ease-in-out infinite;
+  z-index: 3;
+}
+
+.orb1t-core-inner {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 28px; height: 28px;
+  background: #fff9e0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
 }
 
 .orb1t-ring {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
   border-radius: 50%;
-  border: 1px dashed rgba(245,200,66,0.20);
 }
-
 .orb1t-ring-1 {
-  width: 140px;
-  height: 140px;
-  animation: orb-spin 18s linear infinite;
+  width: 150px; height: 150px;
+  border: 1px dashed rgba(245,200,66,0.35);
+  animation: orb-spin 16s linear infinite;
 }
-
 .orb1t-ring-2 {
-  width: 220px;
-  height: 220px;
-  border-color: rgba(255,107,53,0.18);
-  animation: orb-counter 30s linear infinite;
+  width: 260px; height: 260px;
+  border: 1px solid rgba(255,107,53,0.2);
+  animation: orb-counter 28s linear infinite;
 }
-
 .orb1t-ring-3 {
-  width: 320px;
-  height: 320px;
-  border-color: rgba(139,92,246,0.15);
-  animation: orb-spin 48s linear infinite;
+  width: 380px; height: 380px;
+  border: 1px dashed rgba(139,92,246,0.18);
+  animation: orb-spin 45s linear infinite;
+}
+.orb1t-ring-4 {
+  width: 480px; height: 480px;
+  border: 1px solid rgba(74,222,128,0.08);
+  animation: orb-counter 70s linear infinite;
 }
 
 .orb1t-dot {
   position: absolute;
-  top: 0;
-  left: 50%;
-  width: 9px;
-  height: 9px;
+  top: 0; left: 50%;
   border-radius: 50%;
-  transform: translate(-50%, -50%);
+  animation: orb-dot-trail 2s ease-in-out infinite;
 }
+.orb1t-dot-amber  { width: 10px; height: 10px; background: #f5c842; box-shadow: 0 0 14px 4px rgba(245,200,66,0.8), 0 0 28px 8px rgba(245,200,66,0.3); transform: translate(-50%, -50%); }
+.orb1t-dot-orange { width: 8px;  height: 8px;  background: #ff6b35; box-shadow: 0 0 12px 4px rgba(255,107,53,0.8), 0 0 24px 8px rgba(255,107,53,0.3); transform: translate(-50%, -50%); animation-delay: 0.8s; }
+.orb1t-dot-purple { width: 9px;  height: 9px;  background: #8b5cf6; box-shadow: 0 0 12px 4px rgba(139,92,246,0.8), 0 0 24px 8px rgba(139,92,246,0.3); transform: translate(-50%, -50%); animation-delay: 1.6s; }
+.orb1t-dot-green  { width: 6px;  height: 6px;  background: #4ade80; box-shadow: 0 0 10px 3px rgba(74,222,128,0.7); transform: translate(-50%, -50%); animation-delay: 2.4s; }
 
-.orb1t-dot-amber  { background: #f5c842; box-shadow: 0 0 10px 3px rgba(245,200,66,0.7); }
-.orb1t-dot-orange { background: #ff6b35; box-shadow: 0 0 10px 3px rgba(255,107,53,0.7); }
-.orb1t-dot-purple { background: #8b5cf6; box-shadow: 0 0 10px 3px rgba(139,92,246,0.7); }
-
-/* ── Nav dot ──────────────────────────────────── */
-.orb1t-nav-dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
+/* ── Second dots (trailing) ───────────────────── */
+.orb1t-dot-2-amber {
+  position: absolute;
+  bottom: 0; left: 50%;
+  width: 5px; height: 5px;
+  background: rgba(245,200,66,0.4);
   border-radius: 50%;
-  background: #f5c842;
-  margin-left: 5px;
-  vertical-align: middle;
-  animation: orb-nav-dot 1.8s ease-in-out infinite;
+  transform: translate(-50%, 50%);
+  box-shadow: 0 0 8px 2px rgba(245,200,66,0.4);
+}
+.orb1t-dot-2-orange {
+  position: absolute;
+  bottom: 0; left: 50%;
+  width: 4px; height: 4px;
+  background: rgba(255,107,53,0.35);
+  border-radius: 50%;
+  transform: translate(-50%, 50%);
+}
+.orb1t-dot-2-purple {
+  position: absolute;
+  right: 0; top: 50%;
+  width: 4px; height: 4px;
+  background: rgba(139,92,246,0.3);
+  border-radius: 50%;
+  transform: translate(50%, -50%);
 }
 
-/* ── Hero text reveal ──────────────────────────── */
-.orb1t-hero-text {
-  animation: orb-fade-up 0.8s ease both;
-}
-.orb1t-hero-text-delay {
-  animation: orb-fade-up 0.8s 0.2s ease both;
-}
-.orb1t-hero-text-delay2 {
-  animation: orb-fade-up 0.8s 0.4s ease both;
+/* ═══════════════════════════════════════════════
+   FLOATING PARTICLES
+   ═══════════════════════════════════════════════ */
+
+.orb1t-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
 }
 
-/* ── Input focus glow ──────────────────────────── */
+.fp { position: absolute; }
+.fp-circle { border-radius: 50%; border: 1px solid; }
+.fp-triangle {
+  width: 0; height: 0;
+  background: transparent !important;
+  border-left: solid transparent;
+  border-right: solid transparent;
+  border-bottom: solid;
+}
+.fp-square { border: 1px solid; }
+.fp-diamond { border: 1px solid; transform: rotate(45deg); }
+
+.fp-a { animation: fp-a 9s  ease-in-out infinite; }
+.fp-b { animation: fp-b 13s ease-in-out infinite; }
+.fp-c { animation: fp-c 11s ease-in-out infinite; }
+.fp-d { animation: fp-d 16s ease-in-out infinite; }
+.fp-e { animation: fp-e 8s  ease-in-out infinite; }
+.fp-f { animation: fp-a 14s ease-in-out infinite reverse; }
+.fp-g { animation: fp-c 10s ease-in-out infinite 2s; }
+.fp-h { animation: fp-b 18s ease-in-out infinite 4s; }
+.fp-i { animation: fp-d 12s ease-in-out infinite 1s; }
+.fp-j { animation: fp-e 7s  ease-in-out infinite 3s; }
+
+/* ═══════════════════════════════════════════════
+   COMPONENTS
+   ═══════════════════════════════════════════════ */
+
+/* Hero text entrance */
+.orb1t-u1 { animation: orb-up 0.9s ease both; }
+.orb1t-u2 { animation: orb-up 0.9s 0.15s ease both; }
+.orb1t-u3 { animation: orb-up 0.9s 0.30s ease both; }
+.orb1t-u4 { animation: orb-up 0.9s 0.45s ease both; }
+.orb1t-u5 { animation: orb-up 0.9s 0.60s ease both; }
+
+/* Gradient text */
+.orb1t-gradient-text {
+  background: linear-gradient(120deg, #f5c842 0%, #ff6b35 40%, #f5c842 60%, #fff9e0 80%, #f5c842 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: orb-text-shimmer 4s linear infinite;
+}
+
+/* Input styles */
+.orb1t-input {
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
 .orb1t-input:focus {
   outline: none;
   border-color: #f5c842 !important;
   box-shadow: 0 0 0 3px rgba(245,200,66,0.12);
 }
 
-/* ── Pillar card hover ────────────────────────── */
-.orb1t-pillar-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* Pillar card */
+.orb1t-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  cursor: pointer;
 }
-.orb1t-pillar-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.5) !important;
+.orb1t-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6) !important;
 }
 
-/* ── Step connector line ────────────────────────── */
-.orb1t-step-line::after {
-  content: '';
-  position: absolute;
-  top: 28px;
-  right: -50%;
-  width: 100%;
+/* Stat number */
+.orb1t-stat-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 40px;
+  color: #f5c842;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  display: block;
+}
+
+/* Live dot */
+.orb1t-live-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 0 0 rgba(74,222,128,0.4);
+  animation: orb-nav-dot 1.5s ease-in-out infinite;
+}
+
+/* Nav dot */
+.orb1t-nav-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #f5c842;
+  margin-left: 3px;
+  vertical-align: middle;
+  animation: orb-nav-dot 1.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* Modal */
+.orb1t-modal-backdrop {
+  animation: orb-modal-backdrop 0.2s ease;
+}
+.orb1t-modal-box {
+  animation: orb-modal-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Step number circle */
+.orb1t-step-n {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+/* Role tag hover */
+.orb1t-role-card {
+  transition: transform 0.2s, border-color 0.2s;
+}
+.orb1t-role-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Gradient divider */
+.orb1t-divider {
   height: 1px;
-  background: linear-gradient(90deg, rgba(245,200,66,0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(245,200,66,0.2), transparent);
+  border: none;
+  margin: 0;
+}
+
+/* CTA button press */
+.orb1t-btn-primary {
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.orb1t-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(245,200,66,0.35);
+}
+.orb1t-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary button */
+.orb1t-btn-ghost {
+  transition: background 0.2s, border-color 0.2s;
+}
+.orb1t-btn-ghost:hover {
+  background: rgba(245,200,66,0.06) !important;
+  border-color: rgba(245,200,66,0.3) !important;
+}
+
+/* Pillar icon box */
+.orb1t-icon-box {
+  transition: transform 0.2s;
+}
+.orb1t-card:hover .orb1t-icon-box {
+  transform: scale(1.08) rotate(-3deg);
+}
+
+/* Large decorative letter */
+.orb1t-deco-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Ticker */
+@keyframes orb-ticker {
+  0%   { opacity: 0; transform: translateY(6px); }
+  15%  { opacity: 1; transform: translateY(0); }
+  80%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-6px); }
+}
+.orb1t-ticker-item {
+  animation: orb-ticker 3.5s ease-in-out infinite;
+}
+
+/* Responsive ring sizes */
+@media (max-width: 900px) {
+  .orb1t-ring-3 { width: 280px; height: 280px; }
+  .orb1t-ring-4 { display: none; }
+}
+@media (max-width: 600px) {
+  .orb1t-ring-2 { width: 200px; height: 200px; }
+  .orb1t-ring-3 { width: 280px; height: 280px; }
 }
