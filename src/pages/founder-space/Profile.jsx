@@ -62,6 +62,13 @@ const ROLE_STYLES = {
   enthusiast: { bg: '#e8d5fb', color: '#5a2d82', label: 'Enthusiast' },
 };
 
+const STAGE_STYLES = {
+  idea:    { color: '#92610a', bg: 'rgba(245,200,66,0.15)', border: 'rgba(245,200,66,0.5)', dot: '#f5c842', label: 'Idea Stage'  },
+  mvp:     { color: '#bf4b1a', bg: 'rgba(255,107,53,0.12)', border: 'rgba(255,107,53,0.4)', dot: '#ff6b35', label: 'MVP Built'   },
+  live:    { color: '#1a5c33', bg: 'rgba(74,222,128,0.12)', border: 'rgba(74,222,128,0.4)', dot: '#4ade80', label: 'Live'        },
+  scaling: { color: '#5a2d82', bg: 'rgba(139,92,246,0.12)', border: 'rgba(139,92,246,0.4)', dot: '#8b5cf6', label: 'Scaling'     },
+};
+
 const CATEGORY_LABELS = {
   fintech: 'Fintech', edtech: 'Edtech', healthtech: 'Healthtech',
   saas: 'SaaS', ecommerce: 'E-Commerce', deeptech: 'Deeptech', other: 'Other',
@@ -491,7 +498,8 @@ export default function Profile() {
 
   if (notFound) return <NotFound />;
 
-  const roleMeta = ROLE_STYLES[profile.role] || ROLE_STYLES.enthusiast;
+  const roleMeta   = ROLE_STYLES[profile.role] || ROLE_STYLES.enthusiast;
+  const stageMeta  = profile.builderStage ? STAGE_STYLES[profile.builderStage] : null;
 
   return (
     <div className="fs-page">
@@ -536,6 +544,23 @@ export default function Profile() {
 
             {/* Name / title / bio */}
             <div style={{ flex: 1 }}>
+              {/* Stage badge — prominent, above name */}
+              {stageMeta && (
+                <div style={{ marginBottom: 10 }}>
+                  <span style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    background: stageMeta.bg, color: stageMeta.color,
+                    border: `1.5px solid ${stageMeta.border}`,
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: 10, fontWeight: 700,
+                    letterSpacing: '0.12em', textTransform: 'uppercase',
+                    padding: '5px 14px', borderRadius: 6,
+                  }}>
+                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: stageMeta.dot, display: 'inline-block' }} />
+                    {stageMeta.label}
+                  </span>
+                </div>
+              )}
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 6 }}>
                 <h1 style={{
                   fontFamily: "'Playfair Display', serif",

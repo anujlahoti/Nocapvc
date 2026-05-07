@@ -27,6 +27,13 @@ const ROLES = [
   { id: 'enthusiast', label: '🔥 Enthusiast' },
 ];
 
+const BUILDER_STAGES = [
+  { id: 'idea',    label: 'Idea Stage', color: '#f5c842', bg: 'rgba(245,200,66,0.12)',  border: 'rgba(245,200,66,0.4)'  },
+  { id: 'mvp',     label: 'MVP Built',  color: '#ff6b35', bg: 'rgba(255,107,53,0.12)',  border: 'rgba(255,107,53,0.4)'  },
+  { id: 'live',    label: 'Live',       color: '#4ade80', bg: 'rgba(74,222,128,0.12)',  border: 'rgba(74,222,128,0.4)'  },
+  { id: 'scaling', label: 'Scaling',    color: '#8b5cf6', bg: 'rgba(139,92,246,0.12)',  border: 'rgba(139,92,246,0.4)'  },
+];
+
 const TOTAL_STEPS = 3;
 
 // ── Step indicator ────────────────────────────
@@ -187,6 +194,34 @@ function Step1({ data, onChange, errors }) {
               {r.label}
             </button>
           ))}
+        </div>
+      </Field>
+
+      <Field label="Where are you in your build?" hint="Pick the stage that best describes what you're working on right now." error={errors.builderStage}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>
+          {BUILDER_STAGES.map(s => {
+            const active = data.builderStage === s.id;
+            return (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => onChange('builderStage', s.id)}
+                style={{
+                  padding: '8px 18px', borderRadius: 8, cursor: 'pointer',
+                  border: `1.5px solid ${active ? s.border : 'var(--fs-border)'}`,
+                  background: active ? s.bg : 'transparent',
+                  color: active ? s.color : 'var(--fs-muted)',
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: 11, fontWeight: active ? 700 : 400,
+                  letterSpacing: '0.06em',
+                  transition: 'all 0.15s',
+                }}
+              >
+                {active && <span style={{ marginRight: 6, fontSize: 8 }}>●</span>}
+                {s.label}
+              </button>
+            );
+          })}
         </div>
       </Field>
     </div>
@@ -409,6 +444,7 @@ function Onboarding() {
     title:          '',
     whatImBuilding: '',
     role:           '',
+    builderStage:   '',
     contactEmail:   user?.email || '',
     linkedin:       '',
     twitter:        '',
@@ -457,6 +493,7 @@ function Onboarding() {
         title:          data.title.trim(),
         whatImBuilding: data.whatImBuilding.trim(),
         role:           data.role,
+        builderStage:   data.builderStage || '',
         contactEmail:   data.contactEmail.trim(),
         linkedin:       data.linkedin.trim(),
         twitter:        data.twitter.trim(),

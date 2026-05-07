@@ -1,113 +1,102 @@
 /**
- * FeedIdeaCard — investigation board card for the Founder Space feed.
- *
- * Props:
- *   idea    {object}  — Firestore idea document
- *   author  {object}  — Firestore user profile of the author
- *   onClick {fn}      — navigation handler
+ * FeedIdeaCard — ORB1T dark theme feed card.
  */
 
 import React, { useCallback } from 'react';
 
-// ── Node config (same tack colors as the submission form) ────────────────────
+const STAGE_DOT = {
+  idea:    '#f5c842',
+  mvp:     '#ff6b35',
+  live:    '#4ade80',
+  scaling: '#8b5cf6',
+};
+
+// ── Node config ───────────────────────────────────────────────────────────────
 const NODE_CONFIG = [
-  { key: 'problem',  number: 1, label: 'The Villain', color: '#e8391e', rotation: -2   },
-  { key: 'reveal',   number: 2, label: 'The Reveal',  color: '#c4a882', rotation: 1.5  },
-  { key: 'solution', number: 3, label: 'The Hero',    color: '#2c8a4e', rotation: -1   },
-  { key: 'market',   number: 4, label: 'The Stakes',  color: '#1a6bb5', rotation: 2    },
-  { key: 'ask',      number: 5, label: 'The Ask',     color: '#f5c842', rotation: -1.5 },
+  { key: 'problem',  number: 1, label: 'Villain', color: '#ff4444',  rotation: -2   },
+  { key: 'reveal',   number: 2, label: 'Reveal',  color: '#c4a882',  rotation: 1.5  },
+  { key: 'solution', number: 3, label: 'Hero',    color: '#4ade80',  rotation: -1   },
+  { key: 'market',   number: 4, label: 'Stakes',  color: '#60a5fa',  rotation: 2    },
+  { key: 'ask',      number: 5, label: 'Ask',     color: '#f5c842',  rotation: -1.5 },
 ];
 
-// ── Relative date ─────────────────────────────────────────────────────────────
 function relDays(ts) {
   if (!ts) return '';
   const d = ts.toDate ? ts.toDate() : ts.seconds ? new Date(ts.seconds * 1000) : new Date(ts);
   const diff = Date.now() - d.getTime();
   const days = Math.floor(diff / 86400000);
   if (days === 0) return 'today';
-  if (days === 1) return '1 day ago';
-  if (days < 30) return `${days} days ago`;
+  if (days === 1) return '1d ago';
+  if (days < 30)  return `${days}d ago`;
   const months = Math.floor(days / 30);
-  return months === 1 ? '1 month ago' : `${months} months ago`;
+  return months === 1 ? '1mo ago' : `${months}mo ago`;
 }
 
-// ── Avatar ────────────────────────────────────────────────────────────────────
 function MiniAvatar({ profile }) {
-  const initials = (profile?.name || 'F')
-    .split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+  const initials = (profile?.name || 'F').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
   if (profile?.photoURL) {
     return (
-      <img
-        src={profile.photoURL} alt={profile.name}
-        style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+      <img src={profile.photoURL} alt={profile.name}
+        style={{ width: 26, height: 26, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
       />
     );
   }
   return (
     <div style={{
-      width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
-      background: 'linear-gradient(135deg, #c4963a 0%, #2c1f0e 100%)',
-      color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: 10, fontFamily: "'Playfair Display', serif", fontWeight: 700,
+      width: 26, height: 26, borderRadius: '50%', flexShrink: 0,
+      background: 'linear-gradient(135deg, #f5c842 0%, #ff6b35 100%)',
+      color: '#0a0a0f', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontSize: 9, fontFamily: "'Syne', sans-serif", fontWeight: 800,
     }}>
       {initials}
     </div>
   );
 }
 
-// ── Mini polaroid strip ───────────────────────────────────────────────────────
 function MiniPolaroidStrip({ idea }) {
   return (
-    <div style={{
-      display: 'flex', gap: 4,
-      overflowX: 'auto', paddingBottom: 2,
-      // hide scrollbar
-      scrollbarWidth: 'none',
-    }}>
+    <div style={{ display: 'flex', gap: 5, paddingBottom: 2, scrollbarWidth: 'none', overflowX: 'auto' }}>
       {NODE_CONFIG.map(node => {
-        const title    = idea[`${node.key}Title`] || '';
-        const photoURL = idea[`${node.key}PhotoURL`] || '';
-        const filled   = title.trim().length > 0;
+        const title  = idea[`${node.key}Title`] || '';
+        const photo  = idea[`${node.key}PhotoURL`] || '';
+        const filled = title.trim().length > 0;
 
         return (
-          <div
-            key={node.key}
-            style={{
-              width: 64, minWidth: 64,
-              background: '#fff',
-              borderRadius: 6,
-              border: '1px solid rgba(44,31,14,0.12)',
-              padding: '6px 5px 14px',
-              position: 'relative',
-              transform: `rotate(${node.rotation}deg)`,
-              boxShadow: '1px 2px 0 #e0d4c0',
-              flexShrink: 0,
-            }}
-          >
+          <div key={node.key} style={{
+            width: 60, minWidth: 60,
+            background: '#1e1e30',
+            borderRadius: 5,
+            border: '1px solid rgba(255,255,255,0.07)',
+            padding: '6px 4px 12px',
+            position: 'relative',
+            transform: `rotate(${node.rotation}deg)`,
+            boxShadow: `0 2px 8px rgba(0,0,0,0.4)`,
+            flexShrink: 0,
+          }}>
             {/* Tack dot */}
             <div style={{
               position: 'absolute', top: -4, left: '50%',
               transform: 'translateX(-50%)',
-              width: 7, height: 7, borderRadius: '50%',
+              width: 6, height: 6, borderRadius: '50%',
               background: node.color,
-              boxShadow: `0 1px 3px ${node.color}88`,
+              boxShadow: `0 0 6px ${node.color}`,
             }} />
 
             {/* Photo or number */}
             <div style={{
-              width: '100%', height: 32,
-              background: filled ? 'rgba(44,31,14,0.04)' : '#f5ece0',
+              width: '100%', height: 28,
+              background: filled ? 'rgba(245,200,66,0.05)' : 'rgba(255,255,255,0.03)',
               borderRadius: 3, marginBottom: 3,
               overflow: 'hidden',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              {photoURL ? (
-                <img src={photoURL} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              {photo ? (
+                <img src={photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               ) : (
                 <span style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: 16, fontWeight: 900,
-                  color: filled ? 'rgba(44,31,14,0.14)' : '#e0d4c0',
+                  fontFamily: "'Syne', sans-serif",
+                  fontSize: 14, fontWeight: 800,
+                  color: filled ? 'rgba(245,200,66,0.2)' : 'rgba(255,255,255,0.08)',
                 }}>
                   {node.number}
                 </span>
@@ -117,9 +106,9 @@ function MiniPolaroidStrip({ idea }) {
             {/* Node title */}
             <div style={{
               fontFamily: "'DM Mono', monospace",
-              fontSize: 7, fontWeight: 700,
-              color: filled ? '#2c1f0e' : '#c4a882',
-              lineHeight: 1.25, wordBreak: 'break-word',
+              fontSize: 6, fontWeight: 700,
+              color: filled ? 'rgba(232,232,240,0.7)' : 'rgba(232,232,240,0.2)',
+              lineHeight: 1.3, wordBreak: 'break-word',
               display: '-webkit-box',
               WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
@@ -130,11 +119,12 @@ function MiniPolaroidStrip({ idea }) {
 
             {/* Label at bottom */}
             <div style={{
-              position: 'absolute', bottom: 3, left: 3, right: 3,
+              position: 'absolute', bottom: 2, left: 2, right: 2,
               fontFamily: "'DM Mono', monospace",
-              fontSize: 6, color: node.color,
-              textAlign: 'center', letterSpacing: '0.1em',
+              fontSize: 5, color: node.color,
+              textAlign: 'center', letterSpacing: '0.08em',
               textTransform: 'uppercase', fontWeight: 700,
+              opacity: 0.7,
             }}>
               {String(node.number).padStart(2, '0')}
             </div>
@@ -145,59 +135,90 @@ function MiniPolaroidStrip({ idea }) {
   );
 }
 
-// ── Share helper ──────────────────────────────────────────────────────────────
-
 function useShare() {
   return useCallback(async (url, title, e) => {
     e.stopPropagation();
     if (navigator.share) {
       try { await navigator.share({ title, url }); return; } catch {}
     }
-    try {
-      await navigator.clipboard.writeText(url);
-    } catch {}
+    try { await navigator.clipboard.writeText(url); } catch {}
   }, []);
 }
 
 // ── FeedIdeaCard ─────────────────────────────────────────────────────────────
 
 export default function FeedIdeaCard({ idea, author, onClick }) {
-  const share = useShare();
-  const avg     = idea.avgOverall     || 0;
-  const ratings = idea.ratingCount    || 0;
-  const views   = idea.viewCount      || 0;
+  const share   = useShare();
+  const avg     = idea.avgOverall      || 0;
+  const ratings = idea.ratingCount     || 0;
+  const views   = idea.viewCount       || 0;
   const wants   = idea.wantToWorkCount || 0;
 
   return (
     <div
       onClick={onClick}
       style={{
-        background: '#fff',
-        borderRadius: 18,
-        border: '1px solid rgba(44,31,14,0.1)',
-        padding: '18px 18px 16px',
+        background: '#13131f',
+        borderRadius: 14,
+        border: '1px solid rgba(245,200,66,0.08)',
+        padding: '16px 16px 14px',
         cursor: 'pointer',
-        transition: 'box-shadow 0.2s, transform 0.15s',
+        transition: 'border-color 0.2s, transform 0.15s, box-shadow 0.2s',
+        position: 'relative',
+        overflow: 'hidden',
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = '0 8px 32px rgba(44,31,14,0.14)';
-        e.currentTarget.style.transform = 'translateY(-2px)';
+        e.currentTarget.style.borderColor = 'rgba(245,200,66,0.22)';
+        e.currentTarget.style.transform   = 'translateY(-2px)';
+        e.currentTarget.style.boxShadow   = '0 8px 32px rgba(245,200,66,0.06)';
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = 'none';
-        e.currentTarget.style.transform = 'none';
+        e.currentTarget.style.borderColor = 'rgba(245,200,66,0.08)';
+        e.currentTarget.style.transform   = 'none';
+        e.currentTarget.style.boxShadow   = 'none';
       }}
     >
-      {/* Mini polaroid investigation strip */}
+      {/* Top accent line */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+        background: 'linear-gradient(90deg, #f5c842, transparent)',
+        opacity: 0.5,
+      }} />
+
+      {/* Mini polaroid strip */}
       <MiniPolaroidStrip idea={idea} />
 
-      {/* Startup name */}
+      {/* Signal type label */}
       <div style={{
-        fontFamily: "'Playfair Display', serif",
-        fontSize: 20, fontWeight: 900,
-        color: '#2c1f0e', letterSpacing: '-0.02em',
-        marginTop: 14, marginBottom: 4,
-        lineHeight: 1.2,
+        display: 'flex', alignItems: 'center', gap: 6, marginTop: 12, marginBottom: 6,
+      }}>
+        <span style={{
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 7, fontWeight: 700, letterSpacing: '0.2em',
+          textTransform: 'uppercase', color: '#f5c842',
+          background: 'rgba(245,200,66,0.1)',
+          padding: '2px 7px', borderRadius: 3,
+        }}>
+          IDEA
+        </span>
+        {idea.category && (
+          <span style={{
+            fontFamily: "'DM Mono', monospace",
+            fontSize: 7, fontWeight: 600, letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            color: 'rgba(232,232,240,0.4)',
+          }}>
+            {idea.category}
+          </span>
+        )}
+      </div>
+
+      {/* Title */}
+      <div style={{
+        fontFamily: "'Syne', sans-serif",
+        fontSize: 18, fontWeight: 800,
+        color: '#e8e8f0', letterSpacing: '-0.02em',
+        marginBottom: 5, lineHeight: 1.2,
       }}>
         {idea.ideaTitle || 'Untitled'}
       </div>
@@ -205,131 +226,86 @@ export default function FeedIdeaCard({ idea, author, onClick }) {
       {/* Tagline */}
       {idea.tagline && (
         <div style={{
-          fontFamily: "'Syne', sans-serif",
-          fontSize: 13, color: '#b09878',
-          fontStyle: 'italic', lineHeight: 1.55,
-          marginBottom: 10,
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 11, color: 'rgba(232,232,240,0.45)',
+          lineHeight: 1.55, marginBottom: 12,
           display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
           overflow: 'hidden',
         }}>
           {idea.tagline}
         </div>
       )}
 
-      {/* Category + stage badges */}
-      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
-        {idea.category && (
-          <span style={{
-            fontFamily: "'DM Mono', monospace",
-            fontSize: 8, fontWeight: 700,
-            letterSpacing: '0.14em', textTransform: 'uppercase',
-            background: '#2c1f0e', color: '#f5c842',
-            padding: '3px 9px', borderRadius: 20,
-          }}>
-            {idea.category}
-          </span>
-        )}
-        {idea.stage && (
-          <span style={{
-            fontFamily: "'DM Mono', monospace",
-            fontSize: 8, fontWeight: 600,
-            letterSpacing: '0.12em', textTransform: 'uppercase',
-            background: 'rgba(44,31,14,0.07)', color: '#7a5c3a',
-            padding: '3px 9px', borderRadius: 20,
-          }}>
-            {idea.stage}
-          </span>
-        )}
-        {(idea.branchNodes?.length || 0) > 0 && (
-          <span style={{
-            fontFamily: "'DM Mono', monospace",
-            fontSize: 8, color: '#c4a882',
-            padding: '3px 9px', borderRadius: 20,
-            border: '1px solid #e8dcc8',
-          }}>
-            +{idea.branchNodes.length} notes
-          </span>
-        )}
-      </div>
-
       {/* Divider */}
-      <div style={{ height: 1, background: 'rgba(44,31,14,0.06)', marginBottom: 10 }} />
+      <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', marginBottom: 10 }} />
 
-      {/* Founder row */}
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      }}>
+      {/* Author + stats row */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <MiniAvatar profile={author} />
           <div>
             <div style={{
+              display: 'flex', alignItems: 'center', gap: 5,
               fontFamily: "'DM Mono', monospace",
-              fontSize: 10, fontWeight: 600,
-              color: '#2c1f0e',
+              fontSize: 9, fontWeight: 600, color: 'rgba(232,232,240,0.75)',
             }}>
-              {author?.name || 'Founder'}
+              {author?.name || 'Builder'}
+              {author?.builderStage && STAGE_DOT[author.builderStage] && (
+                <span style={{
+                  display: 'inline-block', width: 5, height: 5, borderRadius: '50%',
+                  background: STAGE_DOT[author.builderStage], flexShrink: 0,
+                }} title={author.builderStage} />
+              )}
             </div>
             <div style={{
               fontFamily: "'DM Mono', monospace",
-              fontSize: 8, color: '#c4a882', marginTop: 1,
+              fontSize: 7, color: 'rgba(232,232,240,0.25)', marginTop: 1,
             }}>
               {relDays(idea.publishedAt)}
             </div>
           </div>
         </div>
 
-        {/* Stats + share */}
-        <div style={{
-          display: 'flex', gap: 10, alignItems: 'center',
-        }}>
+        {/* Stats */}
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           {ratings > 0 && (
-            <div style={{
-              fontFamily: "'DM Mono', monospace",
-              fontSize: 9, color: '#c4963a',
-              display: 'flex', alignItems: 'center', gap: 3,
+            <span style={{
+              fontFamily: "'DM Mono', monospace", fontSize: 9,
+              color: '#f5c842', display: 'flex', alignItems: 'center', gap: 2,
             }}>
-              <span style={{ fontSize: 11 }}>★</span>
-              <span>{avg.toFixed(1)}</span>
-              <span style={{ color: '#c4a882' }}>({ratings})</span>
-            </div>
+              ★ {avg.toFixed(1)}
+              <span style={{ color: 'rgba(232,232,240,0.25)', fontSize: 8 }}>({ratings})</span>
+            </span>
           )}
-          <div style={{
-            fontFamily: "'DM Mono', monospace",
-            fontSize: 9, color: '#c4a882',
-            display: 'flex', alignItems: 'center', gap: 3,
+          <span style={{
+            fontFamily: "'DM Mono', monospace", fontSize: 9,
+            color: 'rgba(232,232,240,0.3)', display: 'flex', alignItems: 'center', gap: 2,
           }}>
-            <span style={{ fontSize: 10 }}>◎</span>
-            <span>{views}</span>
-          </div>
+            ◎ {views}
+          </span>
           {wants > 0 && (
-            <div style={{
-              fontFamily: "'DM Mono', monospace",
-              fontSize: 9, color: '#7a5c3a',
-              display: 'flex', alignItems: 'center', gap: 3,
+            <span style={{
+              fontFamily: "'DM Mono', monospace", fontSize: 9,
+              color: '#4ade80', display: 'flex', alignItems: 'center', gap: 2,
             }}>
-              <span style={{ fontSize: 10 }}>↑</span>
-              <span>{wants}</span>
-            </div>
+              ↑ {wants}
+            </span>
           )}
           <button
             onClick={e => share(
               `${window.location.origin}/founder-space/ideas/${idea.id}`,
-              idea.ideaTitle || 'Startup idea',
-              e
+              idea.ideaTitle || 'Startup idea', e
             )}
             title="Copy link"
             style={{
               background: 'transparent', border: 'none', cursor: 'pointer',
-              padding: '2px 4px', borderRadius: 4,
-              fontFamily: "'DM Mono', monospace",
-              fontSize: 10, color: '#c4a882',
-              transition: 'color 0.15s',
-              lineHeight: 1,
+              padding: '2px 4px', fontFamily: "'DM Mono', monospace",
+              fontSize: 11, color: 'rgba(232,232,240,0.2)',
+              transition: 'color 0.15s', lineHeight: 1,
             }}
-            onMouseEnter={e => e.currentTarget.style.color = '#2c1f0e'}
-            onMouseLeave={e => e.currentTarget.style.color = '#c4a882'}
+            onMouseEnter={e => e.currentTarget.style.color = '#f5c842'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(232,232,240,0.2)'}
           >
             ↗
           </button>
@@ -343,49 +319,41 @@ export default function FeedIdeaCard({ idea, author, onClick }) {
 
 export function FeedIdeaCardSkeleton() {
   const pulse = {
-    background: '#e8dcc8',
+    background: 'rgba(255,255,255,0.04)',
     borderRadius: 4,
-    animation: 'feed-pulse 1.8s ease-in-out infinite',
+    animation: 'orb-feed-pulse 1.8s ease-in-out infinite',
   };
 
   return (
     <div style={{
-      background: '#fff', borderRadius: 18,
-      border: '1px solid rgba(44,31,14,0.1)',
-      padding: '18px 18px 16px',
+      background: '#13131f', borderRadius: 14,
+      border: '1px solid rgba(245,200,66,0.06)',
+      padding: '16px 16px 14px',
     }}>
-      {/* Mini strip skeleton */}
-      <div style={{ display: 'flex', gap: 4 }}>
-        {[0, 1, 2, 3, 4].map(i => (
+      <div style={{ display: 'flex', gap: 5, marginBottom: 12 }}>
+        {[0,1,2,3,4].map(i => (
           <div key={i} style={{
-            ...pulse, width: 64, height: 58, borderRadius: 6,
+            ...pulse, width: 60, height: 52, borderRadius: 5,
             transform: `rotate(${(i % 2 === 0 ? -1 : 1) * 1.5}deg)`,
           }} />
         ))}
       </div>
-      {/* Name */}
-      <div style={{ ...pulse, height: 22, width: '60%', marginTop: 14, marginBottom: 8 }} />
-      {/* Tagline */}
-      <div style={{ ...pulse, height: 14, width: '85%', marginBottom: 4 }} />
-      <div style={{ ...pulse, height: 14, width: '70%', marginBottom: 12 }} />
-      {/* Badges */}
-      <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
-        <div style={{ ...pulse, height: 18, width: 56, borderRadius: 20 }} />
-        <div style={{ ...pulse, height: 18, width: 72, borderRadius: 20 }} />
-      </div>
-      {/* Founder row */}
+      <div style={{ ...pulse, height: 8, width: 48, marginBottom: 8, borderRadius: 3 }} />
+      <div style={{ ...pulse, height: 20, width: '65%', marginBottom: 6 }} />
+      <div style={{ ...pulse, height: 11, width: '80%', marginBottom: 3 }} />
+      <div style={{ ...pulse, height: 11, width: '60%', marginBottom: 12 }} />
       <div style={{ ...pulse, height: 1, marginBottom: 10, borderRadius: 1 }} />
       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-        <div style={{ ...pulse, width: 28, height: 28, borderRadius: '50%' }} />
+        <div style={{ ...pulse, width: 26, height: 26, borderRadius: '50%' }} />
         <div>
-          <div style={{ ...pulse, height: 10, width: 80, marginBottom: 4 }} />
-          <div style={{ ...pulse, height: 8, width: 52 }} />
+          <div style={{ ...pulse, height: 9, width: 72, marginBottom: 4 }} />
+          <div style={{ ...pulse, height: 7, width: 44 }} />
         </div>
       </div>
       <style>{`
-        @keyframes feed-pulse {
+        @keyframes orb-feed-pulse {
           0%,100% { opacity: 1; }
-          50% { opacity: 0.5; }
+          50% { opacity: 0.4; }
         }
       `}</style>
     </div>
