@@ -34,6 +34,17 @@ const BUILDER_STAGES = [
   { id: 'scaling', label: 'Scaling',    color: '#8b5cf6', bg: 'rgba(139,92,246,0.12)',  border: 'rgba(139,92,246,0.4)'  },
 ];
 
+const LOOKING_FOR = [
+  { id: 'cofounder',  label: 'Co-founder'  },
+  { id: 'cto',        label: 'CTO'         },
+  { id: 'designer',   label: 'Designer'    },
+  { id: 'developer',  label: 'Developer'   },
+  { id: 'funding',    label: 'Funding'     },
+  { id: 'betausers',  label: 'Beta users'  },
+  { id: 'mentor',     label: 'Mentor'      },
+  { id: 'advisor',    label: 'Advisor'     },
+];
+
 const TOTAL_STEPS = 3;
 
 // ── Step indicator ────────────────────────────
@@ -219,6 +230,40 @@ function Step1({ data, onChange, errors }) {
               >
                 {active && <span style={{ marginRight: 6, fontSize: 8 }}>●</span>}
                 {s.label}
+              </button>
+            );
+          })}
+        </div>
+      </Field>
+
+      <Field label="What are you looking for?" hint="Select all that apply — this shows on your public profile.">
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>
+          {LOOKING_FOR.map(item => {
+            const selected = (data.lookingFor || []).includes(item.id);
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => {
+                  const current = data.lookingFor || [];
+                  onChange('lookingFor', selected
+                    ? current.filter(x => x !== item.id)
+                    : [...current, item.id]
+                  );
+                }}
+                style={{
+                  padding: '7px 16px', borderRadius: 8, cursor: 'pointer',
+                  border: `1.5px solid ${selected ? 'rgba(245,200,66,0.5)' : 'var(--fs-border)'}`,
+                  background: selected ? 'rgba(245,200,66,0.1)' : 'transparent',
+                  color: selected ? '#f5c842' : 'var(--fs-muted)',
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: 11, fontWeight: selected ? 700 : 400,
+                  letterSpacing: '0.06em',
+                  transition: 'all 0.15s',
+                }}
+              >
+                {selected && <span style={{ marginRight: 5, fontSize: 8 }}>✓</span>}
+                {item.label}
               </button>
             );
           })}
@@ -445,6 +490,7 @@ function Onboarding() {
     whatImBuilding: '',
     role:           '',
     builderStage:   '',
+    lookingFor:     [],
     contactEmail:   user?.email || '',
     linkedin:       '',
     twitter:        '',
@@ -494,6 +540,7 @@ function Onboarding() {
         whatImBuilding: data.whatImBuilding.trim(),
         role:           data.role,
         builderStage:   data.builderStage || '',
+        lookingFor:     data.lookingFor || [],
         contactEmail:   data.contactEmail.trim(),
         linkedin:       data.linkedin.trim(),
         twitter:        data.twitter.trim(),

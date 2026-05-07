@@ -1,5 +1,5 @@
 /**
- * Founder Space — Public Idea Page
+ * Founder Space — Public Idea Page  (dark orbital theme)
  * Route: /founder-space/ideas/:ideaId
  */
 
@@ -16,19 +16,18 @@ import { PolaroidWallDiagram } from '../../components/founder-space/PolaroidWall
 import RatingModal from '../../components/founder-space/RatingModal';
 import { useToast } from '../../components/Toast';
 import DiagramSkeleton from '../../components/founder-space/skeletons/DiagramSkeleton';
-import './FounderSpace.css';
 
 // ─────────────────────────────────────────────
 //  Constants
 // ─────────────────────────────────────────────
 
-const TAG_STYLES = {
-  Launched:  { bg: '#d4edda', color: '#1a5c33', dot: '#2c8a4e' },
-  Funding:   { bg: '#fef3cd', color: '#92610a', dot: '#f5c842' },
-  Milestone: { bg: '#d1ecf1', color: '#0c5460', dot: '#1a6bb5' },
-  Marketing: { bg: '#e8d5fb', color: '#5a2d82', dot: '#8b5cf6' },
-  Pivot:     { bg: '#f8d7da', color: '#721c24', dot: '#e8391e' },
-  Other:     { bg: '#f0e8d8', color: '#7a5c3a', dot: '#c4a882' },
+const TAG_COLORS = {
+  Launched:  '#4ade80',
+  Funding:   '#f5c842',
+  Milestone: '#60a5fa',
+  Marketing: '#c084fc',
+  Pivot:     '#f87171',
+  Other:     '#94a3b8',
 };
 
 const RATING_PARAMS = [
@@ -40,6 +39,13 @@ const RATING_PARAMS = [
 ];
 
 const UPDATE_TAGS = ['Launched', 'Funding', 'Milestone', 'Marketing', 'Pivot', 'Other'];
+
+const ROLE_COLORS = {
+  founder:    '#f5c842',
+  investor:   '#4ade80',
+  talent:     '#60a5fa',
+  enthusiast: '#c084fc',
+};
 
 // ─────────────────────────────────────────────
 //  Helpers
@@ -66,7 +72,6 @@ function relativeDate(ts) {
   return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-/** Upsert an OG/meta tag on document.head. Works for JS-crawlable contexts. */
 function setMeta(property, content) {
   let el = document.querySelector(`meta[property="${property}"]`);
   if (!el) {
@@ -77,12 +82,47 @@ function setMeta(property, content) {
   el.setAttribute('content', content);
 }
 
+// ─────────────────────────────────────────────
+//  Dark card primitives
+// ─────────────────────────────────────────────
+
+function Card({ children, style }) {
+  return (
+    <div style={{
+      background: '#13131f',
+      borderRadius: 14,
+      border: '1px solid rgba(245,200,66,0.08)',
+      padding: '20px',
+      ...style,
+    }}>
+      {children}
+    </div>
+  );
+}
+
+function CardLabel({ children, color = '#f5c842' }) {
+  return (
+    <div style={{
+      fontFamily: "'DM Mono', monospace",
+      fontSize: 9, fontWeight: 700,
+      letterSpacing: '0.22em', textTransform: 'uppercase',
+      color, marginBottom: 14,
+    }}>
+      {children}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────
+//  Avatar
+// ─────────────────────────────────────────────
+
 function Avatar({ profile, size = 32 }) {
   if (!profile) {
     return (
       <div style={{
         width: size, height: size, borderRadius: '50%',
-        background: '#e8dcc8', flexShrink: 0,
+        background: 'rgba(255,255,255,0.06)', flexShrink: 0,
       }} />
     );
   }
@@ -97,42 +137,12 @@ function Avatar({ profile, size = 32 }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: '50%',
-      background: 'linear-gradient(135deg, #c4963a 0%, #2c1f0e 100%)',
-      color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: size * 0.35, fontFamily: "'Playfair Display', serif", fontWeight: 700,
+      background: 'linear-gradient(135deg, #f5c842 0%, #ff6b35 100%)',
+      color: '#0a0a0f', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontSize: size * 0.35, fontFamily: "'Syne', sans-serif", fontWeight: 800,
       flexShrink: 0,
     }}>
       {initials}
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────
-//  Card wrapper
-// ─────────────────────────────────────────────
-
-function Card({ children, style }) {
-  return (
-    <div style={{
-      background: '#fff', borderRadius: 18,
-      border: '1px solid rgba(44,31,14,0.1)',
-      padding: '20px',
-      ...style,
-    }}>
-      {children}
-    </div>
-  );
-}
-
-function CardLabel({ children }) {
-  return (
-    <div style={{
-      fontFamily: "'DM Mono', monospace",
-      fontSize: 9, fontWeight: 700,
-      letterSpacing: '0.22em', textTransform: 'uppercase',
-      color: '#c4963a', marginBottom: 14,
-    }}>
-      {children}
     </div>
   );
 }
@@ -142,35 +152,41 @@ function CardLabel({ children }) {
 // ─────────────────────────────────────────────
 
 function UpdateCard({ update }) {
-  const tag = TAG_STYLES[update.tag] || TAG_STYLES.Other;
+  const color = TAG_COLORS[update.tag] || TAG_COLORS.Other;
   return (
     <div style={{
       display: 'flex', gap: 12, alignItems: 'flex-start',
       paddingBottom: 16, marginBottom: 16,
-      borderBottom: '1px solid rgba(44,31,14,0.06)',
+      borderBottom: '1px solid rgba(255,255,255,0.05)',
     }}>
-      <div style={{ width: 8, height: 8, borderRadius: '50%', background: tag.dot, marginTop: 5, flexShrink: 0 }} />
+      <div style={{
+        width: 7, height: 7, borderRadius: '50%',
+        background: color, marginTop: 6, flexShrink: 0,
+        boxShadow: `0 0 8px ${color}60`,
+      }} />
       <div style={{ flex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
           <span style={{
             fontFamily: "'DM Mono', monospace",
-            fontSize: 9, fontWeight: 700, letterSpacing: '0.14em',
+            fontSize: 8, fontWeight: 700, letterSpacing: '0.14em',
             textTransform: 'uppercase',
-            background: tag.bg, color: tag.color,
+            color,
+            background: `${color}15`,
+            border: `1px solid ${color}30`,
             padding: '2px 8px', borderRadius: 4,
           }}>
             {update.tag}
           </span>
           <span style={{
             fontFamily: "'DM Mono', monospace",
-            fontSize: 9, color: 'rgba(44,31,14,0.35)',
+            fontSize: 9, color: 'rgba(232,232,240,0.25)',
           }}>
             {relativeDate(update.createdAt)}
           </span>
         </div>
         <div style={{
           fontFamily: "'Syne', sans-serif",
-          fontSize: 13, color: '#2c1f0e', lineHeight: 1.65,
+          fontSize: 13, color: 'rgba(232,232,240,0.75)', lineHeight: 1.65,
         }}>
           {update.body}
         </div>
@@ -204,25 +220,26 @@ function PostUpdateForm({ ideaId, onPosted }) {
 
   return (
     <div style={{
-      background: '#fdf6e8', borderRadius: 14,
-      border: '1.5px solid #e8dcc8', padding: '16px', marginBottom: 16,
+      background: 'rgba(255,255,255,0.03)', borderRadius: 10,
+      border: '1px solid rgba(255,255,255,0.07)', padding: '14px', marginBottom: 16,
     }}>
       <div style={{
         fontFamily: "'DM Mono', monospace", fontSize: 9,
         letterSpacing: '0.16em', textTransform: 'uppercase',
-        color: '#c4a882', marginBottom: 10,
+        color: 'rgba(232,232,240,0.3)', marginBottom: 10,
       }}>
         Tag
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
         {UPDATE_TAGS.map(t => {
           const sel = tag === t;
+          const c = TAG_COLORS[t];
           return (
             <button key={t} onClick={() => setTag(t)} style={{
               padding: '5px 12px', borderRadius: 20,
-              border: `1.5px solid ${sel ? TAG_STYLES[t].dot : '#e8dcc8'}`,
-              background: sel ? TAG_STYLES[t].bg : '#fff',
-              color: sel ? TAG_STYLES[t].color : '#7a5c3a',
+              border: `1.5px solid ${sel ? c : 'rgba(255,255,255,0.1)'}`,
+              background: sel ? `${c}15` : 'transparent',
+              color: sel ? c : 'rgba(232,232,240,0.45)',
               fontFamily: "'DM Mono', monospace",
               fontSize: 10, fontWeight: sel ? 700 : 400,
               cursor: 'pointer', transition: 'all 0.15s',
@@ -240,16 +257,17 @@ function PostUpdateForm({ ideaId, onPosted }) {
         rows={3}
         style={{
           width: '100%', boxSizing: 'border-box',
-          background: '#fff !important', border: '1.5px solid #e8dcc8',
-          borderRadius: 10, outline: 'none', padding: '10px 12px',
+          background: 'rgba(255,255,255,0.04)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 8, outline: 'none', padding: '10px 12px',
           fontFamily: "'Syne', sans-serif", fontSize: 13,
-          color: '#2c1f0e', lineHeight: 1.6, resize: 'none',
+          color: '#e8e8f0', lineHeight: 1.6, resize: 'none',
         }}
-        onFocus={e => e.target.style.borderColor = '#2c1f0e'}
-        onBlur={e => e.target.style.borderColor = '#e8dcc8'}
+        onFocus={e => e.target.style.borderColor = 'rgba(245,200,66,0.4)'}
+        onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
       />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
-        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, color: '#c4a882' }}>
+        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, color: 'rgba(232,232,240,0.25)' }}>
           {300 - body.length} left
         </span>
         <button
@@ -257,12 +275,12 @@ function PostUpdateForm({ ideaId, onPosted }) {
           disabled={!tag || !body.trim() || saving}
           style={{
             padding: '8px 18px', borderRadius: 8, border: 'none',
-            background: tag && body.trim() ? '#2c1f0e' : '#e8dcc8',
-            color: tag && body.trim() ? '#f5c842' : '#c4a882',
+            background: tag && body.trim() ? '#f5c842' : 'rgba(255,255,255,0.07)',
+            color: tag && body.trim() ? '#0a0a0f' : 'rgba(232,232,240,0.3)',
             fontFamily: "'DM Mono', monospace",
             fontSize: 11, fontWeight: 700, letterSpacing: '0.06em',
             cursor: tag && body.trim() ? 'pointer' : 'not-allowed',
-            opacity: saving ? 0.6 : 1,
+            opacity: saving ? 0.6 : 1, transition: 'all 0.15s',
           }}
         >
           {saving ? 'Posting…' : 'Post update'}
@@ -273,31 +291,69 @@ function PostUpdateForm({ ideaId, onPosted }) {
 }
 
 // ─────────────────────────────────────────────
-//  CommentCard
+//  Reddit-style CommentCard
 // ─────────────────────────────────────────────
 
-const ROLE_BADGES = {
-  founder:    { bg: '#fef3cd', color: '#92610a' },
-  investor:   { bg: '#d4edda', color: '#1a5c33' },
-  talent:     { bg: '#d1ecf1', color: '#0c5460' },
-  enthusiast: { bg: '#e8d5fb', color: '#5a2d82' },
-};
-
-function CommentCard({ comment, authorProfile, onReply, isReply }) {
-  const rb = ROLE_BADGES[authorProfile?.role] || ROLE_BADGES.enthusiast;
+function CommentCard({ comment, authorProfile, onReply, isReply, isUpvoted, onUpvote }) {
+  const roleColor = ROLE_COLORS[authorProfile?.role] || 'rgba(232,232,240,0.3)';
+  const votes = comment.upvoteCount || 0;
 
   return (
     <div style={{
-      display: 'flex', gap: 10, alignItems: 'flex-start',
-      paddingLeft: isReply ? 44 : 0,
-      marginBottom: 14,
+      display: 'flex', gap: 0, alignItems: 'flex-start',
+      paddingLeft: isReply ? 32 : 0,
+      marginBottom: 4,
+      position: 'relative',
     }}>
-      <Avatar profile={authorProfile} size={34} />
-      <div style={{ flex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+      {/* Thread indent line for replies */}
+      {isReply && (
+        <div style={{
+          position: 'absolute', left: 12, top: 0, bottom: 0,
+          width: 1.5, background: 'rgba(255,255,255,0.07)',
+          borderRadius: 1,
+        }} />
+      )}
+
+      {/* Vote column */}
+      <div style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        gap: 2, paddingTop: 4, marginRight: 10, flexShrink: 0, width: 24,
+      }}>
+        <button
+          onClick={() => onUpvote(comment.id)}
+          title={isUpvoted ? 'Remove upvote' : 'Upvote'}
+          style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            padding: '2px 4px', lineHeight: 1,
+            color: isUpvoted ? '#f5c842' : 'rgba(232,232,240,0.25)',
+            fontSize: 12, transition: 'color 0.15s',
+          }}
+          onMouseEnter={e => { if (!isUpvoted) e.currentTarget.style.color = 'rgba(245,200,66,0.6)'; }}
+          onMouseLeave={e => { if (!isUpvoted) e.currentTarget.style.color = 'rgba(232,232,240,0.25)'; }}
+        >
+          ▲
+        </button>
+        <span style={{
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 9, fontWeight: 700,
+          color: votes > 0 ? '#f5c842' : 'rgba(232,232,240,0.2)',
+          lineHeight: 1,
+        }}>
+          {votes}
+        </span>
+      </div>
+
+      {/* Avatar */}
+      <div style={{ marginRight: 10, marginTop: 2 }}>
+        <Avatar profile={authorProfile} size={28} />
+      </div>
+
+      {/* Content */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5, flexWrap: 'wrap' }}>
           <span style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 13, fontWeight: 700, color: '#2c1f0e',
+            fontFamily: "'DM Mono', monospace",
+            fontSize: 11, fontWeight: 700, color: '#e8e8f0',
           }}>
             {authorProfile?.name || 'Founder'}
           </span>
@@ -306,23 +362,25 @@ function CommentCard({ comment, authorProfile, onReply, isReply }) {
               fontFamily: "'DM Mono', monospace",
               fontSize: 8, fontWeight: 700, letterSpacing: '0.14em',
               textTransform: 'uppercase',
-              background: rb.bg, color: rb.color,
-              padding: '2px 7px', borderRadius: 4,
+              color: roleColor,
+              background: `${roleColor}15`,
+              border: `1px solid ${roleColor}30`,
+              padding: '1px 6px', borderRadius: 3,
             }}>
               {authorProfile.role}
             </span>
           )}
           <span style={{
             fontFamily: "'DM Mono', monospace",
-            fontSize: 9, color: 'rgba(44,31,14,0.35)',
+            fontSize: 9, color: 'rgba(232,232,240,0.25)',
           }}>
             {relativeDate(comment.createdAt)}
           </span>
         </div>
         <div style={{
           fontFamily: "'Syne', sans-serif",
-          fontSize: 13, color: '#2c1f0e', lineHeight: 1.65,
-          marginBottom: 6,
+          fontSize: 13, color: 'rgba(232,232,240,0.8)', lineHeight: 1.65,
+          marginBottom: 7, wordBreak: 'break-word',
         }}>
           {comment.body}
         </div>
@@ -332,13 +390,14 @@ function CommentCard({ comment, authorProfile, onReply, isReply }) {
             style={{
               background: 'none', border: 'none', cursor: 'pointer',
               fontFamily: "'DM Mono', monospace",
-              fontSize: 9, color: '#c4a882', letterSpacing: '0.08em',
-              padding: 0,
+              fontSize: 9, color: 'rgba(232,232,240,0.25)',
+              letterSpacing: '0.08em', padding: 0,
+              transition: 'color 0.15s',
             }}
-            onMouseEnter={e => e.currentTarget.style.color = '#2c1f0e'}
-            onMouseLeave={e => e.currentTarget.style.color = '#c4a882'}
+            onMouseEnter={e => e.currentTarget.style.color = '#f5c842'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(232,232,240,0.25)'}
           >
-            ↩ Reply
+            ↩ reply
           </button>
         )}
       </div>
@@ -347,49 +406,47 @@ function CommentCard({ comment, authorProfile, onReply, isReply }) {
 }
 
 // ─────────────────────────────────────────────
-//  RatingCard (right column)
+//  RatingCard
 // ─────────────────────────────────────────────
 
 function RatingCard({ idea, onRate }) {
   const count = idea?.ratingCount || 0;
-  const avg = idea?.avgOverall || 0;
+  const avg   = idea?.avgOverall  || 0;
 
   return (
     <Card style={{ marginBottom: 12 }}>
       <CardLabel>Community verdict</CardLabel>
       {count === 0 ? (
-        <div style={{ textAlign: 'center', padding: '8px 0 16px' }}>
-          <div style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 15, fontWeight: 700, color: '#2c1f0e', marginBottom: 6,
-          }}>
-            Be the first to pin a verdict
-          </div>
+        <div style={{ textAlign: 'center', padding: '8px 0 14px' }}>
           <div style={{
             fontFamily: "'Syne', sans-serif",
-            fontSize: 12, color: '#7a5c3a', marginBottom: 14,
+            fontSize: 14, fontWeight: 700, color: '#e8e8f0', marginBottom: 6,
+          }}>
+            No verdicts yet
+          </div>
+          <div style={{
+            fontFamily: "'DM Mono', monospace",
+            fontSize: 11, color: 'rgba(232,232,240,0.35)', marginBottom: 14,
           }}>
             Rate the 5 pitch dimensions
           </div>
         </div>
       ) : (
         <div style={{ marginBottom: 14 }}>
-          {/* Big avg */}
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 14 }}>
             <span style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 40, fontWeight: 900, color: '#2c1f0e', lineHeight: 1,
+              fontFamily: "'Syne', sans-serif",
+              fontSize: 40, fontWeight: 900, color: '#f5c842', lineHeight: 1,
             }}>
               {avg.toFixed(1)}
             </span>
             <span style={{
               fontFamily: "'DM Mono', monospace",
-              fontSize: 10, color: '#c4a882',
+              fontSize: 10, color: 'rgba(232,232,240,0.35)',
             }}>
               / 5 · {count} {count === 1 ? 'rating' : 'ratings'}
             </span>
           </div>
-          {/* Parameter bars */}
           {RATING_PARAMS.map(p => (
             <div key={p.key} style={{ marginBottom: 8 }}>
               <div style={{
@@ -397,16 +454,16 @@ function RatingCard({ idea, onRate }) {
                 fontFamily: "'DM Mono', monospace",
                 fontSize: 8, letterSpacing: '0.1em', marginBottom: 3,
               }}>
-                <span style={{ color: '#7a5c3a' }}>{p.label}</span>
-                <span style={{ color: '#2c1f0e', fontWeight: 700 }}>
+                <span style={{ color: 'rgba(232,232,240,0.4)' }}>{p.label}</span>
+                <span style={{ color: '#f5c842', fontWeight: 700 }}>
                   {(idea[p.key] || 0).toFixed(1)}
                 </span>
               </div>
-              <div style={{ height: 4, background: '#f0e8d8', borderRadius: 2, overflow: 'hidden' }}>
+              <div style={{ height: 3, background: 'rgba(255,255,255,0.07)', borderRadius: 2, overflow: 'hidden' }}>
                 <div style={{
                   height: '100%',
                   width: `${((idea[p.key] || 0) / 5) * 100}%`,
-                  background: 'linear-gradient(90deg, #c4963a, #f5c842)',
+                  background: 'linear-gradient(90deg, #f5c842, #ff6b35)',
                   borderRadius: 2, transition: 'width 0.5s ease',
                 }} />
               </div>
@@ -418,13 +475,13 @@ function RatingCard({ idea, onRate }) {
         onClick={onRate}
         style={{
           width: '100%', padding: '10px 0',
-          background: '#2c1f0e', color: '#f5c842',
-          borderRadius: 10, border: 'none',
+          background: '#f5c842', color: '#0a0a0f',
+          borderRadius: 8, border: 'none',
           fontFamily: "'DM Mono', monospace",
-          fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
+          fontSize: 11, fontWeight: 800, letterSpacing: '0.08em',
           cursor: 'pointer', transition: 'opacity 0.15s',
         }}
-        onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+        onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
         onMouseLeave={e => e.currentTarget.style.opacity = '1'}
       >
         Rate this idea →
@@ -434,14 +491,14 @@ function RatingCard({ idea, onRate }) {
 }
 
 // ─────────────────────────────────────────────
-//  StatsCard (right column)
+//  StatsCard
 // ─────────────────────────────────────────────
 
 function StatsCard({ idea }) {
   const stats = [
-    { label: 'Views',      value: idea?.viewCount       || 0 },
-    { label: 'Ratings',    value: idea?.ratingCount     || 0 },
-    { label: 'Want in',    value: idea?.wantToWorkCount || 0 },
+    { label: 'Views',   value: idea?.viewCount       || 0, color: 'rgba(232,232,240,0.5)' },
+    { label: 'Ratings', value: idea?.ratingCount     || 0, color: '#f5c842'               },
+    { label: 'Want in', value: idea?.wantToWorkCount || 0, color: '#4ade80'               },
   ];
   return (
     <Card style={{ marginBottom: 12 }}>
@@ -449,15 +506,16 @@ function StatsCard({ idea }) {
         {stats.map(s => (
           <div key={s.label} style={{ textAlign: 'center' }}>
             <div style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 24, fontWeight: 900, color: '#2c1f0e',
+              fontFamily: "'Syne', sans-serif",
+              fontSize: 26, fontWeight: 900, color: s.color, lineHeight: 1,
             }}>
               {s.value}
             </div>
             <div style={{
               fontFamily: "'DM Mono', monospace",
               fontSize: 8, letterSpacing: '0.14em',
-              textTransform: 'uppercase', color: '#c4a882',
+              textTransform: 'uppercase', color: 'rgba(232,232,240,0.25)',
+              marginTop: 4,
             }}>
               {s.label}
             </div>
@@ -469,12 +527,12 @@ function StatsCard({ idea }) {
 }
 
 // ─────────────────────────────────────────────
-//  WantToWorkCard (right column)
+//  WantToWorkCard
 // ─────────────────────────────────────────────
 
 function WantToWorkCard({ ideaId, user, signIn, done, onDone }) {
-  const [note, setNote]         = useState('');
-  const [saving, setSaving]     = useState(false);
+  const [note, setNote]     = useState('');
+  const [saving, setSaving] = useState(false);
 
   async function handleSubmit() {
     if (!user || done) return;
@@ -494,20 +552,12 @@ function WantToWorkCard({ ideaId, user, signIn, done, onDone }) {
     return (
       <Card style={{ marginBottom: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{
-            width: 10, height: 10, borderRadius: '50%', background: '#2c8a4e', flexShrink: 0,
-          }} />
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#4ade80', flexShrink: 0, boxShadow: '0 0 8px #4ade8060' }} />
           <div>
-            <div style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 14, fontWeight: 700, color: '#2c1f0e',
-            }}>
+            <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 13, fontWeight: 700, color: '#4ade80' }}>
               You're interested ✓
             </div>
-            <div style={{
-              fontFamily: "'DM Mono', monospace",
-              fontSize: 9, color: '#7a5c3a', marginTop: 2,
-            }}>
+            <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, color: 'rgba(232,232,240,0.3)', marginTop: 2 }}>
               The founder has been notified.
             </div>
           </div>
@@ -520,21 +570,16 @@ function WantToWorkCard({ ideaId, user, signIn, done, onDone }) {
     return (
       <Card style={{ marginBottom: 12 }}>
         <CardLabel>Want to work on this?</CardLabel>
-        <div style={{
-          fontFamily: "'Syne', sans-serif",
-          fontSize: 13, color: '#7a5c3a', marginBottom: 14,
-        }}>
-          Sign in to express interest in this idea.
+        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'rgba(232,232,240,0.4)', marginBottom: 14 }}>
+          Sign in to express interest.
         </div>
         <button
           onClick={signIn}
           style={{
-            width: '100%', padding: '10px 0',
-            background: '#fff', borderRadius: 10,
-            border: '1.5px solid #e8dcc8',
+            width: '100%', padding: '10px 0', background: 'transparent',
+            borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)',
             fontFamily: "'DM Mono', monospace",
-            fontSize: 11, color: '#2c1f0e', fontWeight: 600,
-            cursor: 'pointer',
+            fontSize: 11, color: '#e8e8f0', fontWeight: 600, cursor: 'pointer',
           }}
         >
           Sign in with Google
@@ -554,18 +599,19 @@ function WantToWorkCard({ ideaId, user, signIn, done, onDone }) {
         rows={3}
         style={{
           width: '100%', boxSizing: 'border-box',
-          background: '#fdf6e8 !important', border: '1.5px solid #e8dcc8',
-          borderRadius: 10, outline: 'none', padding: '10px 12px',
+          background: 'rgba(255,255,255,0.04)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 8, outline: 'none', padding: '10px 12px',
           fontFamily: "'Syne', sans-serif", fontSize: 13,
-          color: '#2c1f0e', lineHeight: 1.6, resize: 'none', marginBottom: 10,
+          color: '#e8e8f0', lineHeight: 1.6, resize: 'none', marginBottom: 8,
         }}
-        onFocus={e => e.target.style.borderColor = '#2c1f0e'}
-        onBlur={e => e.target.style.borderColor = '#e8dcc8'}
+        onFocus={e => e.target.style.borderColor = 'rgba(245,200,66,0.4)'}
+        onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
       />
       <div style={{
         display: 'flex', justifyContent: 'flex-end',
         fontFamily: "'DM Mono', monospace", fontSize: 9,
-        color: '#c4a882', marginBottom: 10,
+        color: 'rgba(232,232,240,0.25)', marginBottom: 10,
       }}>
         {200 - note.length} left
       </div>
@@ -574,11 +620,12 @@ function WantToWorkCard({ ideaId, user, signIn, done, onDone }) {
         disabled={saving}
         style={{
           width: '100%', padding: '10px 0',
-          background: '#2c1f0e', color: '#f5c842',
-          borderRadius: 10, border: 'none',
+          background: '#4ade80', color: '#0a0a0f',
+          borderRadius: 8, border: 'none',
           fontFamily: "'DM Mono', monospace",
-          fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
+          fontSize: 11, fontWeight: 800, letterSpacing: '0.08em',
           cursor: saving ? 'wait' : 'pointer', opacity: saving ? 0.6 : 1,
+          transition: 'opacity 0.15s',
         }}
       >
         {saving ? 'Submitting…' : 'I want in →'}
@@ -588,20 +635,24 @@ function WantToWorkCard({ ideaId, user, signIn, done, onDone }) {
 }
 
 // ─────────────────────────────────────────────
-//  Shimmer loading
+//  Shimmer
 // ─────────────────────────────────────────────
 
 function Shimmer() {
   return (
-    <div className="fs-page">
-      <nav className="fs-nav" style={{ justifyContent: 'space-between' }}>
-        <div style={{ width: 120, height: 16, background: '#e8dcc8', borderRadius: 4 }} />
-        <div style={{ width: 80, height: 16, background: '#e8dcc8', borderRadius: 4 }} />
+    <div style={{ background: '#0a0a0f', minHeight: '100vh' }}>
+      <nav style={{
+        position: 'sticky', top: 0, zIndex: 50,
+        background: 'rgba(10,10,15,0.95)',
+        borderBottom: '1px solid rgba(245,200,66,0.07)',
+        padding: '14px 24px',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      }}>
+        <div style={{ width: 120, height: 14, background: 'rgba(255,255,255,0.06)', borderRadius: 4 }} />
+        <div style={{ width: 60, height: 14, background: 'rgba(255,255,255,0.06)', borderRadius: 4 }} />
       </nav>
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px' }}>
-        <div style={{ marginBottom: 32 }}>
-          <DiagramSkeleton />
-        </div>
+        <DiagramSkeleton />
       </div>
     </div>
   );
@@ -617,7 +668,6 @@ export default function IdeaPage() {
   const navigate                = useNavigate();
   const { showToast }           = useToast();
 
-  // ── Data ──────────────────────────────────
   const [idea,           setIdea]           = useState(null);
   const [author,         setAuthor]         = useState(null);
   const [comments,       setComments]       = useState([]);
@@ -626,15 +676,16 @@ export default function IdeaPage() {
   const [loading,        setLoading]        = useState(true);
   const [notFound,       setNotFound]       = useState(false);
 
-  // ── Interaction ───────────────────────────
   const [userRating,      setUserRating]      = useState(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [wantToWorkDone,  setWantToWorkDone]  = useState(false);
 
-  // ── Comments ──────────────────────────────
   const [newComment,  setNewComment]  = useState('');
   const [replyingTo,  setReplyingTo]  = useState(null);
-  const [replyBody,         setReplyBody]         = useState('');
+  const [replyBody,   setReplyBody]   = useState('');
+
+  // Track upvoted comment IDs for this session
+  const [upvotedIds,  setUpvotedIds]  = useState(new Set());
 
   // ── Fetch data ───────────────────────────
   useEffect(() => {
@@ -644,7 +695,6 @@ export default function IdeaPage() {
     async function load() {
       setLoading(true);
       try {
-        // 1. Idea
         const ideaSnap = await getDoc(doc(db, 'ideas', ideaId));
         if (!ideaSnap.exists() || ideaSnap.data().status !== 'published') {
           if (!cancelled) setNotFound(true);
@@ -653,32 +703,26 @@ export default function IdeaPage() {
         const ideaData = { id: ideaSnap.id, ...ideaSnap.data() };
         if (!cancelled) setIdea(ideaData);
 
-        // Set page title + OG meta
-        document.title = `${ideaData.ideaTitle || 'Idea'} — Founder Space | NoCap VC`;
-        setMeta('og:title',       `${ideaData.ideaTitle || 'Idea'} on Founder Space | NoCap VC`);
+        document.title = `${ideaData.ideaTitle || 'Idea'} — ORB1T | NoCap VC`;
+        setMeta('og:title',       `${ideaData.ideaTitle || 'Idea'} on ORB1T | NoCap VC`);
         setMeta('og:description', ideaData.tagline || ideaData.problemTitle || '');
         setMeta('og:image',       `/api/og/idea/${ideaId}`);
-        setMeta('og:image:width',  '1200');
-        setMeta('og:image:height', '630');
         setMeta('og:url',         window.location.href);
 
-        // 2. Author
         const authorSnap = await getDoc(doc(db, 'users', ideaData.authorUid));
         if (!cancelled && authorSnap.exists()) setAuthor({ uid: authorSnap.id, ...authorSnap.data() });
 
-        // 3. Comments (approved)
         const cQ = query(
           collection(db, 'comments'),
           where('ideaId', '==', ideaId),
           where('status', '==', 'approved'),
           orderBy('createdAt', 'desc'),
-          limit(20)
+          limit(50)
         );
         const cSnap = await getDocs(cQ);
         const fetchedComments = cSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         if (!cancelled) setComments(fetchedComments);
 
-        // 4. Comment author profiles (batch by unique uid)
         const authorUids = [...new Set(fetchedComments.map(c => c.authorUid).filter(Boolean))];
         const authorMap = {};
         await Promise.all(authorUids.map(async uid => {
@@ -687,7 +731,6 @@ export default function IdeaPage() {
         }));
         if (!cancelled) setCommentAuthors(authorMap);
 
-        // 5. Updates subcollection
         const uQ = query(
           collection(db, 'ideas', ideaId, 'updates'),
           orderBy('createdAt', 'desc'),
@@ -696,7 +739,6 @@ export default function IdeaPage() {
         const uSnap = await getDocs(uQ);
         if (!cancelled) setUpdates(uSnap.docs.map(d => ({ id: d.id, ...d.data() })));
 
-        // 6. Fire-and-forget view count
         updateDoc(doc(db, 'ideas', ideaId), { viewCount: increment(1) });
 
       } catch (err) {
@@ -711,12 +753,10 @@ export default function IdeaPage() {
     return () => { cancelled = true; };
   }, [ideaId]);
 
-  // ── User-specific data (after auth resolves) ──
   useEffect(() => {
     if (!user || !ideaId) return;
 
     async function loadUserData() {
-      // Check wantToWork
       const wtwQ = query(
         collection(db, 'wantToWork'),
         where('ideaId', '==', ideaId),
@@ -726,7 +766,6 @@ export default function IdeaPage() {
       const wtwSnap = await getDocs(wtwQ);
       if (!wtwSnap.empty) setWantToWorkDone(true);
 
-      // Check existing rating
       const rQ = query(
         collection(db, 'ratings'),
         where('ideaId', '==', ideaId),
@@ -749,13 +788,11 @@ export default function IdeaPage() {
         body: body.trim(),
         status: 'approved',
         parentId: parentId || null,
+        upvoteCount: 0,
         createdAt: serverTimestamp(),
       };
       const ref = await addDoc(collection(db, 'comments'), data);
-      const optimistic = {
-        id: ref.id, ...data,
-        createdAt: { seconds: Date.now() / 1000 },
-      };
+      const optimistic = { id: ref.id, ...data, createdAt: { seconds: Date.now() / 1000 } };
       if (!parentId) {
         setComments(prev => [optimistic, ...prev]);
         setCommentAuthors(prev => ({
@@ -771,24 +808,39 @@ export default function IdeaPage() {
     } catch (e) { console.error(e); }
   }, [user, ideaId, userProfile]);
 
+  // ── Upvote ───────────────────────────────
+  const handleUpvote = useCallback(async (commentId) => {
+    if (!user) return;
+    const isUpvoted = upvotedIds.has(commentId);
+    setUpvotedIds(prev => {
+      const next = new Set(prev);
+      isUpvoted ? next.delete(commentId) : next.add(commentId);
+      return next;
+    });
+    setComments(prev => prev.map(c =>
+      c.id === commentId
+        ? { ...c, upvoteCount: Math.max(0, (c.upvoteCount || 0) + (isUpvoted ? -1 : 1)) }
+        : c
+    ));
+    try {
+      await updateDoc(doc(db, 'comments', commentId), {
+        upvoteCount: increment(isUpvoted ? -1 : 1),
+      });
+    } catch (e) { console.error(e); }
+  }, [user, upvotedIds]);
+
   // ── Share ────────────────────────────────
   async function handleShare() {
     const url = window.location.href;
     if (navigator.share) {
-      try {
-        await navigator.share({ title: idea?.ideaTitle, text: idea?.tagline, url });
-      } catch {
-        // User cancelled — no-op
-      }
+      try { await navigator.share({ title: idea?.ideaTitle, text: idea?.tagline, url }); } catch {}
     } else {
       await navigator.clipboard.writeText(url);
-      showToast('Link copied to clipboard!', 'success');
+      showToast('Link copied!', 'success');
     }
-    // Fire-and-forget share count
     if (ideaId) updateDoc(doc(db, 'ideas', ideaId), { shareCount: increment(1) });
   }
 
-  // ── Rating submitted ─────────────────────
   function handleRatingSubmitted(newAggregates) {
     setIdea(prev => prev ? { ...prev, ...newAggregates } : prev);
     setShowRatingModal(false);
@@ -796,58 +848,81 @@ export default function IdeaPage() {
   }
 
   // ─────────────────────────────────────────
-  //  Render states
+  //  Render
   // ─────────────────────────────────────────
 
   if (loading) return <Shimmer />;
 
   if (notFound) {
     return (
-      <div className="fs-page">
-        <nav className="fs-nav">
-          <Link to="/founder-space" className="fs-nav-logo">
-            <span className="fs-nav-dot" />Founder Space
+      <div style={{ background: '#0a0a0f', minHeight: '100vh' }}>
+        <nav style={{
+          background: 'rgba(10,10,15,0.95)',
+          borderBottom: '1px solid rgba(245,200,66,0.07)',
+          padding: '14px 24px',
+        }}>
+          <Link to="/founder-space/feed" style={{
+            fontFamily: "'Syne', sans-serif", fontSize: 14, fontWeight: 800,
+            color: '#e8e8f0', textDecoration: 'none', letterSpacing: '-0.02em',
+          }}>
+            ORB<span style={{ color: '#f5c842' }}>1</span>T
           </Link>
         </nav>
         <div style={{ maxWidth: 480, margin: '80px auto', padding: '0 24px', textAlign: 'center' }}>
           <div style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 36, fontWeight: 900, color: '#2c1f0e', marginBottom: 12,
+            fontFamily: "'Syne', sans-serif",
+            fontSize: 32, fontWeight: 900, color: '#e8e8f0', marginBottom: 12,
           }}>
-            Board not found.
+            Signal not found.
           </div>
-          <p style={{ fontFamily: "'Syne', sans-serif", fontSize: 14, color: '#7a5c3a', marginBottom: 24 }}>
+          <p style={{ fontFamily: "'DM Mono', monospace", fontSize: 12, color: 'rgba(232,232,240,0.35)', marginBottom: 24 }}>
             This idea may not be published yet, or the link is wrong.
           </p>
-          <Link to="/founder-space" className="fs-btn-primary">← Back to Founder Space</Link>
+          <Link to="/founder-space/feed" style={{
+            display: 'inline-block', padding: '10px 24px', borderRadius: 8,
+            background: '#f5c842', color: '#0a0a0f',
+            fontFamily: "'DM Mono', monospace", fontSize: 11, fontWeight: 800,
+            textDecoration: 'none',
+          }}>← Back to feed</Link>
         </div>
       </div>
     );
   }
 
-  const isAuthor = user?.uid === idea?.authorUid;
-
-  // Group comments: top-level + replies
-  const topComments = comments.filter(c => !c.parentId);
+  const isAuthor    = user?.uid === idea?.authorUid;
+  const topComments = comments
+    .filter(c => !c.parentId)
+    .sort((a, b) => (b.upvoteCount || 0) - (a.upvoteCount || 0));
   const replies     = comments.filter(c => c.parentId);
 
   return (
-    <div className="fs-page" style={{ paddingBottom: 60 }}>
+    <div style={{ background: '#0a0a0f', minHeight: '100vh', paddingBottom: 60 }}>
 
       {/* ── Sticky nav ─────────────────────── */}
-      <nav className="fs-nav" style={{ position: 'sticky', top: 0, zIndex: 50 }}>
-        <Link to="/founder-space/feed" className="fs-nav-logo">
-          <span className="fs-nav-dot" />Founder Space
+      <nav style={{
+        position: 'sticky', top: 0, zIndex: 50,
+        background: 'rgba(10,10,15,0.92)',
+        backdropFilter: 'blur(12px)',
+        borderBottom: '1px solid rgba(245,200,66,0.07)',
+        padding: '14px 24px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      }}>
+        <Link to="/founder-space/feed" style={{
+          fontFamily: "'Syne', sans-serif", fontSize: 14, fontWeight: 800,
+          color: '#e8e8f0', textDecoration: 'none', letterSpacing: '-0.02em',
+        }}>
+          ORB<span style={{ color: '#f5c842' }}>1</span>T
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {isAuthor && (
             <button
               onClick={() => navigate(`/founder-space/submit?ideaId=${ideaId}`)}
               style={{
-                padding: '7px 14px', borderRadius: 8,
-                border: '1.5px solid #e8dcc8', background: '#fff',
+                padding: '7px 14px', borderRadius: 7,
+                border: '1px solid rgba(255,255,255,0.12)',
+                background: 'transparent',
                 fontFamily: "'DM Mono', monospace",
-                fontSize: 10, color: '#2c1f0e', cursor: 'pointer',
+                fontSize: 10, color: 'rgba(232,232,240,0.7)', cursor: 'pointer',
               }}
             >
               Edit board
@@ -856,14 +931,14 @@ export default function IdeaPage() {
           <button
             onClick={handleShare}
             style={{
-              padding: '7px 14px', borderRadius: 8,
-              border: 'none', background: '#2c1f0e',
+              padding: '7px 16px', borderRadius: 7,
+              border: 'none', background: '#f5c842',
               fontFamily: "'DM Mono', monospace",
-              fontSize: 10, fontWeight: 700, color: '#f5c842',
-              cursor: 'pointer',
+              fontSize: 10, fontWeight: 800, color: '#0a0a0f',
+              cursor: 'pointer', letterSpacing: '0.04em',
             }}
           >
-            Share
+            Share ↗
           </button>
         </div>
       </nav>
@@ -882,12 +957,12 @@ export default function IdeaPage() {
           <div style={{ flex: 1, minWidth: 0 }}>
 
             {/* Updates */}
-            <Card style={{ marginBottom: 16 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#e8391e' }} />
+            <Card style={{ marginBottom: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#f87171', boxShadow: '0 0 8px #f8717160' }} />
                 <span style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: 17, fontWeight: 700, color: '#2c1f0e',
+                  fontFamily: "'Syne', sans-serif",
+                  fontSize: 15, fontWeight: 800, color: '#e8e8f0', letterSpacing: '-0.01em',
                 }}>
                   Investigation updates
                 </span>
@@ -903,8 +978,9 @@ export default function IdeaPage() {
               {updates.length === 0 ? (
                 <div style={{
                   fontFamily: "'DM Mono', monospace",
-                  fontSize: 10, color: '#c4a882', letterSpacing: '0.08em',
-                  textAlign: 'center', padding: '16px 0',
+                  fontSize: 10, color: 'rgba(232,232,240,0.2)',
+                  textAlign: 'center', padding: '14px 0',
+                  letterSpacing: '0.08em',
                 }}>
                   No updates yet.
                 </div>
@@ -915,103 +991,137 @@ export default function IdeaPage() {
 
             {/* Comments */}
             <Card>
-              <div style={{ marginBottom: 16 }}>
+              {/* Header */}
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18,
+              }}>
                 <span style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: 17, fontWeight: 700, color: '#2c1f0e',
+                  fontFamily: "'Syne', sans-serif",
+                  fontSize: 15, fontWeight: 800, color: '#e8e8f0', letterSpacing: '-0.01em',
                 }}>
                   Community notes
                 </span>
+                {topComments.length > 0 && (
+                  <span style={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: 9, color: '#f5c842',
+                    background: 'rgba(245,200,66,0.1)',
+                    padding: '2px 7px', borderRadius: 4, fontWeight: 700,
+                  }}>
+                    {topComments.length}
+                  </span>
+                )}
                 <span style={{
                   fontFamily: "'DM Mono', monospace",
-                  fontSize: 9, color: '#c4a882',
-                  marginLeft: 10, letterSpacing: '0.1em',
+                  fontSize: 8, color: 'rgba(232,232,240,0.2)',
+                  marginLeft: 4, letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
                 }}>
-                  {topComments.length}
+                  sorted by top
                 </span>
               </div>
 
-              {/* Comments list */}
+              {/* Comment list */}
               {topComments.map(c => (
                 <React.Fragment key={c.id}>
-                  <CommentCard
-                    comment={c}
-                    authorProfile={commentAuthors[c.authorUid]}
-                    onReply={id => { setReplyingTo(id); setReplyBody(''); }}
-                    isReply={false}
-                  />
-                  {/* Reply form */}
-                  {replyingTo === c.id && (
-                    <div style={{ paddingLeft: 44, marginBottom: 12 }}>
-                      <textarea
-                        value={replyBody}
-                        onChange={e => setReplyBody(e.target.value)}
-                        placeholder="Write a reply…"
-                        maxLength={500} rows={2}
-                        style={{
-                          width: '100%', boxSizing: 'border-box',
-                          background: '#fdf6e8 !important',
-                          border: '1.5px solid #e8dcc8', borderRadius: 8,
-                          outline: 'none', padding: '8px 10px',
-                          fontFamily: "'Syne', sans-serif",
-                          fontSize: 13, color: '#2c1f0e', lineHeight: 1.6, resize: 'none',
-                        }}
-                        autoFocus
-                      />
-                      <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
-                        <button
-                          onClick={() => handleCommentSubmit(replyBody, c.id)}
-                          disabled={!replyBody.trim()}
-                          style={{
-                            padding: '6px 14px', borderRadius: 6, border: 'none',
-                            background: replyBody.trim() ? '#2c1f0e' : '#e8dcc8',
-                            color: replyBody.trim() ? '#f5c842' : '#c4a882',
-                            fontFamily: "'DM Mono', monospace",
-                            fontSize: 10, fontWeight: 700, cursor: 'pointer',
-                          }}
-                        >
-                          Reply
-                        </button>
-                        <button
-                          onClick={() => setReplyingTo(null)}
-                          style={{
-                            padding: '6px 14px', borderRadius: 6,
-                            border: '1px solid #e8dcc8', background: '#fff',
-                            fontFamily: "'DM Mono', monospace",
-                            fontSize: 10, color: '#7a5c3a', cursor: 'pointer',
-                          }}
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                  {/* Nested replies */}
-                  {replies.filter(r => r.parentId === c.id).map(r => (
+                  <div style={{
+                    paddingBottom: 12, marginBottom: 8,
+                    borderBottom: '1px solid rgba(255,255,255,0.04)',
+                  }}>
                     <CommentCard
-                      key={r.id}
-                      comment={r}
-                      authorProfile={commentAuthors[r.authorUid]}
-                      onReply={() => {}}
-                      isReply={true}
+                      comment={c}
+                      authorProfile={commentAuthors[c.authorUid]}
+                      onReply={id => { setReplyingTo(id); setReplyBody(''); }}
+                      isReply={false}
+                      isUpvoted={upvotedIds.has(c.id)}
+                      onUpvote={handleUpvote}
                     />
-                  ))}
-                  <div style={{ height: 1, background: 'rgba(44,31,14,0.05)', marginBottom: 14 }} />
+
+                    {/* Reply input */}
+                    {replyingTo === c.id && (
+                      <div style={{ paddingLeft: 66, marginTop: 10 }}>
+                        <textarea
+                          value={replyBody}
+                          onChange={e => setReplyBody(e.target.value)}
+                          placeholder="Write a reply…"
+                          maxLength={500} rows={2}
+                          autoFocus
+                          style={{
+                            width: '100%', boxSizing: 'border-box',
+                            background: 'rgba(255,255,255,0.04)',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            borderRadius: 8,
+                            outline: 'none', padding: '8px 10px',
+                            fontFamily: "'Syne', sans-serif",
+                            fontSize: 13, color: '#e8e8f0', lineHeight: 1.6, resize: 'none',
+                          }}
+                          onFocus={e => e.target.style.borderColor = 'rgba(245,200,66,0.35)'}
+                          onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
+                        />
+                        <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+                          <button
+                            onClick={() => handleCommentSubmit(replyBody, c.id)}
+                            disabled={!replyBody.trim()}
+                            style={{
+                              padding: '6px 14px', borderRadius: 6, border: 'none',
+                              background: replyBody.trim() ? '#f5c842' : 'rgba(255,255,255,0.07)',
+                              color: replyBody.trim() ? '#0a0a0f' : 'rgba(232,232,240,0.3)',
+                              fontFamily: "'DM Mono', monospace",
+                              fontSize: 10, fontWeight: 700, cursor: 'pointer',
+                            }}
+                          >
+                            Reply
+                          </button>
+                          <button
+                            onClick={() => setReplyingTo(null)}
+                            style={{
+                              padding: '6px 14px', borderRadius: 6,
+                              border: '1px solid rgba(255,255,255,0.1)',
+                              background: 'transparent',
+                              fontFamily: "'DM Mono', monospace",
+                              fontSize: 10, color: 'rgba(232,232,240,0.4)', cursor: 'pointer',
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Nested replies */}
+                    {replies.filter(r => r.parentId === c.id).length > 0 && (
+                      <div style={{ marginTop: 8 }}>
+                        {replies.filter(r => r.parentId === c.id).map(r => (
+                          <div key={r.id} style={{ marginTop: 6 }}>
+                            <CommentCard
+                              comment={r}
+                              authorProfile={commentAuthors[r.authorUid]}
+                              onReply={() => {}}
+                              isReply={true}
+                              isUpvoted={upvotedIds.has(r.id)}
+                              onUpvote={handleUpvote}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </React.Fragment>
               ))}
 
               {topComments.length === 0 && (
                 <div style={{
                   fontFamily: "'DM Mono', monospace",
-                  fontSize: 10, color: '#c4a882',
+                  fontSize: 10, color: 'rgba(232,232,240,0.2)',
                   textAlign: 'center', padding: '16px 0 8px',
+                  letterSpacing: '0.08em',
                 }}>
                   No notes yet — be the first.
                 </div>
               )}
 
               {/* Add comment */}
-              <div style={{ marginTop: 16, borderTop: '1px solid rgba(44,31,14,0.07)', paddingTop: 16 }}>
+              <div style={{ marginTop: 16, borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 16 }}>
                 {user ? (
                   <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                     <Avatar profile={userProfile} size={30} />
@@ -1023,18 +1133,19 @@ export default function IdeaPage() {
                         maxLength={500} rows={3}
                         style={{
                           width: '100%', boxSizing: 'border-box',
-                          background: '#fdf6e8 !important',
-                          border: '1.5px solid #e8dcc8', borderRadius: 10,
+                          background: 'rgba(255,255,255,0.04)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: 10,
                           outline: 'none', padding: '10px 12px',
                           fontFamily: "'Syne', sans-serif",
-                          fontSize: 13, color: '#2c1f0e',
+                          fontSize: 13, color: '#e8e8f0',
                           lineHeight: 1.6, resize: 'none',
                         }}
-                        onFocus={e => e.target.style.borderColor = '#2c1f0e'}
-                        onBlur={e => e.target.style.borderColor = '#e8dcc8'}
+                        onFocus={e => e.target.style.borderColor = 'rgba(245,200,66,0.35)'}
+                        onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                       />
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, alignItems: 'center' }}>
-                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, color: '#c4a882' }}>
+                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, color: 'rgba(232,232,240,0.2)' }}>
                           {500 - newComment.length} left
                         </span>
                         <button
@@ -1042,11 +1153,12 @@ export default function IdeaPage() {
                           disabled={!newComment.trim()}
                           style={{
                             padding: '8px 16px', borderRadius: 8, border: 'none',
-                            background: newComment.trim() ? '#2c1f0e' : '#e8dcc8',
-                            color: newComment.trim() ? '#f5c842' : '#c4a882',
+                            background: newComment.trim() ? '#f5c842' : 'rgba(255,255,255,0.07)',
+                            color: newComment.trim() ? '#0a0a0f' : 'rgba(232,232,240,0.25)',
                             fontFamily: "'DM Mono', monospace",
                             fontSize: 11, fontWeight: 700, letterSpacing: '0.06em',
                             cursor: newComment.trim() ? 'pointer' : 'not-allowed',
+                            transition: 'all 0.15s',
                           }}
                         >
                           Add note →
@@ -1056,19 +1168,16 @@ export default function IdeaPage() {
                   </div>
                 ) : (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <span style={{
-                      fontFamily: "'Syne', sans-serif",
-                      fontSize: 13, color: '#7a5c3a',
-                    }}>
+                    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, color: 'rgba(232,232,240,0.35)' }}>
                       Sign in to add a note
                     </span>
                     <button
                       onClick={signIn}
                       style={{
                         padding: '8px 16px', borderRadius: 8, border: 'none',
-                        background: '#2c1f0e', color: '#f5c842',
+                        background: '#f5c842', color: '#0a0a0f',
                         fontFamily: "'DM Mono', monospace",
-                        fontSize: 10, fontWeight: 700, cursor: 'pointer',
+                        fontSize: 10, fontWeight: 800, cursor: 'pointer',
                       }}
                     >
                       Sign in →
@@ -1090,15 +1199,15 @@ export default function IdeaPage() {
                   <Avatar profile={author} size={44} />
                   <div>
                     <div style={{
-                      fontFamily: "'Playfair Display', serif",
-                      fontSize: 15, fontWeight: 700, color: '#2c1f0e',
+                      fontFamily: "'Syne', sans-serif",
+                      fontSize: 14, fontWeight: 800, color: '#e8e8f0',
                     }}>
                       {author.name}
                     </div>
                     {author.title && (
                       <div style={{
                         fontFamily: "'DM Mono', monospace",
-                        fontSize: 10, color: '#7a5c3a', marginTop: 2,
+                        fontSize: 10, color: 'rgba(232,232,240,0.4)', marginTop: 2,
                       }}>
                         {author.title}
                       </div>
@@ -1106,7 +1215,7 @@ export default function IdeaPage() {
                     {author.location && (
                       <div style={{
                         fontFamily: "'DM Mono', monospace",
-                        fontSize: 9, color: '#c4a882', marginTop: 2,
+                        fontSize: 9, color: 'rgba(232,232,240,0.25)', marginTop: 2,
                       }}>
                         {author.location}
                       </div>
@@ -1115,8 +1224,8 @@ export default function IdeaPage() {
                 </div>
                 {author.whatImBuilding && (
                   <div style={{
-                    fontFamily: "'Syne', sans-serif",
-                    fontSize: 12, color: '#7a5c3a', lineHeight: 1.6,
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: 11, color: 'rgba(232,232,240,0.45)', lineHeight: 1.6,
                     marginBottom: 12,
                   }}>
                     {author.whatImBuilding}
@@ -1127,14 +1236,21 @@ export default function IdeaPage() {
                   style={{
                     display: 'block', textAlign: 'center',
                     padding: '8px 0', borderRadius: 8,
-                    border: '1.5px solid #e8dcc8', background: '#fff',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    background: 'transparent',
                     fontFamily: "'DM Mono', monospace",
-                    fontSize: 10, fontWeight: 600, color: '#2c1f0e',
+                    fontSize: 10, fontWeight: 600, color: 'rgba(232,232,240,0.7)',
                     textDecoration: 'none',
-                    transition: 'border-color 0.15s',
+                    transition: 'border-color 0.15s, color 0.15s',
                   }}
-                  onMouseEnter={e => e.currentTarget.style.borderColor = '#2c1f0e'}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = '#e8dcc8'}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.borderColor = 'rgba(245,200,66,0.4)';
+                    e.currentTarget.style.color = '#f5c842';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)';
+                    e.currentTarget.style.color = 'rgba(232,232,240,0.7)';
+                  }}
                 >
                   View full profile →
                 </Link>
