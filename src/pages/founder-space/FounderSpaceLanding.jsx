@@ -523,53 +523,59 @@ export default function FounderSpaceLanding() {
       {/* ══════════════════════════════════════
           WHAT YOU GET ACCESS TO
       ══════════════════════════════════════ */}
-      <section style={{ background: '#fdf6e8', padding: '100px 48px' }}>
+      <section style={{ background: '#0a0a0f', padding: '100px 48px', borderTop: '1px solid rgba(245,200,66,0.07)' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 60 }}>
             <div style={{
               fontFamily: "'DM Mono', monospace",
               fontSize: 9, letterSpacing: '0.26em', textTransform: 'uppercase',
-              color: '#c4963a', marginBottom: 12,
+              color: '#f5c842', marginBottom: 12,
             }}>
               Members get access to
             </div>
             <h2 style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "'Syne', sans-serif",
               fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 900,
-              color: '#2c1f0e', margin: 0, letterSpacing: '-0.02em',
+              color: '#e8e8f0', margin: 0, letterSpacing: '-0.025em',
             }}>
               A platform built for people<br />who are actually building.
             </h2>
           </div>
 
           <div className="feature-grid" style={{
-            display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20,
+            display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16,
           }}>
             {MEMBER_BENEFITS.map((b, i) => (
               <div key={i} style={{
-                background: '#fff', borderRadius: 20,
-                border: '1px solid rgba(44,31,14,0.08)',
-                padding: '32px 28px',
-                position: 'relative',
+                background: '#13131f', borderRadius: 16,
+                border: '1px solid rgba(245,200,66,0.08)',
+                padding: '28px 24px',
+                position: 'relative', overflow: 'hidden',
               }}>
-                {/* Tack */}
+                {/* Top accent */}
                 <div style={{
-                  position: 'absolute', top: 20, right: 20,
-                  width: 10, height: 10, borderRadius: '50%',
-                  background: b.tack,
-                  boxShadow: `0 0 12px ${b.tack}55`,
+                  position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+                  background: `linear-gradient(90deg, ${b.tack}, transparent)`,
+                  opacity: 0.6,
                 }} />
-                <div style={{ fontSize: 28, marginBottom: 16 }}>{b.icon}</div>
+                {/* Tack dot */}
+                <div style={{
+                  position: 'absolute', top: 18, right: 18,
+                  width: 8, height: 8, borderRadius: '50%',
+                  background: b.tack,
+                  boxShadow: `0 0 10px ${b.tack}70`,
+                }} />
+                <div style={{ fontSize: 26, marginBottom: 14 }}>{b.icon}</div>
                 <h3 style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: 20, fontWeight: 700, color: '#2c1f0e',
-                  margin: '0 0 10px', lineHeight: 1.3,
+                  fontFamily: "'Syne', sans-serif",
+                  fontSize: 18, fontWeight: 800, color: '#e8e8f0',
+                  margin: '0 0 8px', lineHeight: 1.25, letterSpacing: '-0.01em',
                 }}>
                   {b.title}
                 </h3>
                 <p style={{
-                  fontFamily: "'Syne', sans-serif",
-                  fontSize: 14, color: '#7a5c3a',
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: 12, color: 'rgba(232,232,240,0.45)',
                   lineHeight: 1.65, margin: 0,
                 }}>
                   {b.desc}
@@ -693,11 +699,11 @@ export default function FounderSpaceLanding() {
       {/* ══════════════════════════════════════
           APPLICATION FORM
       ══════════════════════════════════════ */}
-      <section ref={formRef} style={{ background: '#fdf6e8', padding: '100px 48px' }}>
-        <div style={{ maxWidth: 680, margin: '0 auto' }}>
+      <section ref={formRef} style={{ background: '#0a0a0f', padding: '100px 48px', borderTop: '1px solid rgba(232,57,30,0.1)' }}>
+        <div style={{ maxWidth: 620, margin: '0 auto' }}>
 
           {/* Header */}
-          <div style={{ marginBottom: 48, textAlign: 'center' }}>
+          <div style={{ marginBottom: 44, textAlign: 'center' }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 7,
               background: 'rgba(232,57,30,0.08)',
@@ -716,16 +722,16 @@ export default function FounderSpaceLanding() {
             </div>
 
             <h2 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(30px, 4vw, 46px)', fontWeight: 900,
-              color: '#2c1f0e', margin: '0 0 14px', letterSpacing: '-0.02em',
+              fontFamily: "'Syne', sans-serif",
+              fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 900,
+              color: '#e8e8f0', margin: '0 0 14px', letterSpacing: '-0.025em',
               lineHeight: 1.1,
             }}>
               Apply for access.
             </h2>
             <p style={{
-              fontFamily: "'Syne', sans-serif",
-              fontSize: 16, color: '#7a5c3a',
+              fontFamily: "'DM Mono', monospace",
+              fontSize: 13, color: 'rgba(232,232,240,0.4)',
               lineHeight: 1.65, margin: '0 0 8px',
             }}>
               We read every application personally. Be honest, be specific,
@@ -734,7 +740,7 @@ export default function FounderSpaceLanding() {
             {waitlistCount !== null && (
               <div style={{
                 fontFamily: "'DM Mono', monospace",
-                fontSize: 10, color: '#c4a882',
+                fontSize: 10, color: 'rgba(232,232,240,0.25)',
                 letterSpacing: '0.06em',
               }}>
                 {waitlistCount}+ applications reviewed so far.
@@ -743,32 +749,31 @@ export default function FounderSpaceLanding() {
           </div>
 
           {submitted ? (
-            /* ── Success state ───────────────────────── */
             <div style={{
-              background: '#fff', borderRadius: 20,
-              border: '1px solid rgba(44,31,14,0.08)',
-              padding: '60px 40px', textAlign: 'center',
-              boxShadow: '0 12px 48px rgba(44,31,14,0.08)',
+              background: '#13131f', borderRadius: 16,
+              border: '1px solid rgba(74,222,128,0.2)',
+              padding: '52px 36px', textAlign: 'center',
             }}>
               <div style={{
-                width: 64, height: 64, borderRadius: '50%',
-                background: 'rgba(44,138,78,0.1)',
+                width: 56, height: 56, borderRadius: '50%',
+                background: 'rgba(74,222,128,0.1)',
+                border: '1px solid rgba(74,222,128,0.3)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                margin: '0 auto 24px',
-                fontSize: 28,
+                margin: '0 auto 20px',
+                fontSize: 24, color: '#4ade80',
               }}>
                 ✓
               </div>
               <h3 style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: 28, fontWeight: 900,
-                color: '#2c1f0e', margin: '0 0 12px',
+                fontFamily: "'Syne', sans-serif",
+                fontSize: 26, fontWeight: 900,
+                color: '#e8e8f0', margin: '0 0 10px', letterSpacing: '-0.02em',
               }}>
                 Application received.
               </h3>
               <p style={{
-                fontFamily: "'Syne', sans-serif",
-                fontSize: 15, color: '#7a5c3a',
+                fontFamily: "'DM Mono', monospace",
+                fontSize: 12, color: 'rgba(232,232,240,0.4)',
                 lineHeight: 1.65, margin: '0 0 24px',
               }}>
                 We review every application personally. You'll hear from us within
@@ -776,20 +781,18 @@ export default function FounderSpaceLanding() {
               </p>
               <Link to="/founder-space/feed" style={{
                 fontFamily: "'DM Mono', monospace",
-                fontSize: 11, fontWeight: 600,
-                color: '#c4963a', textDecoration: 'none',
+                fontSize: 11, fontWeight: 700,
+                color: '#f5c842', textDecoration: 'none',
                 letterSpacing: '0.08em',
               }}>
                 Browse the investigation board →
               </Link>
             </div>
           ) : (
-            /* ── Application form ────────────────────── */
             <div style={{
-              background: '#fff', borderRadius: 20,
-              border: '1px solid rgba(44,31,14,0.08)',
-              padding: '48px 40px',
-              boxShadow: '0 12px 48px rgba(44,31,14,0.08)',
+              background: '#13131f', borderRadius: 16,
+              border: '1px solid rgba(245,200,66,0.08)',
+              padding: '40px 36px',
             }}>
               <form onSubmit={handleSubmit}>
                 {QUESTIONS.map((q, i) => (
@@ -799,16 +802,16 @@ export default function FounderSpaceLanding() {
                       fontFamily: "'DM Mono', monospace",
                       fontSize: 10, fontWeight: 700,
                       letterSpacing: '0.16em', textTransform: 'uppercase',
-                      color: '#2c1f0e', marginBottom: 4,
+                      color: '#f5c842', marginBottom: 4,
                     }}>
                       {String(i + 1).padStart(2, '0')} — {q.label}
-                      {q.required && <span style={{ color: '#c4963a', marginLeft: 4 }}>*</span>}
+                      {q.required && <span style={{ color: '#f87171', marginLeft: 4 }}>*</span>}
                     </label>
                     {q.subtitle && (
                       <div style={{
-                        fontFamily: "'Syne', sans-serif",
-                        fontSize: 12, color: '#b09878',
-                        marginBottom: 8, fontStyle: 'italic',
+                        fontFamily: "'DM Mono', monospace",
+                        fontSize: 11, color: 'rgba(232,232,240,0.3)',
+                        marginBottom: 8,
                       }}>
                         {q.subtitle}
                       </div>
@@ -821,20 +824,20 @@ export default function FounderSpaceLanding() {
                         maxLength={q.maxLength}
                         rows={4}
                         style={{
-                          width: '100%', padding: '12px 16px',
-                          background: '#fdf6e8',
+                          width: '100%', padding: '12px 14px',
+                          background: 'rgba(255,255,255,0.04)',
                           border: errors[q.id]
-                            ? '1.5px solid #c0392b'
-                            : '1.5px solid rgba(44,31,14,0.12)',
-                          borderRadius: 10, outline: 'none',
-                          fontFamily: "'Syne', sans-serif",
-                          fontSize: 14, color: '#2c1f0e',
+                            ? '1.5px solid #f87171'
+                            : '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: 8, outline: 'none',
+                          fontFamily: "'DM Mono', monospace",
+                          fontSize: 13, color: '#e8e8f0',
                           lineHeight: 1.6, resize: 'vertical',
                           boxSizing: 'border-box',
                           transition: 'border-color 0.15s',
                         }}
-                        onFocus={e => e.target.style.borderColor = '#c4963a'}
-                        onBlur={e => e.target.style.borderColor = errors[q.id] ? '#c0392b' : 'rgba(44,31,14,0.12)'}
+                        onFocus={e => e.target.style.borderColor = 'rgba(245,200,66,0.4)'}
+                        onBlur={e => e.target.style.borderColor = errors[q.id] ? '#f87171' : 'rgba(255,255,255,0.1)'}
                       />
                     ) : (
                       <input
@@ -844,54 +847,44 @@ export default function FounderSpaceLanding() {
                         placeholder={q.placeholder}
                         maxLength={q.maxLength}
                         style={{
-                          width: '100%', padding: '12px 16px',
-                          background: '#fdf6e8',
+                          width: '100%', padding: '12px 14px',
+                          background: 'rgba(255,255,255,0.04)',
                           border: errors[q.id]
-                            ? '1.5px solid #c0392b'
-                            : '1.5px solid rgba(44,31,14,0.12)',
-                          borderRadius: 10, outline: 'none',
-                          fontFamily: "'Syne', sans-serif",
-                          fontSize: 14, color: '#2c1f0e',
+                            ? '1.5px solid #f87171'
+                            : '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: 8, outline: 'none',
+                          fontFamily: "'DM Mono', monospace",
+                          fontSize: 13, color: '#e8e8f0',
                           boxSizing: 'border-box',
                           transition: 'border-color 0.15s',
                         }}
-                        onFocus={e => e.target.style.borderColor = '#c4963a'}
-                        onBlur={e => e.target.style.borderColor = errors[q.id] ? '#c0392b' : 'rgba(44,31,14,0.12)'}
+                        onFocus={e => e.target.style.borderColor = 'rgba(245,200,66,0.4)'}
+                        onBlur={e => e.target.style.borderColor = errors[q.id] ? '#f87171' : 'rgba(255,255,255,0.1)'}
                       />
                     )}
-                    <div style={{
-                      display: 'flex', justifyContent: 'space-between',
-                      marginTop: 4,
-                    }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
                       {errors[q.id] ? (
-                        <span style={{
-                          fontFamily: "'DM Mono', monospace",
-                          fontSize: 10, color: '#c0392b',
-                        }}>
+                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, color: '#f87171' }}>
                           {errors[q.id]}
                         </span>
                       ) : <span />}
-                      <span style={{
-                        fontFamily: "'DM Mono', monospace",
-                        fontSize: 9, color: '#c4a882',
-                      }}>
+                      <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, color: 'rgba(232,232,240,0.2)' }}>
                         {(form[q.id] || '').length}/{q.maxLength}
                       </span>
                     </div>
                   </div>
                 ))}
 
-                {/* Submit */}
                 <button
                   type="submit"
                   disabled={submitting}
                   style={{
-                    width: '100%', padding: '16px',
-                    borderRadius: 12, border: 'none',
-                    background: submitting ? 'rgba(44,31,14,0.4)' : '#2c1f0e',
-                    color: '#f5c842',
+                    width: '100%', padding: '14px',
+                    borderRadius: 10, border: 'none',
+                    background: submitting ? 'rgba(245,200,66,0.4)' : '#f5c842',
+                    color: '#0a0a0f',
                     fontFamily: "'DM Mono', monospace",
-                    fontSize: 13, fontWeight: 700, letterSpacing: '0.08em',
+                    fontSize: 13, fontWeight: 800, letterSpacing: '0.08em',
                     cursor: submitting ? 'wait' : 'pointer',
                     transition: 'opacity 0.15s',
                     marginTop: 8,
@@ -901,9 +894,9 @@ export default function FounderSpaceLanding() {
                 </button>
 
                 <p style={{
-                  fontFamily: "'Syne', sans-serif",
-                  fontSize: 12, color: '#c4a882',
-                  textAlign: 'center', margin: '16px 0 0',
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: 11, color: 'rgba(232,232,240,0.2)',
+                  textAlign: 'center', margin: '14px 0 0',
                   lineHeight: 1.5,
                 }}>
                   We personally review every application. No spam, no newsletters.

@@ -1,28 +1,25 @@
 /**
- * Professional Journey — Public Detail Page
+ * Professional Journey — Public Detail Page  (dark orbital theme)
  * Route: /founder-space/journey/:journeyId
  */
 
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import {
-  doc, getDoc, updateDoc, increment,
-} from 'firebase/firestore';
+import { doc, getDoc, updateDoc, increment } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../../lib/auth';
 import { useToast } from '../../components/Toast';
-import './FounderSpace.css';
 
 // ─────────────────────────────────────────────
 //  Node config
 // ─────────────────────────────────────────────
 
 const NODE_CONFIG = [
-  { key: 'origin',    number: 1, label: 'The Origin',  tackColor: '#7c3aed', rotation: -1.5 },
-  { key: 'expertise', number: 2, label: 'The Craft',   tackColor: '#0d9488', rotation: 1    },
-  { key: 'impact',    number: 3, label: 'The Proof',   tackColor: '#d97706', rotation: -0.8 },
-  { key: 'now',       number: 4, label: 'The Now',     tackColor: '#2563eb', rotation: 1.2  },
-  { key: 'next',      number: 5, label: 'The Seek',    tackColor: '#db2777', rotation: -0.6 },
+  { key: 'origin',    number: 1, label: 'The Origin', tackColor: '#8b5cf6', rotation: -1.5 },
+  { key: 'expertise', number: 2, label: 'The Craft',  tackColor: '#0d9488', rotation: 1    },
+  { key: 'impact',    number: 3, label: 'The Proof',  tackColor: '#f59e0b', rotation: -0.8 },
+  { key: 'now',       number: 4, label: 'The Now',    tackColor: '#3b82f6', rotation: 1.2  },
+  { key: 'next',      number: 5, label: 'The Seek',   tackColor: '#ec4899', rotation: -0.6 },
 ];
 
 // ─────────────────────────────────────────────
@@ -31,8 +28,8 @@ const NODE_CONFIG = [
 
 function tsToDate(ts) {
   if (!ts) return null;
-  if (ts.toDate)   return ts.toDate();
-  if (ts.seconds)  return new Date(ts.seconds * 1000);
+  if (ts.toDate)  return ts.toDate();
+  if (ts.seconds) return new Date(ts.seconds * 1000);
   return new Date(ts);
 }
 
@@ -54,10 +51,10 @@ function Avatar({ profile, size = 40 }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: '50%', flexShrink: 0,
-      background: 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
+      background: 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)',
       color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
       fontSize: Math.floor(size * 0.35),
-      fontFamily: "'Playfair Display', serif", fontWeight: 700,
+      fontFamily: "'Syne', sans-serif", fontWeight: 800,
     }}>
       {initials}
     </div>
@@ -73,14 +70,11 @@ function ShareButton({ url, headline }) {
 
   async function handleShare() {
     if (navigator.share) {
-      try {
-        await navigator.share({ title: headline, url });
-        return;
-      } catch {}
+      try { await navigator.share({ title: headline, url }); return; } catch {}
     }
     try {
       await navigator.clipboard.writeText(url);
-      showToast('Link copied to clipboard!', 'success');
+      showToast('Link copied!', 'success');
     } catch {
       showToast('Could not copy link.', 'error');
     }
@@ -91,15 +85,15 @@ function ShareButton({ url, headline }) {
       onClick={handleShare}
       style={{
         display: 'inline-flex', alignItems: 'center', gap: 6,
-        padding: '8px 16px', borderRadius: 8,
-        border: '1.5px solid rgba(44,31,14,0.15)',
-        background: '#fff', color: '#7a5c3a',
+        padding: '7px 16px', borderRadius: 7,
+        border: '1px solid rgba(255,255,255,0.12)',
+        background: 'transparent', color: 'rgba(232,232,240,0.6)',
         fontFamily: "'DM Mono', monospace",
         fontSize: 10, fontWeight: 600, letterSpacing: '0.06em',
         cursor: 'pointer', transition: 'all 0.15s',
       }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c3aed'; e.currentTarget.style.color = '#7c3aed'; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(44,31,14,0.15)'; e.currentTarget.style.color = '#7a5c3a'; }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(139,92,246,0.4)'; e.currentTarget.style.color = '#8b5cf6'; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = 'rgba(232,232,240,0.6)'; }}
     >
       ↗ Share
     </button>
@@ -107,10 +101,10 @@ function ShareButton({ url, headline }) {
 }
 
 // ─────────────────────────────────────────────
-//  Polaroid node card (large)
+//  Dark polaroid node card
 // ─────────────────────────────────────────────
 
-function JourneyNodeCard({ node, journey, compact }) {
+function JourneyNodeCard({ node, journey }) {
   const title = journey[`${node.key}Title`] || '';
   const body  = journey[`${node.key}Body`]  || '';
   const photo = journey[`${node.key}PhotoURL`] || '';
@@ -119,25 +113,24 @@ function JourneyNodeCard({ node, journey, compact }) {
 
   return (
     <div style={{
-      background: '#fff',
-      borderRadius: 8,
-      padding: compact ? '14px 14px 28px' : '16px 16px 36px',
-      border: '1px solid #e8dcc8',
-      boxShadow: '2px 3px 0 #d4c4b0',
+      background: '#1a1a2e',
+      borderRadius: 6,
+      padding: '16px 14px 32px',
+      border: `1px solid ${node.tackColor}25`,
+      boxShadow: `2px 3px 0 rgba(0,0,0,0.4), 0 0 20px ${node.tackColor}08`,
       transform: `rotate(${node.rotation}deg)`,
       position: 'relative',
       transition: 'transform 0.2s, box-shadow 0.2s',
-      minWidth: compact ? 200 : 240,
-      maxWidth: compact ? 220 : 260,
+      minWidth: 230, maxWidth: 255,
       flexShrink: 0,
     }}
     onMouseEnter={e => {
-      e.currentTarget.style.transform = `rotate(0deg) translateY(-4px)`;
-      e.currentTarget.style.boxShadow = '4px 8px 0 #c4b4a0';
+      e.currentTarget.style.transform = 'rotate(0deg) translateY(-4px)';
+      e.currentTarget.style.boxShadow = `4px 8px 0 rgba(0,0,0,0.5), 0 0 30px ${node.tackColor}20`;
     }}
     onMouseLeave={e => {
       e.currentTarget.style.transform = `rotate(${node.rotation}deg)`;
-      e.currentTarget.style.boxShadow = '2px 3px 0 #d4c4b0';
+      e.currentTarget.style.boxShadow = `2px 3px 0 rgba(0,0,0,0.4), 0 0 20px ${node.tackColor}08`;
     }}
     >
       {/* Tack */}
@@ -146,7 +139,7 @@ function JourneyNodeCard({ node, journey, compact }) {
         transform: 'translateX(-50%)',
         width: 12, height: 12, borderRadius: '50%',
         background: node.tackColor,
-        boxShadow: `0 2px 6px ${node.tackColor}99`,
+        boxShadow: `0 2px 8px ${node.tackColor}80`,
       }} />
 
       {/* Node label */}
@@ -160,30 +153,29 @@ function JourneyNodeCard({ node, journey, compact }) {
         {String(node.number).padStart(2, '0')} · {node.label}
       </div>
 
-      {/* Photo */}
       {photo && (
         <div style={{
-          width: '100%', height: compact ? 100 : 130,
+          width: '100%', height: 120,
           borderRadius: 4, marginBottom: 10, overflow: 'hidden',
         }}>
           <img src={photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         </div>
       )}
 
-      {/* Title */}
       <div style={{
-        fontFamily: "'Playfair Display', serif",
-        fontSize: compact ? 14 : 16, fontWeight: 700,
-        color: '#2c1f0e', lineHeight: 1.25, marginBottom: 8,
+        fontFamily: "'Syne', sans-serif",
+        fontSize: 15, fontWeight: 800,
+        color: '#e8e8f0', lineHeight: 1.25, marginBottom: 8,
+        letterSpacing: '-0.01em',
       }}>
         {title}
       </div>
 
-      {/* Body */}
       <div style={{
-        fontFamily: "'Syne', sans-serif",
-        fontSize: compact ? 11 : 12,
-        color: '#7a5c3a', lineHeight: 1.6,
+        fontFamily: "'DM Mono', monospace",
+        fontSize: 11, color: 'rgba(232,232,240,0.45)', lineHeight: 1.6,
+        display: '-webkit-box', WebkitLineClamp: 4,
+        WebkitBoxOrient: 'vertical', overflow: 'hidden',
       }}>
         {body}
       </div>
@@ -197,19 +189,30 @@ function JourneyNodeCard({ node, journey, compact }) {
 
 function LoadingSkeleton() {
   const pulse = {
-    background: '#e8dcc8', borderRadius: 4,
-    animation: 'fs-skeleton 1.8s ease-in-out infinite',
+    background: 'rgba(255,255,255,0.05)', borderRadius: 4,
+    animation: 'orb-jp-pulse 1.8s ease-in-out infinite',
   };
   return (
-    <div style={{ maxWidth: 900, margin: '48px auto', padding: '0 24px' }}>
-      <div style={{ ...pulse, height: 32, width: '50%', marginBottom: 16 }} />
-      <div style={{ ...pulse, height: 16, width: '70%', marginBottom: 32 }} />
-      <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-        {[0,1,2,3,4].map(i => (
-          <div key={i} style={{ ...pulse, width: 240, height: 300, borderRadius: 8 }} />
-        ))}
+    <div style={{ background: '#0a0a0f', minHeight: '100vh' }}>
+      <nav style={{
+        background: 'rgba(10,10,15,0.95)',
+        borderBottom: '1px solid rgba(139,92,246,0.1)',
+        padding: '14px 24px',
+        display: 'flex', justifyContent: 'space-between',
+      }}>
+        <div style={{ ...pulse, height: 14, width: 120 }} />
+        <div style={{ ...pulse, height: 14, width: 60 }} />
+      </nav>
+      <div style={{ maxWidth: 900, margin: '48px auto', padding: '0 24px' }}>
+        <div style={{ ...pulse, height: 32, width: '55%', marginBottom: 14 }} />
+        <div style={{ ...pulse, height: 16, width: '70%', marginBottom: 32 }} />
+        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+          {[0,1,2,3,4].map(i => (
+            <div key={i} style={{ ...pulse, width: 240, height: 280, borderRadius: 6 }} />
+          ))}
+        </div>
       </div>
-      <style>{`@keyframes fs-skeleton { 0%,100%{opacity:1} 50%{opacity:0.4} }`}</style>
+      <style>{`@keyframes orb-jp-pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }`}</style>
     </div>
   );
 }
@@ -219,12 +222,12 @@ function LoadingSkeleton() {
 // ─────────────────────────────────────────────
 
 export default function ProfessionalJourneyPage() {
-  const { journeyId }         = useParams();
-  const { user } = useAuth();
+  const { journeyId } = useParams();
+  const { user }      = useAuth();
 
-  const [journey, setJourney] = useState(null);
-  const [author,  setAuthor]  = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [journey,  setJourney]  = useState(null);
+  const [author,   setAuthor]   = useState(null);
+  const [loading,  setLoading]  = useState(true);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
@@ -234,11 +237,7 @@ export default function ProfessionalJourneyPage() {
         if (!snap.exists()) { setNotFound(true); return; }
         const data = { id: snap.id, ...snap.data() };
         setJourney(data);
-
-        // View count
         updateDoc(doc(db, 'journeys', journeyId), { viewCount: increment(1) }).catch(() => {});
-
-        // Author
         if (data.authorUid) {
           const aSnap = await getDoc(doc(db, 'users', data.authorUid));
           if (aSnap.exists()) setAuthor({ uid: aSnap.id, ...aSnap.data() });
@@ -253,10 +252,9 @@ export default function ProfessionalJourneyPage() {
     load();
   }, [journeyId]);
 
-  // Set page title
   useEffect(() => {
     if (journey?.headline) {
-      document.title = `${journey.headline} — Professional Journey | NoCap VC`;
+      document.title = `${journey.headline} — Trajectory | NoCap VC`;
     }
   }, [journey]);
 
@@ -264,45 +262,58 @@ export default function ProfessionalJourneyPage() {
 
   if (notFound || !journey) {
     return (
-      <div className="fs-page" style={{
+      <div style={{
+        background: '#0a0a0f', minHeight: '100vh',
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
-        minHeight: '100vh', gap: 16, padding: '0 24px',
+        gap: 16, padding: '0 24px',
       }}>
         <div style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: 32, fontWeight: 900, color: '#2c1f0e',
+          fontFamily: "'Syne', sans-serif",
+          fontSize: 28, fontWeight: 900, color: '#e8e8f0', letterSpacing: '-0.02em',
         }}>
-          Journey not found.
+          Trajectory not found.
         </div>
         <p style={{
-          fontFamily: "'Syne', sans-serif",
-          fontSize: 14, color: '#7a5c3a', textAlign: 'center',
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 12, color: 'rgba(232,232,240,0.35)',
         }}>
           It may have been removed.
         </p>
         <Link to="/founder-space/journey/feed" style={{
           padding: '10px 24px', borderRadius: 8,
-          background: '#7c3aed', color: '#fff',
+          background: '#8b5cf6', color: '#fff',
           fontFamily: "'DM Mono', monospace",
           fontSize: 11, fontWeight: 700, textDecoration: 'none',
         }}>
-          Browse journeys
+          Browse trajectories
         </Link>
       </div>
     );
   }
 
-  const pageUrl = window.location.href;
+  const pageUrl    = window.location.href;
+  const filledNodes = NODE_CONFIG.filter(n => journey[`${n.key}Title`] || journey[`${n.key}Body`]);
 
   return (
-    <div className="fs-page" style={{ paddingBottom: 80 }}>
+    <div style={{ background: '#0a0a0f', minHeight: '100vh', paddingBottom: 80 }}>
 
-      {/* Nav */}
-      <nav className="fs-nav">
-        <Link to="/founder-space/journey/feed" className="fs-nav-logo">
-          <span className="fs-nav-dot" style={{ background: '#7c3aed' }} />
-          Professional Journey
+      {/* ── Nav ─────────────────────────────── */}
+      <nav style={{
+        position: 'sticky', top: 0, zIndex: 50,
+        background: 'rgba(10,10,15,0.92)',
+        backdropFilter: 'blur(12px)',
+        borderBottom: '1px solid rgba(139,92,246,0.1)',
+        padding: '14px 24px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      }}>
+        <Link to="/founder-space/journey/feed" style={{
+          fontFamily: "'Syne', sans-serif", fontSize: 14, fontWeight: 800,
+          color: '#e8e8f0', textDecoration: 'none', letterSpacing: '-0.02em',
+          display: 'flex', alignItems: 'center', gap: 7,
+        }}>
+          <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#8b5cf6', boxShadow: '0 0 8px #8b5cf680' }} />
+          TRAJECTORY
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <ShareButton url={pageUrl} headline={journey.headline} />
@@ -310,10 +321,10 @@ export default function ProfessionalJourneyPage() {
             <Link
               to="/founder-space/journey/submit"
               style={{
-                padding: '8px 16px', borderRadius: 8,
-                background: '#7c3aed', color: '#fff',
+                padding: '7px 16px', borderRadius: 7,
+                background: '#8b5cf6', color: '#fff',
                 fontFamily: "'DM Mono', monospace",
-                fontSize: 10, fontWeight: 700, letterSpacing: '0.06em',
+                fontSize: 10, fontWeight: 800, letterSpacing: '0.06em',
                 textDecoration: 'none',
               }}
             >
@@ -323,11 +334,11 @@ export default function ProfessionalJourneyPage() {
         </div>
       </nav>
 
-      {/* Hero */}
+      {/* ── Hero ────────────────────────────── */}
       <div style={{
-        background: 'linear-gradient(180deg, rgba(124,58,237,0.06) 0%, transparent 100%)',
-        padding: '48px 24px 40px',
-        borderBottom: '1px solid rgba(44,31,14,0.06)',
+        background: 'linear-gradient(180deg, rgba(139,92,246,0.06) 0%, transparent 100%)',
+        padding: '44px 24px 36px',
+        borderBottom: '1px solid rgba(139,92,246,0.07)',
       }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
           {/* Author row */}
@@ -338,15 +349,15 @@ export default function ProfessionalJourneyPage() {
             />
             <div>
               <div style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: 18, fontWeight: 700, color: '#2c1f0e',
+                fontFamily: "'Syne', sans-serif",
+                fontSize: 16, fontWeight: 800, color: '#e8e8f0', letterSpacing: '-0.01em',
               }}>
                 {author?.name || journey.authorName || 'Professional'}
               </div>
               <div style={{
                 fontFamily: "'DM Mono', monospace",
-                fontSize: 9, color: '#7a5c3a',
-                marginTop: 2, letterSpacing: '0.08em',
+                fontSize: 9, color: 'rgba(232,232,240,0.3)',
+                marginTop: 3, letterSpacing: '0.08em',
               }}>
                 Published {fullDate(journey.publishedAt)}
                 {journey.viewCount > 0 && ` · ${journey.viewCount} views`}
@@ -356,22 +367,22 @@ export default function ProfessionalJourneyPage() {
 
           {/* Headline */}
           <h1 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 'clamp(24px, 4vw, 40px)', fontWeight: 900,
-            color: '#2c1f0e', letterSpacing: '-0.02em',
-            margin: '0 0 12px', lineHeight: 1.1,
+            fontFamily: "'Syne', sans-serif",
+            fontSize: 'clamp(24px, 4vw, 42px)', fontWeight: 900,
+            color: '#e8e8f0', letterSpacing: '-0.03em',
+            margin: '0 0 14px', lineHeight: 1.05,
           }}>
             {journey.headline}
           </h1>
 
-          {/* Meta tags */}
+          {/* Tags */}
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {journey.industry && (
               <span style={{
                 fontFamily: "'DM Mono', monospace",
                 fontSize: 9, fontWeight: 700,
                 letterSpacing: '0.14em', textTransform: 'uppercase',
-                background: '#7c3aed', color: '#fff',
+                background: '#8b5cf6', color: '#fff',
                 padding: '4px 10px', borderRadius: 20,
               }}>
                 {journey.industry}
@@ -382,8 +393,9 @@ export default function ProfessionalJourneyPage() {
                 fontFamily: "'DM Mono', monospace",
                 fontSize: 9, fontWeight: 600,
                 letterSpacing: '0.1em', textTransform: 'uppercase',
-                background: 'rgba(44,31,14,0.07)', color: '#7a5c3a',
+                background: 'rgba(255,255,255,0.06)', color: 'rgba(232,232,240,0.5)',
                 padding: '4px 10px', borderRadius: 20,
+                border: '1px solid rgba(255,255,255,0.1)',
               }}>
                 {journey.experience}
               </span>
@@ -391,9 +403,9 @@ export default function ProfessionalJourneyPage() {
             {journey.location && (
               <span style={{
                 fontFamily: "'DM Mono', monospace",
-                fontSize: 9, color: '#c4a882',
+                fontSize: 9, color: 'rgba(232,232,240,0.35)',
                 padding: '4px 10px', borderRadius: 20,
-                border: '1px solid #e8dcc8',
+                border: '1px solid rgba(255,255,255,0.08)',
               }}>
                 {journey.location}
               </span>
@@ -402,21 +414,21 @@ export default function ProfessionalJourneyPage() {
         </div>
       </div>
 
-      {/* Cork board */}
+      {/* ── Dark cork board ──────────────────── */}
       <div style={{
-        maxWidth: '100%',
-        overflowX: 'auto',
-        padding: '48px 48px',
-        background: '#f5ece0',
-        borderBottom: '1px solid rgba(44,31,14,0.1)',
+        maxWidth: '100%', overflowX: 'auto',
+        padding: '48px',
+        background: '#0d0d1a',
+        borderBottom: '1px solid rgba(139,92,246,0.08)',
         scrollbarWidth: 'none',
+        backgroundImage: 'radial-gradient(rgba(139,92,246,0.04) 1px, transparent 1px)',
+        backgroundSize: '28px 28px',
       }}>
         <div style={{
-          display: 'flex',
-          gap: 32,
+          display: 'flex', gap: 28,
           alignItems: 'center',
           minWidth: 'max-content',
-          padding: '20px 0',
+          padding: '24px 0',
           justifyContent: 'center',
         }}>
           {NODE_CONFIG.map((node, i) => {
@@ -427,11 +439,10 @@ export default function ProfessionalJourneyPage() {
             return (
               <React.Fragment key={node.key}>
                 <JourneyNodeCard node={node} journey={journey} />
-                {i < NODE_CONFIG.length - 1 && (
+                {i < NODE_CONFIG.length - 1 && filledNodes.indexOf(node) < filledNodes.length - 1 && (
                   <div style={{
-                    width: 40, height: 1.5, flexShrink: 0,
-                    background: `repeating-linear-gradient(90deg, ${node.tackColor} 0px, ${node.tackColor} 4px, transparent 4px, transparent 10px)`,
-                    opacity: 0.4,
+                    width: 36, height: 1.5, flexShrink: 0,
+                    background: `repeating-linear-gradient(90deg, ${node.tackColor}60 0px, ${node.tackColor}60 4px, transparent 4px, transparent 10px)`,
                   }} />
                 )}
               </React.Fragment>
@@ -440,9 +451,9 @@ export default function ProfessionalJourneyPage() {
         </div>
       </div>
 
-      {/* Detailed node sections */}
-      <div style={{ maxWidth: 760, margin: '0 auto', padding: '48px 24px' }}>
-        {NODE_CONFIG.map(node => {
+      {/* ── Detailed sections ────────────────── */}
+      <div style={{ maxWidth: 720, margin: '0 auto', padding: '52px 24px' }}>
+        {NODE_CONFIG.map((node, idx) => {
           const title = journey[`${node.key}Title`] || '';
           const body  = journey[`${node.key}Body`]  || '';
           const photo = journey[`${node.key}PhotoURL`] || '';
@@ -450,14 +461,14 @@ export default function ProfessionalJourneyPage() {
 
           return (
             <div key={node.key} style={{
-              marginBottom: 48, paddingBottom: 48,
-              borderBottom: '1px solid rgba(44,31,14,0.07)',
+              marginBottom: 52, paddingBottom: 52,
+              borderBottom: '1px solid rgba(255,255,255,0.05)',
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
                 <div style={{
-                  width: 10, height: 10, borderRadius: '50%',
+                  width: 8, height: 8, borderRadius: '50%',
                   background: node.tackColor,
-                  boxShadow: `0 2px 6px ${node.tackColor}66`,
+                  boxShadow: `0 0 10px ${node.tackColor}70`,
                   flexShrink: 0,
                 }} />
                 <div style={{
@@ -471,26 +482,27 @@ export default function ProfessionalJourneyPage() {
 
               {photo && (
                 <div style={{
-                  width: '100%', maxHeight: 240, borderRadius: 10,
-                  overflow: 'hidden', marginBottom: 16,
+                  width: '100%', maxHeight: 260, borderRadius: 10,
+                  overflow: 'hidden', marginBottom: 18,
+                  border: '1px solid rgba(255,255,255,0.07)',
                 }}>
                   <img src={photo} alt="" style={{ width: '100%', objectFit: 'cover' }} />
                 </div>
               )}
 
               <h2 style={{
-                fontFamily: "'Playfair Display', serif",
+                fontFamily: "'Syne', sans-serif",
                 fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: 900,
-                color: '#2c1f0e', letterSpacing: '-0.01em',
-                margin: '0 0 14px', lineHeight: 1.2,
+                color: '#e8e8f0', letterSpacing: '-0.02em',
+                margin: '0 0 14px', lineHeight: 1.15,
               }}>
                 {title}
               </h2>
 
               <p style={{
-                fontFamily: "'Syne', sans-serif",
-                fontSize: 16, color: '#5a3e28',
-                lineHeight: 1.75, margin: 0,
+                fontFamily: "'DM Mono', monospace",
+                fontSize: 14, color: 'rgba(232,232,240,0.6)',
+                lineHeight: 1.8, margin: 0,
                 whiteSpace: 'pre-line',
               }}>
                 {body}
@@ -499,22 +511,22 @@ export default function ProfessionalJourneyPage() {
           );
         })}
 
-        {/* Share + CTA */}
+        {/* CTA */}
         <div style={{
-          textAlign: 'center',
-          padding: '32px 0',
+          textAlign: 'center', padding: '32px 0',
+          borderTop: '1px solid rgba(255,255,255,0.05)',
         }}>
           <div style={{
-            fontFamily: "'Playfair Display', serif",
+            fontFamily: "'Syne', sans-serif",
             fontSize: 22, fontWeight: 900,
-            color: '#2c1f0e', marginBottom: 8,
+            color: '#e8e8f0', marginBottom: 8, letterSpacing: '-0.02em',
           }}>
             Every career has a story worth telling.
           </div>
           <p style={{
-            fontFamily: "'Syne', sans-serif",
-            fontSize: 14, color: '#7a5c3a',
-            fontStyle: 'italic', marginBottom: 20,
+            fontFamily: "'DM Mono', monospace",
+            fontSize: 11, color: 'rgba(232,232,240,0.3)',
+            marginBottom: 24, letterSpacing: '0.04em',
           }}>
             Pin yours in 5 minutes.
           </p>
@@ -523,10 +535,10 @@ export default function ProfessionalJourneyPage() {
             <Link
               to="/founder-space/journey/submit"
               style={{
-                padding: '10px 20px', borderRadius: 8,
-                background: '#7c3aed', color: '#fff',
+                padding: '10px 24px', borderRadius: 8,
+                background: '#8b5cf6', color: '#fff',
                 fontFamily: "'DM Mono', monospace",
-                fontSize: 11, fontWeight: 700, textDecoration: 'none',
+                fontSize: 11, fontWeight: 800, textDecoration: 'none',
               }}
             >
               Pin your journey →
@@ -534,7 +546,6 @@ export default function ProfessionalJourneyPage() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }
