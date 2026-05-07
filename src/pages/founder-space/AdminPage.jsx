@@ -64,7 +64,6 @@ const NAV_ITEMS = [
   { id: 'pending',   icon: '⏳', label: 'Pending'   },
   { id: 'published', icon: '✅', label: 'Published'  },
   { id: 'rejected',  icon: '✗',  label: 'Rejected'   },
-  { id: 'comments',  icon: '💬', label: 'Comments'   },
   { id: 'users',     icon: '👥', label: 'Users'      },
 ];
 
@@ -1220,7 +1219,7 @@ export default function AdminPage() {
 
   const [activeTab, setActiveTab] = useState('pending');
   const [counts, setCounts]       = useState({
-    waitlist: 0, pending: 0, published: 0, rejected: 0, comments: 0, users: 0,
+    waitlist: 0, pending: 0, published: 0, rejected: 0, users: 0,
   });
 
   // Auth guard
@@ -1235,12 +1234,11 @@ export default function AdminPage() {
   useEffect(() => {
     if (!userProfile?.isAdmin) return;
     async function loadCounts() {
-      const [waitlist, pending, published, rejected, comments, users] = await Promise.all([
+      const [waitlist, pending, published, rejected, users] = await Promise.all([
         getDocs(query(collection(db, 'waitlist'), where('status', '==', 'pending'))),
         getDocs(query(collection(db, 'ideas'), where('status', '==', 'pending_review'))),
         getDocs(query(collection(db, 'ideas'), where('status', '==', 'published'))),
         getDocs(query(collection(db, 'ideas'), where('status', '==', 'rejected'))),
-        getDocs(query(collection(db, 'comments'), where('status', '==', 'pending'))),
         getDocs(collection(db, 'users')),
       ]);
       setCounts({
@@ -1248,7 +1246,6 @@ export default function AdminPage() {
         pending:   pending.size,
         published: published.size,
         rejected:  rejected.size,
-        comments:  comments.size,
         users:     users.size,
       });
     }
@@ -1270,7 +1267,6 @@ export default function AdminPage() {
     pending:   'Pending Review',
     published: 'Published Ideas',
     rejected:  'Rejected Ideas',
-    comments:  'Comment Moderation',
     users:     'Users',
   };
 
@@ -1286,10 +1282,10 @@ export default function AdminPage() {
           gridTemplateColumns: 'repeat(4, 1fr)',
           gap: 16, marginBottom: 40,
         }}>
-          <StatCard label="Pending review"    value={counts.pending}   color="#c4963a" />
-          <StatCard label="Published"         value={counts.published} color="#2c8a4e" />
-          <StatCard label="Total users"       value={counts.users}     color="#1a6bb5" />
-          <StatCard label="Comments pending"  value={counts.comments}  color={counts.comments > 0 ? '#e8391e' : '#2c1f0e'} />
+          <StatCard label="Pending review"  value={counts.pending}   color="#c4963a" />
+          <StatCard label="Published"       value={counts.published} color="#2c8a4e" />
+          <StatCard label="Total users"     value={counts.users}     color="#1a6bb5" />
+          <StatCard label="Waitlist"        value={counts.waitlist}  color="#8b5cf6" />
         </div>
 
         {/* Tab heading */}
@@ -1306,7 +1302,6 @@ export default function AdminPage() {
         {activeTab === 'pending'   && <PendingTab   showToast={showToast} />}
         {activeTab === 'published' && <PublishedTab  showToast={showToast} />}
         {activeTab === 'rejected'  && <RejectedTab   showToast={showToast} />}
-        {activeTab === 'comments'  && <CommentsTab   showToast={showToast} />}
         {activeTab === 'users'     && <UsersTab      showToast={showToast} />}
       </div>
     </div>

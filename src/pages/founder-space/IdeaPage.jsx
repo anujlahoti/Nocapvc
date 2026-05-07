@@ -283,9 +283,8 @@ const ROLE_BADGES = {
   enthusiast: { bg: '#e8d5fb', color: '#5a2d82' },
 };
 
-function CommentCard({ comment, authorProfile, currentUser, onReply, isReply }) {
+function CommentCard({ comment, authorProfile, onReply, isReply }) {
   const rb = ROLE_BADGES[authorProfile?.role] || ROLE_BADGES.enthusiast;
-  const isPending = comment.status === 'pending' && currentUser?.uid === comment.authorUid;
 
   return (
     <div style={{
@@ -319,14 +318,6 @@ function CommentCard({ comment, authorProfile, currentUser, onReply, isReply }) 
           }}>
             {relativeDate(comment.createdAt)}
           </span>
-          {isPending && (
-            <span style={{
-              fontFamily: "'DM Mono', monospace",
-              fontSize: 8, color: '#c4a882', letterSpacing: '0.08em',
-            }}>
-              · under review
-            </span>
-          )}
         </div>
         <div style={{
           fontFamily: "'Syne', sans-serif",
@@ -641,9 +632,8 @@ export default function IdeaPage() {
   const [wantToWorkDone,  setWantToWorkDone]  = useState(false);
 
   // ── Comments ──────────────────────────────
-  const [newComment,       setNewComment]       = useState('');
-  const [commentSubmitted, setCommentSubmitted] = useState(false);
-  const [replyingTo,        setReplyingTo]        = useState(null);
+  const [newComment,  setNewComment]  = useState('');
+  const [replyingTo,  setReplyingTo]  = useState(null);
   const [replyBody,         setReplyBody]         = useState('');
 
   // ── Fetch data ───────────────────────────
@@ -757,12 +747,11 @@ export default function IdeaPage() {
       const data = {
         ideaId, authorUid: user.uid,
         body: body.trim(),
-        status: 'pending',
+        status: 'approved',
         parentId: parentId || null,
         createdAt: serverTimestamp(),
       };
       const ref = await addDoc(collection(db, 'comments'), data);
-      // Optimistically add to list (pending, visible to commenter only)
       const optimistic = {
         id: ref.id, ...data,
         createdAt: { seconds: Date.now() / 1000 },
@@ -774,7 +763,6 @@ export default function IdeaPage() {
           [user.uid]: userProfile || { name: user.displayName, photoURL: user.photoURL },
         }));
         setNewComment('');
-        setCommentSubmitted(true);
       } else {
         setComments(prev => [...prev, optimistic]);
         setReplyingTo(null);
@@ -949,7 +937,6 @@ export default function IdeaPage() {
                   <CommentCard
                     comment={c}
                     authorProfile={commentAuthors[c.authorUid]}
-                    currentUser={user}
                     onReply={id => { setReplyingTo(id); setReplyBody(''); }}
                     isReply={false}
                   />
@@ -1005,7 +992,6 @@ export default function IdeaPage() {
                       key={r.id}
                       comment={r}
                       authorProfile={commentAuthors[r.authorUid]}
-                      currentUser={user}
                       onReply={() => {}}
                       isReply={true}
                     />
@@ -1027,58 +1013,47 @@ export default function IdeaPage() {
               {/* Add comment */}
               <div style={{ marginTop: 16, borderTop: '1px solid rgba(44,31,14,0.07)', paddingTop: 16 }}>
                 {user ? (
-                  commentSubmitted ? (
-                    <div style={{
-                      fontFamily: "'DM Mono', monospace",
-                      fontSize: 10, color: '#c4a882', letterSpacing: '0.08em',
-                    }}>
-                      Your note is under review ✓
-                    </div>
-                  ) : (
-                    <>
-                      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                        <Avatar profile={userProfile} size={30} />
-                        <div style={{ flex: 1 }}>
-                          <textarea
-                            value={newComment}
-                            onChange={e => setNewComment(e.target.value)}
-                            placeholder="Add a note…"
-                            maxLength={500} rows={3}
-                            style={{
-                              width: '100%', boxSizing: 'border-box',
-                              background: '#fdf6e8 !important',
-                              border: '1.5px solid #e8dcc8', borderRadius: 10,
-                              outline: 'none', padding: '10px 12px',
-                              fontFamily: "'Syne', sans-serif",
-                              fontSize: 13, color: '#2c1f0e',
-                              lineHeight: 1.6, resize: 'none',
-                            }}
-                            onFocus={e => e.target.style.borderColor = '#2c1f0e'}
-                            onBlur={e => e.target.style.borderColor = '#e8dcc8'}
-                          />
-                          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, alignItems: 'center' }}>
-                            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, color: '#c4a882' }}>
-                              {500 - newComment.length} left
-                            </span>
-                            <button
-                              onClick={() => handleCommentSubmit(newComment)}
-                              disabled={!newComment.trim()}
-                              style={{
-                                padding: '8px 16px', borderRadius: 8, border: 'none',
-                                background: newComment.trim() ? '#2c1f0e' : '#e8dcc8',
-                                color: newComment.trim() ? '#f5c842' : '#c4a882',
-                                fontFamily: "'DM Mono', monospace",
-                                fontSize: 11, fontWeight: 700, letterSpacing: '0.06em',
-                                cursor: newComment.trim() ? 'pointer' : 'not-allowed',
-                              }}
-                            >
-                              Add note →
-                            </button>
-                          </div>
-                        </div>
+                  <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                    <Avatar profile={userProfile} size={30} />
+                    <div style={{ flex: 1 }}>
+                      <textarea
+                        value={newComment}
+                        onChange={e => setNewComment(e.target.value)}
+                        placeholder="Add a note…"
+                        maxLength={500} rows={3}
+                        style={{
+                          width: '100%', boxSizing: 'border-box',
+                          background: '#fdf6e8 !important',
+                          border: '1.5px solid #e8dcc8', borderRadius: 10,
+                          outline: 'none', padding: '10px 12px',
+                          fontFamily: "'Syne', sans-serif",
+                          fontSize: 13, color: '#2c1f0e',
+                          lineHeight: 1.6, resize: 'none',
+                        }}
+                        onFocus={e => e.target.style.borderColor = '#2c1f0e'}
+                        onBlur={e => e.target.style.borderColor = '#e8dcc8'}
+                      />
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, alignItems: 'center' }}>
+                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, color: '#c4a882' }}>
+                          {500 - newComment.length} left
+                        </span>
+                        <button
+                          onClick={() => handleCommentSubmit(newComment)}
+                          disabled={!newComment.trim()}
+                          style={{
+                            padding: '8px 16px', borderRadius: 8, border: 'none',
+                            background: newComment.trim() ? '#2c1f0e' : '#e8dcc8',
+                            color: newComment.trim() ? '#f5c842' : '#c4a882',
+                            fontFamily: "'DM Mono', monospace",
+                            fontSize: 11, fontWeight: 700, letterSpacing: '0.06em',
+                            cursor: newComment.trim() ? 'pointer' : 'not-allowed',
+                          }}
+                        >
+                          Add note →
+                        </button>
                       </div>
-                    </>
-                  )
+                    </div>
+                  </div>
                 ) : (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <span style={{
